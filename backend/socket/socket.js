@@ -1,105 +1,68 @@
 const { Server } = require("socket.io");
 
-//STORE ONLINE USERS
 const onlineUsers = new Map();
 
-//SOCKET INITIALIZATION
 const initializeSocket = (server) => {
 
     const io = new Server(server, {
         cors: {
-            origin: "http://localhost:4200",
-            methods: ["GET", "POST"]
+            origin: "http://localhost:4200"
         }
     });
 
     io.on("connection", (socket) => {
-        console.log("NEW SOCKET CONNECTED", socket.id);
 
-        //USER CONNECTED
-        socket.on(
-            "user-connected",
-            async (userId) => {
-                onlineUsers.set(
-                    userId,
-                    socket.id
-                );
+        console.log("Connected:", socket.id);
 
-                io.emit(
-                    "online-users",
-                    Array.from(
-                        onlineUsers.keys()
-                    )
-                )
-            }
-        );
+        // USER ONLINE
+        socket.on("user-connected", (userId) => {
+            onlineUsers.set(userId, socket.id);
 
-        //JOIN CHAT ROOM
-        socket.on(
-            "send-message",
-            (messageData) => {
-                io.to(
-                    messageData.conversationId
-                ).emit(
-                    "receive-message",
-                    messageData
-                )
-            }
-        );
+            io.emit("online-users", Array.from(onlineUsers.keys()));
+        });
 
-        //TYPING
-        socket.on(
-            "typing",
-            ({ conversationId, userId }) => {
-                socket.to(conversationId).emit(
-                    "typing",
-                    userId
-                );
-            }
-        );
+        // JOIN ROOM (VERY IMPORTANT)
+        socket.on("joinConversation", (conversationId) => {
+            socket.join(conversationId);
+        });
 
-        //STOP TYPING
-        socket.on(
-            "stop-typing",
-            ({ conversationId, userId }) => {
-                socket.to(conversationId).emit(
-                    "stop-typing",
-                    userId
-                );
-            }
-        );
+        // SEND MESSAGE (CORE LOGIC)
+        socket.on("send-message", (data) => {
 
-        //MESSAGE SEEN
-        socket.on(
-            "message-seen",
-            ({ conversationId, messageId }) => {
-                socket.to(conversationId).emit(
-                    "message-seen",
-                    messageId
-                );
-            }
-        );
+            const { conversationId } = data;
+
+            // broadcast only to that room
+            io.to(conversationId).emit("receive-message", data);
+        });
+
+        // TYPING
+        socket.on("typing", ({ conversationId, userId }) => {
+            socket.to(conversationId).emit("typing", {
+                userId,
+                conversationId
+            });
+        });
+
+        socket.on("stop-typing", ({ conversationId }) => {
+            socket.to(conversationId).emit("stop-typing", {
+                conversationId
+            });
+        });
 
         // DISCONNECT
         socket.on("disconnect", () => {
-            console.log("USER DISCONNECTED", socket.id);
 
-            for (const [userId, socketId] of onlineUsers.entries()) {
+            for (let [userId, socketId] of onlineUsers.entries()) {
                 if (socketId === socket.id) {
                     onlineUsers.delete(userId);
                     break;
                 }
             }
 
-            io.emit("online-users",
-                Array.from(onlineUsers.keys()
-                )
-            )
-        }
-        )
+            io.emit("online-users", Array.from(onlineUsers.keys()));
+        });
 
-    })
-}
-
+    });
+};
 
 module.exports = initializeSocket;

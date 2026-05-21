@@ -1,1 +1,105 @@
-<p>chat-window works!</p>
+<div class="chat-window">
+
+    <!-- EMPTY CHAT -->
+    @if(!conversation){
+
+    <div class="empty-chat">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" alt="chat">
+
+        <h2>
+            Welcome to Chat App
+        </h2>
+
+        <p>
+            Select a conversation to start chatting
+        </p>
+
+    </div>
+
+    }
+
+    <!-- ACTIVE CHAT -->
+    @if(conversation){
+
+    <!-- HEADER -->
+    <div class="chat-header">
+
+        <div class="user-info">
+
+            <img src="https://i.pravatar.cc/150" alt="avatar">
+
+            <div>
+
+                <h3>
+                    {{
+                    conversation?.participants?.[1]?.user?.username ||
+                    'User'
+                    }}
+                </h3>
+
+                <span class="online">
+                    Online
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="messages" #scrollContainer>
+
+        @for(message of messages; track message._id){
+
+        <div class="message-wrapper" [class.mine]="isMine(message)">
+
+            <div class="message-bubble">
+
+                <p>
+                    {{ message.text }}
+                </p>
+
+                <div class="message-footer">
+
+                    <span class="time">
+                        {{
+                        message.createdAt
+                        | date:'shortTime'
+                        }}
+                    </span>
+
+                    @if(isMine(message)){
+
+                    <span class="ticks">
+
+                        @if(message.seen){
+                        ✔✔
+                        }
+
+                        @if(!message.seen){
+                        ✔
+                        }
+
+                    </span>
+
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+
+    }
+
+</div>
+
+<!-- MESSAGE INPUT -->
+<!-- <app-message-input [conversationId]="conversation._id" [userId]="currentUserId" (send)="sendMessage($event)">
+</app-message-input> -->

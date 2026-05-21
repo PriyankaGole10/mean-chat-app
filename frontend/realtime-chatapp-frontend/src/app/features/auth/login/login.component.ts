@@ -12,7 +12,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, MatInputModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatCardModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule,MatCardModule, MatInputModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSnackBarModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -58,6 +58,7 @@ export class LoginComponent {
     this.authSer.login(this.loginForm.value).subscribe({
       next: (res: any) => {
         this.authSer.saveToken(res.token);
+        localStorage.setItem('user',JSON.stringify(res.user))
         this.snackbar.open('Login Success', 'Close', {
           duration: 3000,
           horizontalPosition: 'right',

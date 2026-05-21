@@ -1,9 +1,24 @@
+/* RESET */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family: Arial, Helvetica, sans-serif;
 }
+
+/* GLOBAL FONT */
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* MATERIAL ICON FIX */
+
+mat-icon{
+    font-family:'Material Icons' !important;
+}
+
+/* PAGE */
 
 .register-page{
 
@@ -25,6 +40,8 @@
         #111827
     );
 }
+
+/* CARD */
 
 .register-card{
 
@@ -59,6 +76,7 @@
 .logo{
 
     width:72px;
+
     height:72px;
 
     margin:auto auto 18px;
@@ -85,9 +103,9 @@
 
     font-size:34px;
 
-    width:34px;
+    width:auto;
 
-    height:34px;
+    height:auto;
 }
 
 .register-header h1{
@@ -170,18 +188,28 @@ form{
     0 0 0 4px rgba(59,130,246,0.15);
 }
 
+/* ICON */
+
 .input-box mat-icon{
 
     color:#94a3b8;
 
     font-size:22px;
 
-    width:22px;
+    width:auto;
 
-    height:22px;
+    height:auto;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
 
     flex-shrink:0;
 }
+
+/* INPUT FIELD */
 
 .input-box input{
 
@@ -203,8 +231,6 @@ form{
 
     font-size:15px;
 
-    font-family: Arial, Helvetica, sans-serif;
-
     padding:0;
 
     margin:0;
@@ -215,7 +241,7 @@ form{
     color:#64748b;
 }
 
-/* AUTOFILL FIX */
+/* AUTOFILL */
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -225,7 +251,7 @@ input:-webkit-autofill:active {
     -webkit-box-shadow:
     0 0 0 1000px #2b3448 inset !important;
 
-    -webkit-text-fill-color: white !important;
+    -webkit-text-fill-color:white !important;
 
     caret-color:white;
 
@@ -360,6 +386,12 @@ small{
     .logo{
 
         width:64px;
+
         height:64px;
+    }
+
+    .logo mat-icon{
+
+        font-size:30px;
     }
 }

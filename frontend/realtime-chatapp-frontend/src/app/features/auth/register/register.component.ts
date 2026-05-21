@@ -1,47 +1,14 @@
-import {
-  Component,
-  inject
-} from '@angular/core';
-
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
-
-import {
-  Router,
-  RouterModule
-} from '@angular/router';
-
-import { AuthService }
-  from '../../../core/services/auth.service';
-
-// MATERIAL
-
-import { MatCardModule }
-  from '@angular/material/card';
-
-import { MatInputModule }
-  from '@angular/material/input';
-
-import { MatButtonModule }
-  from '@angular/material/button';
-
-import { MatFormFieldModule }
-  from '@angular/material/form-field';
-
-import { MatIconModule }
-  from '@angular/material/icon';
+import { Component, inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -50,6 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,

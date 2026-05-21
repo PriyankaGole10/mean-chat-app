@@ -1,1 +1,14 @@
-<p>message-input works!</p>
+<div class="input-box">
+
+  <input
+    [(ngModel)]="text"
+    (input)="onTyping()"
+    (keydown)="handleKey($event)"
+    placeholder="Type a message..."
+  />
+
+  <button (click)="sendMessage()">
+    Send
+  </button>
+
+</div>
