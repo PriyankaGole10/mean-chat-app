@@ -35,8 +35,8 @@ export class LoginComponent {
   initialiazeForm() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20),
-        // this.passwordValidator()
+      password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20),
+       
       ]]
     })
   }
@@ -50,6 +50,7 @@ export class LoginComponent {
   }
 
   login() {
+    
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;

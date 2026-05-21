@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
-            minlength: 6
+            minlength: 3
         },
 
         avatar: {
@@ -104,19 +104,19 @@ const userSchema = new mongoose.Schema(
 );
 
 // INDEXES
-userSchema.index({ email: 1 });
+// userSchema.index({ email: 1 });
 userSchema.index({ username: 1 });
 
 // HASH PASSWORD
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
 
     if (!this.isModified("password")) {
-        return next();
+        return ;
     }
 
     this.password = await bcrypt.hash(this.password, 10);
 
-    next();
+  
 });
 
 // COMPARE PASSWORD
