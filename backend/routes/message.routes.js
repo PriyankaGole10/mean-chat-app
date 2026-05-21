@@ -11,14 +11,14 @@ const {
 
 // SEND MESSAGE
 router.post(
-    "/",
+    "/send-message",
     protect,
     sendMessage
 );
 
 // GET MESSAGES
 router.get(
-    "/:conversationId",
+    "/get-messages/:conversationId",
     protect,
     getMessages
 );

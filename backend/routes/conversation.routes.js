@@ -11,14 +11,14 @@ const {
 
 // CREATE/OPEN CHAT
 router.post(
-    "/",
+    "/create-conversation",
     protect,
     createOrOpenConversation
 );
 
 // GET USER CHATS
 router.get(
-    "/",
+    "/get-Conversations",
     protect,
     getUserConversations
 );

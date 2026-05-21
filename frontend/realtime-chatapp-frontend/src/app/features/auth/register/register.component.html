@@ -1,0 +1,198 @@
+<div class="register-page">
+
+    <div class="register-card">
+
+        <!-- HEADER -->
+
+        <div class="register-header">
+
+            <div class="logo">
+
+                <mat-icon>
+                    chat
+                </mat-icon>
+
+            </div>
+
+            <h1>
+                Create Account
+            </h1>
+
+            <p>
+                Join realtime chatting
+            </p>
+
+        </div>
+
+        <!-- FORM -->
+
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                <div class="input-box">
+
+                    <mat-icon>
+                        person
+                    </mat-icon>
+
+                    <input type="text" placeholder="Enter username" formControlName="username" autocomplete="off" />
+
+                </div>
+
+                @if(
+                username?.touched &&
+                username?.errors?.['required']
+                ){
+
+                <small>
+                    Username is required
+                </small>
+                }
+
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <div class="input-box">
+
+                    <mat-icon>
+                        email
+                    </mat-icon>
+
+                    <input type="email" placeholder="Enter email" formControlName="email" autocomplete="new-email" />
+
+                </div>
+
+                @if(
+                email?.touched &&
+                email?.errors?.['required']
+                ){
+
+                <small>
+                    Email is required
+                </small>
+                }
+
+                @if(
+                email?.touched &&
+                email?.errors?.['email']
+                ){
+
+                <small>
+                    Invalid email
+                </small>
+                }
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-box">
+
+                    <mat-icon>
+                        lock
+                    </mat-icon>
+
+                    <input [type]="hidePassword ? 'password' : 'text'" placeholder="Enter password"
+                        formControlName="password" autocomplete="new-password" />
+
+                    <button type="button" class="eye-btn" (click)="togglePassword()">
+
+                        <mat-icon>
+
+                            {{
+                            hidePassword
+                            ? 'visibility_off'
+                            : 'visibility'
+                            }}
+
+                        </mat-icon>
+
+                    </button>
+
+                </div>
+
+                @if(
+                password?.touched &&
+                password?.errors?.['required']
+                ){
+
+                <small>
+                    Password is required
+                </small>
+                }
+
+                @if(
+                password?.touched &&
+                password?.errors?.['minlength']
+                ){
+
+                <small>
+                    Minimum 6 characters required
+                </small>
+                }
+
+                @if(
+                password?.touched &&
+                password?.errors?.['weakPassword']
+                ){
+
+                <small>
+                    Password must contain
+                    uppercase, lowercase,
+                    number and special character
+                </small>
+                }
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button type="submit" class="register-btn">
+
+                Create Account
+
+            </button>
+
+        </form>
+
+        <!-- FOOTER -->
+
+        <div class="register-footer">
+
+            <p>
+
+                Already have an account?
+
+                <span routerLink="/login">
+
+                    Login
+
+                </span>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

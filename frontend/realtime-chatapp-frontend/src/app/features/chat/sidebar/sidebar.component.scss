@@ -1,0 +1,52 @@
+.sidebar {
+
+    width: 280px;
+
+    height: 100vh;
+
+    background: #111827;
+
+    color: white;
+
+    padding: 20px;
+}
+
+.profile {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 30px;
+}
+
+.profile img {
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 50%;
+}
+
+.menu-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.menu-item:hover {
+
+    background: #1f2937;
+}

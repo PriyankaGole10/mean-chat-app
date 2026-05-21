@@ -1,0 +1,18 @@
+.chat-layout {
+
+    display: flex;
+
+    height: 100vh;
+}
+
+.sidebar {
+
+    width: 30%;
+
+    border-right: 1px solid #ccc;
+}
+
+.chat-window {
+
+    width: 70%;
+}

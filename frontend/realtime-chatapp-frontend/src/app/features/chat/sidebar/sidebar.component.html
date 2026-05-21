@@ -1,0 +1,39 @@
+<div class="sidebar">
+
+    <div class="sidebar-top">
+
+        <div class="profile">
+
+            <img
+                src="https://i.pravatar.cc/150"
+            >
+
+        </div>
+
+    </div>
+
+    <div class="menus">
+
+        @for(menu of menus;
+        track menu.label) {
+
+            <div class="menu-item">
+
+                <mat-icon>
+
+                    {{menu.icon}}
+
+                </mat-icon>
+
+                <span>
+
+                    {{menu.label}}
+
+                </span>
+
+            </div>
+        }
+
+    </div>
+
+</div>
