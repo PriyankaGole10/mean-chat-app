@@ -14,11 +14,12 @@ export class MessageInputComponent {
   @Output() send = new EventEmitter<string>();
   @Input() conversationId=''
   @Input() userId=''
-  socketSer = inject(SocketService);
+  private socketSer = inject(SocketService);
 
   // conversationId: string = ''
   // userId: string = ''
   text: string = '';
+  typingTimeout:any;
 
   sendMessage() {
     if (!this.text.trim()) return;
@@ -27,7 +28,8 @@ export class MessageInputComponent {
     this.text = '';
 
     this.socketSer.stopTyping({
-      conversationId:this.conversationId
+      conversationId:this.conversationId,
+      userId : this.userId
     })
   }
 
@@ -36,6 +38,15 @@ export class MessageInputComponent {
       conversationId:this.conversationId,
       userId : this.userId
     })
+
+    clearTimeout(this.typingTimeout);
+
+    this.typingTimeout = setTimeout(()=>{
+      this.socketSer.stopTyping({
+        conversationId:this.conversationId,
+        userId:this.userId
+      })
+    },1000)
   }
 
   handleKey(event:KeyboardEvent){

@@ -20,7 +20,7 @@ async function protect(req, res, next) {
                 token,
                 process.env.JWT_SECRET
             );
-
+            console.log('decoded', decoded)
             // GET USER
             req.user = await User.findById(decoded.id)
                 .select("-password");

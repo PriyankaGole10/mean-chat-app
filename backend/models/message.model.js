@@ -53,6 +53,13 @@ const messageSchema = new mongoose.Schema(
             }
         ],
 
+          deliveredTo: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        ],
+
         replyTo: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Message",

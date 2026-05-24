@@ -58,7 +58,7 @@ export class LoginComponent {
     this.authSer.login(this.loginForm.value).subscribe({
       next: (res: any) => {
         this.authSer.saveToken(res.token);
-        localStorage.setItem('user',JSON.stringify(res.user))
+        sessionStorage.setItem('user',JSON.stringify(res.user))
         this.snackbar.open('Login Success', 'Close', {
           duration: 3000,
           horizontalPosition: 'right',

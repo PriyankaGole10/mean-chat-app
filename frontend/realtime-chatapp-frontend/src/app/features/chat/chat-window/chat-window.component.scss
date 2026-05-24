@@ -76,6 +76,13 @@
   }
 }
 
+.typing {
+  padding: 5px 20px;
+  font-size: 13px;
+  color: #00a884;
+  font-style: italic;
+}
+
 /* MESSAGES */
 
 .messages {
@@ -129,6 +136,10 @@
 
 .mine .message-bubble {
   background: #d9fdd3;
+}
+
+.seen {
+  color: #53bdeb;
 }
 
 /* FOOTER */

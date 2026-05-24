@@ -1,6 +1,7 @@
 <div class="chat-window">
 
-    <!-- EMPTY CHAT -->
+    <!-- EMPTY STATE -->
+
     @if(!conversation){
 
     <div class="empty-chat">
@@ -20,9 +21,11 @@
     }
 
     <!-- ACTIVE CHAT -->
+
     @if(conversation){
 
     <!-- HEADER -->
+
     <div class="chat-header">
 
         <div class="user-info">
@@ -32,10 +35,12 @@
             <div>
 
                 <h3>
+
                     {{
-                    conversation?.participants?.[1]?.user?.username ||
-                    'User'
+                    getOtherUser()?.username
+                    || 'User'
                     }}
+
                 </h3>
 
                 <span class="online">
@@ -49,38 +54,58 @@
     </div>
 
     <!-- MESSAGES -->
+
     <div class="messages" #scrollContainer>
 
-        @for(message of messages; track message._id){
+        @for(
+        message of messages;
+        track message._id
+        ){
 
         <div class="message-wrapper" [class.mine]="isMine(message)">
 
             <div class="message-bubble">
 
                 <p>
+
                     {{ message.text }}
+
                 </p>
 
                 <div class="message-footer">
 
                     <span class="time">
+
                         {{
                         message.createdAt
                         | date:'shortTime'
                         }}
+
                     </span>
 
                     @if(isMine(message)){
 
                     <span class="ticks">
 
-                        @if(message.seen){
-                        ✔✔
-                        }
+                        <span class="ticks">
 
-                        @if(!message.seen){
-                        ✔
-                        }
+                            @if(message.status === 'sent'){
+                            ✔
+                            }
+
+                            @if(message.status === 'delivered'){
+                            ✔✔
+                            }
+
+                            @if(message.status === 'seen'){
+
+                            <span class="seen">
+                                ✔✔
+                            </span>
+
+                            }
+
+                        </span>
 
                     </span>
 
@@ -96,10 +121,11 @@
 
     </div>
 
+    <!-- MESSAGE INPUT -->
+
+    <app-message-input [conversationId]="conversation._id" [userId]="currentUserId" (send)="sendMessage.emit($event)">
+    </app-message-input>
+
     }
 
 </div>
-
-<!-- MESSAGE INPUT -->
-<!-- <app-message-input [conversationId]="conversation._id" [userId]="currentUserId" (send)="sendMessage($event)">
-</app-message-input> -->

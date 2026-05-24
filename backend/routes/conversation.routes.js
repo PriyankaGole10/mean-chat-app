@@ -18,7 +18,7 @@ router.post(
 
 // GET USER CHATS
 router.get(
-    "/get-Conversations",
+    "/getUserConversations",
     protect,
     getUserConversations
 );

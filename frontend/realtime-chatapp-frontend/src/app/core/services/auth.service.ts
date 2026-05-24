@@ -26,11 +26,11 @@ export class AuthService {
     }
 
     saveToken(token:string){
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('token', token);
     }
 
     getToken(){
-        return localStorage.getItem('token');
+        return sessionStorage.getItem('token');
     }
 
     isLoggedIn(){
@@ -38,7 +38,7 @@ export class AuthService {
     }
 
     logout(){
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
     }
 
 

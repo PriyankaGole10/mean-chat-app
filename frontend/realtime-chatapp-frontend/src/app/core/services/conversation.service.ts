@@ -11,8 +11,8 @@ export class ConversationService {
 private http = inject(HttpClient);
 
 
-getAllConversations(){
-return this.http.get(environment.apiUrl + Conversation.getAllConversations)
+getUserConversations(){
+return this.http.get(environment.apiUrl + Conversation.getUserConversations)
 }
 
 

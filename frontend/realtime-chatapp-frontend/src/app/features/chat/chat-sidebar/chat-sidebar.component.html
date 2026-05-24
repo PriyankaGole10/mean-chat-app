@@ -1,1 +1,104 @@
-<p>chat-sidebar works!</p>
+<div class="chat-sidebar">
+
+    <!-- HEADER -->
+
+    <div class="sidebar-header">
+
+        <h2>
+            Chats
+        </h2>
+
+    </div>
+
+
+    <!-- CONVERSATIONS -->
+
+    <div class="conversation-list">
+
+        @for(conversation of conversations; track conversation._id){
+
+        <div
+            class="conversation-item"
+            (click)="selectChat(conversation)"
+        >
+
+            <!-- AVATAR -->
+
+            <div class="avatar-wrapper">
+
+                <img
+                    src="https://i.pravatar.cc/150"
+                    alt="avatar"
+                >
+
+                @if(isOnline(conversation)){
+
+                <div class="online-dot"></div>
+
+                }
+
+            </div>
+
+
+            <!-- INFO -->
+
+            <div class="conversation-info">
+
+                <div class="top-row">
+
+                    <h4>
+
+                        {{
+                        getOtherUser(conversation)?.username
+                        || 'User'
+                        }}
+
+                    </h4>
+
+                    <span class="time">
+
+                        {{
+                        conversation?.lastMessage?.createdAt
+                        | date:'shortTime'
+                        }}
+
+                    </span>
+
+                </div>
+
+
+                <div class="bottom-row">
+
+                    <p>
+
+                        {{
+                        conversation?.lastMessage?.text
+                        || 'No messages yet'
+                        }}
+
+                    </p>
+
+
+                    @if(unreadCounts[conversation._id]){
+
+                    <div class="unread-count">
+
+                        {{
+                        unreadCounts[conversation._id]
+                        }}
+
+                    </div>
+
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+
+</div>

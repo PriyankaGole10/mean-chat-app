@@ -25,7 +25,7 @@ export class SidebarComponent {
   }
 
   logout() {
-    localStorage.clear();
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 

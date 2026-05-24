@@ -67,11 +67,12 @@ async function createOrOpenConversation(req, res) {
 
 // GET USER CONVERSATIONS
 async function getUserConversations(req, res) {
-
+      console.log( ' req.user._id',req.user._id)
     try {
 
         const conversations = await Conversation.find({
             "participants.user": req.user._id
+           
         })
             .populate(
                 "participants.user",

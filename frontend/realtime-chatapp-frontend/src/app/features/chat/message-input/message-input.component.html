@@ -3,12 +3,13 @@
   <input
     [(ngModel)]="text"
     (input)="onTyping()"
-    (keydown)="handleKey($event)"
+    
+    (keyup.enter)="sendMessage()"
     placeholder="Type a message..."
   />
 
   <button (click)="sendMessage()">
-    Send
+        ➤
   </button>
 
 </div>

@@ -11,6 +11,7 @@ import { AuthService } from './core/services/auth.service';
 })
 export class AppComponent {
   title = 'realtime-chatapp-frontend';
+  currentUser = '';
 
 private auth = inject(AuthService);
 
@@ -20,13 +21,14 @@ this.loadUser();
 
 
   loadUser() {
-    if (localStorage.getItem('token')) {
+    if (sessionStorage.getItem('token')) {
       this.auth.getMe().subscribe({
         next: (res: any) => {
           console.log("USER:", res.user);
+          this.currentUser = res.user.username
         },
         error: () => {
-          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
         }
       });
     }

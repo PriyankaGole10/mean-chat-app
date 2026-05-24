@@ -1,35 +1,28 @@
 <div class="chat-layout">
 
-    <!-- LEFT ICON SIDEBAR -->
-    <app-sidebar class="sidebar"></app-sidebar>
+    <!-- LEFT SIDEBAR -->
+
+    <app-sidebar class="sidebar">
+    </app-sidebar>
+
 
     <!-- CHAT LIST -->
-    <app-chat-sidebar
-        [conversations]="conversations"
-        (openChat)="onChatSelected($event)">
+
+    <app-chat-sidebar class="chat-sidebar" 
+    [conversations]="conversations"
+     [onlineUsers]="onlineUsers"
+        [currentUserId]="currentUser._id"
+         [unreadCounts]="unreadCounts" 
+         (openChat)="onChatSelected($event)">
     </app-chat-sidebar>
 
-    <!-- RIGHT CHAT AREA -->
-    <div class="chat-area">
 
-        <!-- CHAT WINDOW -->
-        <app-chat-window
-            [conversation]="selectedConversation"
-            [messages]="messages"
-            [currentUserId]="currentUser?._id">
-        </app-chat-window>
+    <!-- CHAT WINDOW -->
 
-        <!-- MESSAGE INPUT -->
-        @if(selectedConversation){
-
-        <app-message-input
-            [conversationId]="selectedConversation._id"
-            [userId]="currentUser?._id"
-            (send)="sendMessage($event)">
-        </app-message-input>
-
-        }
-
-    </div>
+    <app-chat-window class="chat-window"
+     [conversation]="selectedConversation" [messages]="messages"
+        [currentUserId]="currentUser?._id || ''" 
+        (sendMessage)="sendMessage($event)">
+    </app-chat-window>
 
 </div>
