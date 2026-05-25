@@ -49,11 +49,7 @@ export class MessageInputComponent {
     },1000)
   }
 
-  handleKey(event:KeyboardEvent){
-    if(event.key === 'Enter'){
-      this.sendMessage();
-    }
-  }
+  
 
 
 }

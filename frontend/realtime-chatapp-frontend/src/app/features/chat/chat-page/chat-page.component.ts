@@ -45,6 +45,10 @@ export class ChatPageComponent {
     // SOCKET  CONNECTION WITH USERID
     this.socketSer.connect(this.currentUser._id);
 
+
+    //GET USER CONVERSATIONS
+    this.getUserConversations();
+
     // RECEIVE MESSAGE
     this.socketSer.onMessage((msg) => {
 
@@ -84,17 +88,30 @@ export class ChatPageComponent {
 
     //SEEN
     this.socketSer.onMessageSeen((data: any) => {
-      const msg = this.messages.find(m => m._id === data.messageId);
-      if (msg) {
-        msg.status = 'seen';
-      }
+      // const msg = this.messages.find(m => m._id === data.messageId);
+      // if (msg) {
+      //   msg.status = 'seen';
+      // }
+
+      this.messages = this.messages.map((msg:any)=>{
+        if(msg._id === data.messageId){
+          return{
+            ...msg,
+            status: "seen",
+            seenBy:[
+              ...(msg.seenBy || []),
+              data.userId
+            ]
+          }
+        }
+      })
     })
 
     this.socketSer.onOnlineUsers((users: string[]) => {
       this.onlineUsers = users;
     })
 
-    this.getUserConversations();
+
   }
 
   getUserConversations() {
@@ -110,14 +127,14 @@ export class ChatPageComponent {
   }
 
   calculateunreadCounts() {
-  this.unreadCounts = {};
-  this.conversations.forEach((conversation: any) => {
+    this.unreadCounts = {};
+    this.conversations.forEach((conversation: any) => {
       this.conversationSer.getMessages(conversation._id)
         .subscribe((messages: any) => {
-          const unread =messages.filter((msg: any) =>
-                msg.sender._id !==this.currentUser._id && !msg.seenBy?.includes(
-                  this.currentUser._id
-                )).length;
+          const unread = messages.filter((msg: any) =>
+            msg.sender._id !== this.currentUser._id && !msg.seenBy?.includes(
+              this.currentUser._id
+            )).length;
 
           this.unreadCounts[conversation._id] = unread;
 
@@ -125,23 +142,27 @@ export class ChatPageComponent {
 
     });
 
-}
+  }
 
   onChatSelected(chat: any) {
     this.selectedConversation = chat;
     this.unreadCounts[chat._id] = 0;
     this.socketSer.joinConversation(chat._id);
     this.loadMessages(chat._id);
-    setTimeout(()=>{
-      this.messages.forEach((msg:any) => {
-        if(msg.sender !== this.currentUser._id){
+    setTimeout(() => {
+      this.messages.forEach((msg: any) => {
+        const senderId = msg.sender?._id || msg.sender;
+        if (senderId  !== this.currentUser._id &&  !msg.seenBy?.includes(
+        this.currentUser._id
+      )) {
           this.socketSer.messageSeen({
-           conversationId: chat._id,
-           messageId: msg._id
+            conversationId: chat._id,
+            messageId: msg._id,
+            userId: this.currentUser._id
           })
         }
       })
-    },1000)
+    }, 1000)
   }
 
   loadMessages(id: string) {
@@ -149,6 +170,9 @@ export class ChatPageComponent {
       (res: any) => { this.messages = res }
     )
   }
+
+
+
 
   sendMessage(text: string) {
     if (!text.trim()) return;
@@ -174,14 +198,14 @@ export class ChatPageComponent {
     )
   }
 
-  updateConversationLastMessage(message:any){
-   const index = this.conversations.findIndex(c=> c.id === message.conversation)
-   if(index === -1) return;
+  updateConversationLastMessage(message: any) {
+    const index = this.conversations.findIndex(c => c._id === (message.conversation?._id || message.conversation))
+    if (index === -1) return;
 
-   this.conversations[index].lastMessage = message;
+    this.conversations[index].lastMessage = message;
 
-   const updatedConversation =  this.conversations.splice(index, 1)[0];
-   this.conversations.unshift(updatedConversation)
+    const updatedConversation = this.conversations.splice(index, 1)[0];
+    this.conversations.unshift(updatedConversation)
   }
 
 

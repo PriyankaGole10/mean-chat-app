@@ -10,7 +10,7 @@ const initializeSocket = (server) => {
         }
     });
 
-   
+
 
     io.on("connection", (socket) => {
 
@@ -22,24 +22,13 @@ const initializeSocket = (server) => {
         });
 
         console.log('onlineUsers-2', onlineUsers)
+
         // JOIN ROOM (VERY IMPORTANT)
         socket.on("join-conversation", (conversationId) => {
             socket.join(conversationId);
-            console.log(
-                "JOINED ROOM:",
-                conversationId
-            );
+            console.log("JOINED ROOM:", conversationId);
         });
 
-        // SEND MESSAGE (CORE LOGIC)
-        // socket.on("send-message", (data) => {
-
-        //     const { conversationId } = data;
-
-        //     // broadcast only to that room
-        //     io.to(conversationId).emit("receive-message", data);
-        // });
-      
 
         // TYPING
         socket.on("typing", ({ conversationId, userId }) => {
@@ -55,9 +44,9 @@ const initializeSocket = (server) => {
             });
         });
 
-     
-          socket.on("send-message", (messageData) => {
-            io.to( messageData.conversation).emit(
+
+        socket.on("send-message", (messageData) => {
+            io.to(messageData.conversation).emit(
                 "receive-message",
                 messageData
             );
@@ -79,36 +68,42 @@ const initializeSocket = (server) => {
         });
 
 
-        socket.on("message-seen", async ({ messageId, conversationId }) => {
+        socket.on("message-seen", async ({ messageId, conversationId, userId }) => {
             await Message.findByIdAndUpdate(
                 messageId,
                 {
-                    status: "seen"
+                    status: "seen",
+                    $addToSet: {
+                        seenBy: userId
+                    }
                 }
             );
 
             io.to(conversationId).emit("message-seen", {
-                messageId,
-                status: "seen"
+              
+                    messageId,
+                    userId,
+                    status: "seen"
+            
             })
-        })
-
-
-
-        // DISCONNECT
-        socket.on("disconnect", () => {
-
-            for (let [userId, socketId] of onlineUsers.entries()) {
-                if (socketId === socket.id) {
-                    onlineUsers.delete(userId);
-                    break;
-                }
-            }
-
-            io.emit("online-users", Array.from(onlineUsers.keys()));
-        });
-        console.log('onlineUsers-3', onlineUsers)
     })
+
+
+
+    // DISCONNECT
+    socket.on("disconnect", () => {
+
+        for (let [userId, socketId] of onlineUsers.entries()) {
+            if (socketId === socket.id) {
+                onlineUsers.delete(userId);
+                break;
+            }
+        }
+
+        io.emit("online-users", Array.from(onlineUsers.keys()));
+    });
+    console.log('onlineUsers-3', onlineUsers)
+})
 };
 
 module.exports = initializeSocket;

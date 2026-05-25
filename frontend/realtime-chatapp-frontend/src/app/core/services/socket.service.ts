@@ -126,10 +126,7 @@ export class SocketService {
   }
 
   messageSeen(
-    data: {
-      messageId: string,
-      conversationId: string
-    }
+    data: any
   ) {
 
     this.socket.emit(
