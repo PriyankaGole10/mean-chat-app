@@ -43,9 +43,23 @@
 
                 </h3>
 
+                @if(!typingUser){
+
                 <span class="online">
                     Online
                 </span>
+
+                }
+
+                @if(typingUser){
+
+                <span class="typing-text">
+
+                    {{ typingUser }}
+
+                </span>
+
+                }
 
             </div>
 
@@ -87,27 +101,33 @@
 
                     <span class="ticks">
 
-                        <span class="ticks">
+                        @if(message.status === 'sent'){
 
-                            @if(message.status === 'sent'){
+                        <span class="single-tick">
                             ✔
-                            }
-
-                            @if(message.status === 'delivered'){
-                            ✔✔
-                            }
-
-                            @if(message.status === 'seen'){
-
-                            <span class="seen">
-                                ✔✔
-                            </span>
-
-                            }
-
                         </span>
 
+                        }
+
+                        @if(message.status === 'delivered'){
+
+                        <span class="double-tick">
+                            ✔✔
+                        </span>
+
+                        }
+
+                        @if(message.status === 'seen'){
+
+                        <span class="seen-tick">
+                            ✔✔
+                        </span>
+
+                        }
+
                     </span>
+
+
 
                     }
 

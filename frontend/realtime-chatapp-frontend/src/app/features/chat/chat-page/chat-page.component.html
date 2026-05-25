@@ -21,7 +21,7 @@
 
     <app-chat-window class="chat-window"
      [conversation]="selectedConversation" [messages]="messages"
-        [currentUserId]="currentUser?._id || ''" 
+        [currentUserId]="currentUser?._id || ''"  [typingUser]="typingUser"
         (sendMessage)="sendMessage($event)">
     </app-chat-window>
 

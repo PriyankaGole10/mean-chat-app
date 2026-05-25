@@ -30,6 +30,7 @@ export class ChatWindowComponent {
   @Input() messages: any[] = [];
 
   @Input() currentUserId: string = '';
+  @Input() typingUser:string = ''
 
   @Output() sendMessage =
     new EventEmitter<string>();

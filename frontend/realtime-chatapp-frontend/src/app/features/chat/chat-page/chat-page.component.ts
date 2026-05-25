@@ -57,14 +57,22 @@ export class ChatPageComponent {
       );
 
       if (!exists) {
-
         if (
-          this.selectedConversation &&
-          msg.conversation === this.selectedConversation._id
+          this.selectedConversation && msg.conversation === this.selectedConversation._id
         ) {
-
           this.messages.push(msg);
+          this.socketSer.messageDelivered({
+            messageId: msg._id,
+            conversationId:this.selectedConversation._id
 
+          });
+
+           this.socketSer.messageSeen({
+            messageId: msg._id,
+            conversationId:this.selectedConversation._id,
+            userId:this.currentUser._id
+
+          });
         }
 
       }
@@ -74,16 +82,37 @@ export class ChatPageComponent {
 
     });
 
-    // TYPING
-    this.socketSer.onTyping((data: any) => {
-      this.typingUser = 'Typing...';
-      // this.typingUser = data.userId;
-      console.log('Typing...', data);
+    //DELIVERED MESSAGE
+    this.socketSer.onMessageDelivered((data:any)=>{
+      const msg = this.messages.find(m => m._id === data.messageId);
+      if(msg){
+      msg.status = "delivered";
+      }
     })
 
-    this.socketSer.onStopTyping(() => {
-      this.typingUser = '';
-      console.log('Stop typing');
+    // TYPING
+   this.socketSer.onTyping((data:any)=>{
+    if(this.selectedConversation?._id ===data.conversationId){
+
+      const conversation = this.conversations.find(c => c._id === data.conversationId);
+
+      const typinguser = conversation?.participants?.find( (p:any)=>
+          p.user._id !==
+          this.currentUser._id
+      );
+
+      this.typingUser = typinguser?.user?.username + " typing...";
+      // console.log('typingUser',this.typingUser)
+    }
+
+  }
+
+);
+
+    this.socketSer.onStopTyping((data:any) => {
+     if(  this.selectedConversation?._id === data.conversationId){
+       this.typingUser = '';
+     }
     })
 
     //SEEN
@@ -93,12 +122,12 @@ export class ChatPageComponent {
       //   msg.status = 'seen';
       // }
 
-      this.messages = this.messages.map((msg:any)=>{
-        if(msg._id === data.messageId){
-          return{
+      this.messages = this.messages.map((msg: any) => {
+        if (msg._id === data.messageId) {
+          return {
             ...msg,
             status: "seen",
-            seenBy:[
+            seenBy: [
               ...(msg.seenBy || []),
               data.userId
             ]
@@ -152,9 +181,9 @@ export class ChatPageComponent {
     setTimeout(() => {
       this.messages.forEach((msg: any) => {
         const senderId = msg.sender?._id || msg.sender;
-        if (senderId  !== this.currentUser._id &&  !msg.seenBy?.includes(
-        this.currentUser._id
-      )) {
+        if (senderId !== this.currentUser._id && !msg.seenBy?.includes(
+          this.currentUser._id
+        )) {
           this.socketSer.messageSeen({
             conversationId: chat._id,
             messageId: msg._id,
