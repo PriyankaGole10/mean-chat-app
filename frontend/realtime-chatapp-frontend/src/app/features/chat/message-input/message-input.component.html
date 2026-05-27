@@ -1,4 +1,6 @@
-<!-- FILE PREVIEW -->
+<!-- =========================
+     FILE PREVIEW
+========================= -->
 
 @if(selectedFiles.length){
 
@@ -8,46 +10,52 @@
 
   <div class="file-chip">
 
-    @if(
-  isImageFile(file)
-    ){
+    @if(isImageFile(file.file)){
 
       <img
-        [src]="getFilePreview(file)"
+        [src]="file.preview"
         class="preview-image"
       >
 
-    } @else if(file?.type === 'application/pdf'){
-
-      <mat-icon>
-        picture_as_pdf
-      </mat-icon>
-
-    } @else if(file?.type?.startsWith('video/')){
-
-      <mat-icon>
-        video_file
-      </mat-icon>
-
-    } @else if(file?.type?.startsWith('audio/')){
-
-      <mat-icon>
-        audio_file
-      </mat-icon>
-
     } @else {
 
-      <mat-icon>
-        description
-      </mat-icon>
+      <div class="file-icon">
+
+        @if(file.file?.type === 'application/pdf'){
+
+          <mat-icon class="pdf-icon">
+            picture_as_pdf
+          </mat-icon>
+
+        } @else if(file.file?.type?.startsWith('video/')){
+
+          <mat-icon class="video-icon">
+            video_file
+          </mat-icon>
+
+        } @else if(file.file?.type?.startsWith('audio/')){
+
+          <mat-icon class="audio-icon">
+            audio_file
+          </mat-icon>
+
+        } @else {
+
+          <mat-icon class="doc-icon">
+            description
+          </mat-icon>
+
+        }
+
+      </div>
 
     }
 
-    <span class="file-name">
+    <div class="file-name">
 
-      {{ file.name }}
+      {{ file.file.name }}
 
-    </span>
+    </div>
 
     <button
       type="button"
@@ -67,7 +75,9 @@
 
 }
 
-<!-- INPUT CONTAINER -->
+<!-- =========================
+     MESSAGE INPUT
+========================= -->
 
 <div class="message-input-container">
 

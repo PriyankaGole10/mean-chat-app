@@ -5,104 +5,113 @@ const uploadToCloudinary = require("../utils/uploadToCloudinary");
 // SEND MESSAGE
 async function sendMessage(req, res) {
 
-    try {
+  try {
 
-        const {
-            conversationId,
-            text,
-            messageType,
-            replyTo
-        } = req.body;
+    const {
+      conversationId,
+      text,
+      messageType,
+      replyTo
+    } = req.body;
 
-        let mediaUrl = "";
-        let fileType  = "";
-        let fileName  = "";
+    let mediaUrls = [];
 
-        //FILE UPLOAD
-        if(req.file){
-            const result = await uploadToCloudinary(req.file.buffer);
-            mediaUrl = result.secure_url;
-            fileType = req.file.mimetype;
-            fileName = req.file.originalname;
-        }
+    // FILE UPLOAD
+    if (req.files && req.files.length) {
 
-        // CREATE MESSAGE
-        const message = await Message.create({
+      for (const file of req.files) {
 
-            sender: req.user._id,
-            conversation: conversationId,
-
-            text,
-
-            messageType: messageType || "text",
-
-            mediaUrl: mediaUrl || "",
-            fileType,
-            fileName,
-
-            replyTo: replyTo || null,
-
-            seenBy: [req.user._id]
-        });
-
-        // UPDATE CONVERSATION
-        await Conversation.findByIdAndUpdate(
-            conversationId,
-            {
-                lastMessage: message._id,
-                lastActivity: new Date()
-            }
+        const result = await uploadToCloudinary(
+          file.buffer,
+          file.mimetype
         );
 
-        // POPULATE
-        const populatedMessage = await Message.findById(message._id)
-            .populate(
-                "sender",
-                "username avatar online"
-            )
-            .populate(
-                "replyTo"
-            );
+        mediaUrls.push({
 
-        res.status(201).json(populatedMessage);
+          fileUrl: result.secure_url,
 
-    } catch (error) {
+          fileType: file.mimetype,
 
-        res.status(500).json({
-            message: error.message
+          fileName: file.originalname, // FIXED
+
+          resourceType: result.resource_type,
+
+          publicId: result.public_id,
+
+          format: result.format,
+
+          bytes: result.bytes
+
         });
+
+      }
     }
+
+    // CREATE MESSAGE
+    const message = await Message.create({
+
+      sender: req.user._id,
+      conversation: conversationId,
+      text: text || "",
+      messageType: messageType || "text",
+      mediaUrls,
+      replyTo: replyTo || null,
+      seenBy: [req.user._id]
+
+    });
+
+    // UPDATE CONVERSATION
+    await Conversation.findByIdAndUpdate(
+      conversationId,
+      {
+        lastMessage: message._id,
+        lastActivity: new Date()
+      }
+    );
+
+    // POPULATE
+    const populatedMessage = await Message.findById(message._id)
+      .populate("sender", "username avatar online")
+      .populate("replyTo");
+
+    res.status(201).json(populatedMessage);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
 }
 
 // GET MESSAGES
 async function getMessages(req, res) {
 
-    try {
+  try {
 
-        const { conversationId } = req.params;
+    const { conversationId } = req.params;
 
-        const messages = await Message.find({
-            conversation: conversationId,
-            isDeleted: false
-        })
-            .populate(
-                "sender",
-                "username avatar"
-            )
-            .populate("replyTo")
-            .sort({ createdAt: 1 });
+    const messages = await Message.find({
+      conversation: conversationId,
+      isDeleted: false
+    })
+      .populate("sender", "username avatar")
+      .populate("replyTo")
+      .sort({ createdAt: 1 });
 
-        res.status(200).json(messages);
+    res.status(200).json(messages);
 
-    } catch (error) {
+  } catch (error) {
 
-        res.status(500).json({
-            message: error.message
-        });
-    }
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
 }
 
 module.exports = {
-    sendMessage,
-    getMessages
+  sendMessage,
+  getMessages
 };

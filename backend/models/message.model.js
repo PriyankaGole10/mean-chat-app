@@ -46,10 +46,13 @@ const messageSchema = new mongoose.Schema(
             default: ""
         },
 
-        mediaUrl: {
-            type: String,
-            default: ""
-        },
+        mediaUrls: [
+            {
+                fileUrl : String,
+                fileType: String,
+                fileName: String
+            }
+        ],
 
         status: {
             type: String,

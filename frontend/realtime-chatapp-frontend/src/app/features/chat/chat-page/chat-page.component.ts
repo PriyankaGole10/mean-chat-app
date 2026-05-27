@@ -203,19 +203,9 @@ export class ChatPageComponent {
 
 
 
-  sendMessage(text: string) {
-    if (!text.trim()) return;
-    const payload = {
-      conversationId: this.selectedConversation._id,
-      // sender: this.currentUser._id,
-      messageType: 'text',
-      text
-    };
-    // this.messages.push(message);
-    // this.socketSer.sendMessage(message);
-
+  sendMessage(formData: FormData) {
     // SAVE MESSAGE IN DB
-    this.conversationSer.sendMessages(payload).subscribe(
+    this.conversationSer.sendMessages(formData).subscribe(
       (res: any) => {
         this.messages.push(res);
         this.socketSer.sendMessage(res);

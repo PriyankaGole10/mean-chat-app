@@ -7,15 +7,19 @@ import {
   ViewChild
 } from '@angular/core';
 
-import { DatePipe } from '@angular/common';
+import {
+  CommonModule,
+  DatePipe
+} from '@angular/common';
 
 import { MessageInputComponent }
-from "../message-input/message-input.component";
+from '../message-input/message-input.component';
 
 @Component({
   selector: 'app-chat-window',
   standalone: true,
   imports: [
+    CommonModule,
     DatePipe,
     MessageInputComponent
   ],
@@ -30,30 +34,33 @@ export class ChatWindowComponent {
   @Input() messages: any[] = [];
 
   @Input() currentUserId: string = '';
-  @Input() typingUser:string = ''
+
+  @Input() typingUser: string = '';
 
   @Output() sendMessage =
-    new EventEmitter<string>();
+    new EventEmitter<FormData>();
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef;
 
-  ngAfterViewChecked() {
+  ngAfterViewChecked(){
+
     this.scrollToBottom();
+
   }
 
-  scrollToBottom() {
+  scrollToBottom(){
 
-    try {
+    try{
 
       this.scrollContainer.nativeElement.scrollTop =
       this.scrollContainer.nativeElement.scrollHeight;
 
-    } catch (error) {}
+    }catch(error){}
 
   }
 
-  isMine(message: any): boolean {
+  isMine(message:any):boolean{
 
     return (
       message.sender === this.currentUserId
@@ -63,12 +70,58 @@ export class ChatWindowComponent {
 
   }
 
-  getOtherUser() {
+  getOtherUser(){
 
-  return this.conversation?.participants?.find(
-    (p: any) => p.user._id !== this.currentUserId
-  )?.user;
+    return this.conversation?.participants?.find(
+      (p:any) => p.user._id !== this.currentUserId
+    )?.user;
 
+  }
+
+ getDownloadUrl(media: any) {
+
+  if (!media?.fileUrl) return '';
+
+  const url = media.fileUrl;
+
+  if (media.resourceType === 'raw' || url.includes('/raw/upload/')) {
+    return url.replace('/raw/upload/', '/raw/upload/fl_attachment/');
+  }
+
+  if (media.resourceType === 'video' || url.includes('/video/upload/')) {
+    return url.replace('/video/upload/', '/video/upload/fl_attachment/');
+  }
+
+  return url.replace('/image/upload/', '/image/upload/fl_attachment/');
 }
+
+  openFile(url:string){
+
+    window.open(url, '_blank');
+
+  }
+
+  formatBytes(bytes:number){
+
+    if(!bytes) return '';
+
+    const sizes = [
+      'Bytes',
+      'KB',
+      'MB',
+      'GB'
+    ];
+
+    const i = Math.floor(
+      Math.log(bytes) / Math.log(1024)
+    );
+
+    return (
+      (bytes / Math.pow(1024, i)).toFixed(1)
+      + ' ' +
+      sizes[i]
+    );
+
+  }
 
 }

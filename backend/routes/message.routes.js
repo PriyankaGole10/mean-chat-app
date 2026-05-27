@@ -15,7 +15,7 @@ const {
 router.post(
     "/send-message",
     protect,
-    upload.single("file"),
+    upload.array("files",10),
     sendMessage
 );
 
@@ -25,6 +25,7 @@ router.get(
     protect,
     getMessages
 );
+
 
 
 
