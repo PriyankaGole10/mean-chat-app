@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/auth.middleware");
+const upload = require("../middleware/upload-multer.middleware");
+
 
 const {
     sendMessage,
@@ -13,6 +15,7 @@ const {
 router.post(
     "/send-message",
     protect,
+    upload.single("file"),
     sendMessage
 );
 
@@ -22,6 +25,8 @@ router.get(
     protect,
     getMessages
 );
+
+
 
 // FUTURE FEATURES
 // router.put("/edit/:messageId")

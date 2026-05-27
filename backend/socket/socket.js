@@ -21,12 +21,12 @@ const initializeSocket = (server) => {
             io.emit("online-users", Array.from(onlineUsers.keys()));
         });
 
-        console.log('onlineUsers-2', onlineUsers)
+        // console.log('onlineUsers-2', onlineUsers)
 
         // JOIN ROOM (VERY IMPORTANT)
         socket.on("join-conversation", (conversationId) => {
             socket.join(conversationId);
-            console.log("JOINED ROOM:", conversationId);
+            // console.log("JOINED ROOM:", conversationId);
         });
 
 
@@ -102,7 +102,7 @@ const initializeSocket = (server) => {
 
         io.emit("online-users", Array.from(onlineUsers.keys()));
     });
-    console.log('onlineUsers-3', onlineUsers)
+    // console.log('onlineUsers-3', onlineUsers)
 })
 };
 

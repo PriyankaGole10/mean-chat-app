@@ -1,5 +1,6 @@
 const Message = require("../models/message.model");
 const Conversation = require("../models/conversation.model");
+const uploadToCloudinary = require("../utils/uploadToCloudinary");
 
 // SEND MESSAGE
 async function sendMessage(req, res) {
@@ -10,9 +11,20 @@ async function sendMessage(req, res) {
             conversationId,
             text,
             messageType,
-            mediaUrl,
             replyTo
         } = req.body;
+
+        let mediaUrl = "";
+        let fileType  = "";
+        let fileName  = "";
+
+        //FILE UPLOAD
+        if(req.file){
+            const result = await uploadToCloudinary(req.file.buffer);
+            mediaUrl = result.secure_url;
+            fileType = req.file.mimetype;
+            fileName = req.file.originalname;
+        }
 
         // CREATE MESSAGE
         const message = await Message.create({
@@ -25,6 +37,8 @@ async function sendMessage(req, res) {
             messageType: messageType || "text",
 
             mediaUrl: mediaUrl || "",
+            fileType,
+            fileName,
 
             replyTo: replyTo || null,
 

@@ -1,15 +1,122 @@
-<div class="input-box">
+<!-- FILE PREVIEW -->
+
+@if(selectedFiles.length){
+
+<div class="file-preview-container">
+
+  @for(file of selectedFiles; track file){
+
+  <div class="file-chip">
+
+    @if(
+  isImageFile(file)
+    ){
+
+      <img
+        [src]="getFilePreview(file)"
+        class="preview-image"
+      >
+
+    } @else if(file?.type === 'application/pdf'){
+
+      <mat-icon>
+        picture_as_pdf
+      </mat-icon>
+
+    } @else if(file?.type?.startsWith('video/')){
+
+      <mat-icon>
+        video_file
+      </mat-icon>
+
+    } @else if(file?.type?.startsWith('audio/')){
+
+      <mat-icon>
+        audio_file
+      </mat-icon>
+
+    } @else {
+
+      <mat-icon>
+        description
+      </mat-icon>
+
+    }
+
+    <span class="file-name">
+
+      {{ file.name }}
+
+    </span>
+
+    <button
+      type="button"
+      class="remove-btn"
+      (click)="removeFile(file)"
+    >
+
+      ✕
+
+    </button>
+
+  </div>
+
+  }
+
+</div>
+
+}
+
+<!-- INPUT CONTAINER -->
+
+<div class="message-input-container">
+
+  <!-- HIDDEN FILE INPUT -->
 
   <input
+    type="file"
+    hidden
+    multiple
+    #fileInput
+    (change)="onFileSelected($event)"
+  >
+
+  <!-- ATTACH BUTTON -->
+
+  <button
+    type="button"
+    class="icon-btn"
+    (click)="fileInput.click()"
+  >
+
+    <mat-icon>
+      attach_file
+    </mat-icon>
+
+  </button>
+
+  <!-- TEXT INPUT -->
+
+  <input
+    type="text"
     [(ngModel)]="text"
     (input)="onTyping()"
-    
     (keyup.enter)="sendMessage()"
-    placeholder="Type a message..."
-  />
+    placeholder="Type a message"
+  >
 
-  <button (click)="sendMessage()">
-        ➤
+  <!-- SEND BUTTON -->
+
+  <button
+    type="button"
+    class="send-btn"
+    (click)="sendMessage()"
+  >
+
+    <mat-icon>
+      send
+    </mat-icon>
+
   </button>
 
 </div>

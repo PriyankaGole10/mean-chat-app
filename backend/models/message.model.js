@@ -31,6 +31,21 @@ const messageSchema = new mongoose.Schema(
             default: "text"
         },
 
+        fileUrl: {
+            type: String,
+            default: ""
+        },
+
+        fileType: {
+            type: String,
+            default: ""
+        },
+
+        fileName: {
+            type: String,
+            default: ""
+        },
+
         mediaUrl: {
             type: String,
             default: ""
@@ -53,7 +68,7 @@ const messageSchema = new mongoose.Schema(
             }
         ],
 
-          deliveredTo: [
+        deliveredTo: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User"
