@@ -229,4 +229,18 @@ export class ChatPageComponent {
 
 
 
+  createConversation(user:any){
+    this.conversationSer.createConversations(user._id).subscribe({
+         next:(conversation:any)=>{
+          this.selectedConversation = conversation;
+          this.onChatSelected(conversation);
+          this.loadMessages(conversation._id);
+          this.getUserConversations();
+         },
+         error:(err)=>{
+          console.error(err)
+         }
+    })
+  }
+
 }

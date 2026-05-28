@@ -6,13 +6,18 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule,MatIconModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
 
-  router = inject(Router)
+  router = inject(Router);
+  showProfile: boolean = false;
+  currentUser =
+    JSON.parse(
+      sessionStorage.getItem('user') || '{}'
+    );
 
   menus = [
     { icon: 'chat', label: 'Chats', route: '/chat' },
@@ -27,6 +32,11 @@ export class SidebarComponent {
   logout() {
     sessionStorage.clear();
     this.router.navigate(['/login']);
+  }
+
+  toggleProfile() {
+    this.showProfile =
+      !this.showProfile;
   }
 
 }

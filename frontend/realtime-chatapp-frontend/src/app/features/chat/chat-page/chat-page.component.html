@@ -13,7 +13,9 @@
      [onlineUsers]="onlineUsers"
         [currentUserId]="currentUser._id"
          [unreadCounts]="unreadCounts" 
-         (openChat)="onChatSelected($event)">
+         (openChat)="onChatSelected($event)"
+         (createChat)="createConversation($event)"
+          [selectedConversationId]="selectedConversation?._id">
     </app-chat-sidebar>
 
 

@@ -1,39 +1,136 @@
 <div class="sidebar">
 
-  <!-- PROFILE -->
+  <!-- TOP -->
+
   <div class="sidebar-top">
 
-    <div class="profile">
-      <img src="https://i.pravatar.cc/150" />
+    <!-- PROFILE -->
+
+    <div
+      class="profile-wrapper"
+      (click)="toggleProfile()"
+    >
+
+      <img
+        src="https://i.pravatar.cc/150"
+        alt="profile"
+      >
+
+      <div class="online-dot"></div>
+
     </div>
 
   </div>
 
-  <!-- MENU -->
+  <!-- MENUS -->
+
   <div class="menus">
 
-    @for (menu of menus; track menu.label) {
+    @for(menu of menus; track menu.label){
 
-      <div class="menu-item"
-           (click)="navigate(menu.route)">
+      <div
+        class="menu-item"
+        (click)="navigate(menu.route)"
+      >
 
-        <mat-icon>{{ menu.icon }}</mat-icon>
+        <mat-icon>
+          {{ menu.icon }}
+        </mat-icon>
 
-        <span>{{ menu.label }}</span>
+        <span>
+          {{ menu.label }}
+        </span>
 
       </div>
 
     }
 
-    <!-- LOGOUT -->
-    <div class="menu-item logout"
-         (click)="logout()">
+  </div>
 
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
+  <!-- BOTTOM -->
+
+  <div class="sidebar-bottom">
+
+    <div
+      class="menu-item logout"
+      (click)="logout()"
+    >
+
+      <mat-icon>
+        logout
+      </mat-icon>
+
+      <span>
+        Logout
+      </span>
 
     </div>
 
   </div>
+
+  <!-- PROFILE POPUP -->
+
+  @if(showProfile){
+
+    <div class="profile-popup">
+
+      <div class="popup-header">
+
+        <img
+          src="https://i.pravatar.cc/150"
+          alt="profile"
+        >
+
+        <div>
+
+          <h3>
+
+            {{ currentUser?.username }}
+
+          </h3>
+
+          <p>
+
+            {{ currentUser?.email }}
+
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="popup-body">
+
+        <div class="info-row">
+
+          <span class="label">
+            Status
+          </span>
+
+          <span class="value online">
+            Online
+          </span>
+
+        </div>
+
+        <div class="info-row">
+
+          <span class="label">
+            User ID
+          </span>
+
+          <span class="value">
+
+            {{ currentUser?._id }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
 
 </div>

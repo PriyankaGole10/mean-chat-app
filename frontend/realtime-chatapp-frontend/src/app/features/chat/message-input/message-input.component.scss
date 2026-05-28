@@ -2,208 +2,167 @@
    FILE PREVIEW CONTAINER
 ========================= */
 
-.file-preview-container {
-
-  display: flex;
-
-  gap: 12px;
-
-  padding: 12px;
-
-  overflow-x: auto;
-
-  background: #f0f2f5;
-
-  border-top: 1px solid #dcdcdc;
-
-  scrollbar-width: none;
+.file-preview-container{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  overflow-x:auto;
+  background:#f0f2f5;
+  border-top:1px solid #dcdcdc;
+  scrollbar-width:none;
+  flex-shrink:0;
 }
 
 .file-preview-container::-webkit-scrollbar{
-  display: none;
+  display:none;
 }
 
 /* =========================
    FILE CHIP
 ========================= */
 
-.file-chip {
-
-  position: relative;
-
-  width: 110px;
-
-  min-width: 110px;
-
-  background: white;
-
-  border-radius: 14px;
-
-  overflow: hidden;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-
-  flex-shrink: 0;
-
-  transition: 0.2s;
+.file-chip{
+  position:relative;
+  width:110px;
+  min-width:110px;
+  background:white;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  flex-shrink:0;
+  transition:0.2s;
 }
 
 .file-chip:hover{
-
-  transform: translateY(-2px);
+  transform:translateY(-2px);
 }
 
 /* =========================
    IMAGE
 ========================= */
 
-.preview-image {
-
-  width: 100%;
-
-  height: 100px;
-
-  object-fit: cover;
-
-  display: block;
+.preview-image{
+  width:100%;
+  height:100px;
+  object-fit:cover;
+  display:block;
 }
 
 /* =========================
    FILE ICON AREA
 ========================= */
 
-.file-icon {
-
-  width: 100%;
-
-  height: 100px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  background: #f7f7f7;
+.file-icon{
+  width:100%;
+  height:100px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f7f7f7;
 }
 
-.file-icon mat-icon {
-
-  font-size: 44px;
-
-  width: 44px;
-
-  height: 44px;
+.file-icon mat-icon{
+  font-size:44px;
+  width:44px;
+  height:44px;
 }
 
 /* ICON COLORS */
 
 .pdf-icon{
-  color: #e53935;
+  color:#e53935;
 }
 
 .video-icon{
-  color: #8e24aa;
+  color:#8e24aa;
 }
 
 .audio-icon{
-  color: #039be5;
+  color:#039be5;
 }
 
 .doc-icon{
-  color: #00a884;
+  color:#00a884;
 }
 
 /* =========================
    FILE NAME
 ========================= */
 
-.file-name {
-
-  padding: 8px;
-
-  font-size: 12px;
-
-  text-align: center;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  color: #111b21;
+.file-name{
+  padding:8px;
+  font-size:12px;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#111b21;
 }
 
 /* =========================
    REMOVE BUTTON
 ========================= */
 
-.remove-btn {
-
-  position: absolute;
-
-  top: 6px;
-
-  right: 6px;
-
-  width: 22px;
-
-  height: 22px;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: rgba(0,0,0,0.6);
-
-  color: white;
-
-  cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 12px;
+.remove-btn{
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:22px;
+  height:22px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,0.6);
+  color:white;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
 }
 
 /* =========================
    INPUT CONTAINER
 ========================= */
 
-.message-input-container {
+.message-input-container{
+  display:flex;
+  align-items:center;
+  gap:10px;
 
-  display: flex;
+  padding:10px 15px;
 
-  align-items: center;
+  background:#f0f2f5;
 
-  gap: 10px;
+  width:100%;
+  min-width:0;
 
-  padding: 10px 15px;
+  flex-shrink:0;
 
-  background: #f0f2f5;
+  border-top:1px solid #dcdcdc;
+
+  overflow:hidden;
 }
 
-/* TEXT INPUT */
+/* =========================
+   TEXT INPUT
+========================= */
 
-.message-input-container input {
+.message-input-container input{
+  flex:1;
+  min-width:0;
 
-  flex: 1;
+  border:none;
+  outline:none;
 
-  border: none;
+  padding:12px 16px;
 
-  outline: none;
+  border-radius:25px;
 
-  padding: 12px 16px;
+  background:white;
 
-  border-radius: 25px;
+  font-size:14px;
 
-  background: white;
-
-  font-size: 14px;
+  height:46px;
 }
 
 /* =========================
@@ -211,45 +170,105 @@
 ========================= */
 
 .icon-btn,
-.send-btn {
+.send-btn{
 
-  width: 42px;
+  width:46px;
+  height:46px;
 
-  height: 42px;
+  min-width:46px;
+  min-height:46px;
 
-  border: none;
+  flex-shrink:0;
 
-  border-radius: 50%;
+  border:none;
+  border-radius:50%;
 
-  display: flex;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  align-items: center;
+  cursor:pointer;
 
-  justify-content: center;
+  transition:0.2s;
 
-  cursor: pointer;
+  padding:0;
 }
 
-/* ATTACH */
+/* =========================
+   ICON SIZE
+========================= */
 
-.icon-btn {
+.icon-btn mat-icon,
+.send-btn mat-icon{
 
-  background: transparent;
+  font-size:22px;
+
+  width:22px;
+  height:22px;
+
+  line-height:22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.icon-btn mat-icon {
+/* =========================
+   ATTACH BUTTON
+========================= */
 
-  color: #54656f;
+.icon-btn{
+  background:transparent;
 }
 
-/* SEND */
-
-.send-btn {
-
-  background: #00a884;
+.icon-btn:hover{
+  background:#e4e6e9;
 }
 
-.send-btn mat-icon {
+.icon-btn mat-icon{
+  color:#54656f;
+}
 
-  color: white;
+/* =========================
+   SEND BUTTON
+========================= */
+
+.send-btn{
+  background:#00a884;
+}
+
+.send-btn:hover{
+  background:#029b79;
+}
+
+.send-btn mat-icon{
+  color:white;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .message-input-container{
+    padding:8px 10px;
+    gap:8px;
+  }
+
+  .message-input-container input{
+    font-size:13px;
+    height:42px;
+  }
+
+  .icon-btn,
+  .send-btn{
+
+    width:42px;
+    height:42px;
+
+    min-width:42px;
+    min-height:42px;
+  }
+
 }

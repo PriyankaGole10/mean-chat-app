@@ -1,8 +1,11 @@
 .chat-window{
   height:100vh;
+  width:100%;
+  min-width:0;
   display:flex;
   flex-direction:column;
   background:#efeae2;
+  overflow:hidden;
 }
 
 /* HEADER */
@@ -14,6 +17,7 @@
   display:flex;
   align-items:center;
   padding:0 20px;
+  flex-shrink:0;
 }
 
 .user-info{
@@ -26,6 +30,13 @@
   width:45px;
   height:45px;
   border-radius:50%;
+  object-fit:cover;
+}
+
+.user-info h3{
+  margin:0;
+  font-size:16px;
+  color:#111b21;
 }
 
 .online{
@@ -44,10 +55,13 @@
 .messages{
   flex:1;
   overflow-y:auto;
+  overflow-x:hidden;
   padding:20px;
   display:flex;
   flex-direction:column;
   gap:10px;
+  min-width:0;
+  scroll-behavior:smooth;
 }
 
 .message-wrapper{
@@ -60,7 +74,7 @@
 }
 
 .message-bubble{
-  max-width:340px;
+  max-width:min(340px, 100%);
   background:white;
   border-radius:14px;
   padding:8px;
@@ -68,6 +82,7 @@
   flex-direction:column;
   gap:6px;
   box-shadow:0 1px 2px rgba(0,0,0,0.08);
+  overflow:hidden;
 }
 
 .mine .message-bubble{
@@ -78,6 +93,7 @@
   margin:0;
   font-size:15px;
   word-break:break-word;
+  color:#111b21;
 }
 
 /* MEDIA */
@@ -93,16 +109,19 @@
 .image-wrapper{
   position:relative;
   width:fit-content;
+  max-width:100%;
 }
 
 .chat-image{
-  width:260px;
-  max-width:100%;
+  width:100%;
+  max-width:260px;
   border-radius:12px;
   object-fit:cover;
   cursor:pointer;
   display:block;
 }
+
+/* DOWNLOAD BUTTON */
 
 .download-btn{
   position:absolute;
@@ -129,8 +148,8 @@
 /* VIDEO */
 
 .chat-video{
-  width:260px;
-  max-width:100%;
+  width:100%;
+  max-width:260px;
   border-radius:12px;
   background:black;
 }
@@ -138,8 +157,8 @@
 /* AUDIO */
 
 audio{
-  width:260px;
-  max-width:100%;
+  width:100%;
+  max-width:260px;
 }
 
 /* FILE */
@@ -154,6 +173,7 @@ audio{
   text-decoration:none;
   color:#111b21;
   min-width:220px;
+  max-width:260px;
 }
 
 .file-link:hover{
@@ -169,6 +189,7 @@ audio{
   align-items:center;
   justify-content:center;
   font-size:20px;
+  flex-shrink:0;
 }
 
 .file-details{
@@ -195,6 +216,7 @@ audio{
 .message-footer{
   display:flex;
   justify-content:flex-end;
+  align-items:center;
   gap:5px;
   margin-top:2px;
 }
@@ -215,9 +237,54 @@ audio{
   font-size:12px;
 }
 
+/* EMPTY CHAT */
+
+.empty-chat{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  color:#667781;
+}
+
+.empty-chat img{
+  width:120px;
+  opacity:0.8;
+}
+
+.empty-chat h2{
+  margin:0;
+  color:#111b21;
+}
+
+.empty-chat p{
+  margin:0;
+}
+
+/* SCROLLBAR */
+
+.messages::-webkit-scrollbar{
+  width:6px;
+}
+
+.messages::-webkit-scrollbar-thumb{
+  background:#c1c1c1;
+  border-radius:10px;
+}
+
 /* MOBILE */
 
 @media(max-width:768px){
+
+  .chat-header{
+    padding:0 14px;
+  }
+
+  .messages{
+    padding:14px;
+  }
 
   .message-bubble{
     max-width:85%;
@@ -225,8 +292,10 @@ audio{
 
   .chat-image,
   .chat-video,
-  audio{
+  audio,
+  .file-link{
     width:100%;
+    max-width:100%;
   }
 
 }

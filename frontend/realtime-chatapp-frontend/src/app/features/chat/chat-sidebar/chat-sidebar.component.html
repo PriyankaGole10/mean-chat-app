@@ -10,26 +10,52 @@
 
     </div>
 
+    <!-- SEARCH -->
+
+    <div class="search-container">
+
+        <input type="text" [(ngModel)]="searchText" (input)="onSearch()" placeholder="Search users...">
+
+    </div>
+
+    <div class="search-results">
+
+        @for(user of searchedUsers; track user._id){
+
+        <div class="search-user" (click)="startChat(user)">
+
+            <img src="https://i.pravatar.cc/150">
+
+            <span>
+
+                {{ user.username }}
+
+            </span>
+
+        </div>
+
+        }
+
+    </div>
+
 
     <!-- CONVERSATIONS -->
 
     <div class="conversation-list">
 
-        @for(conversation of conversations; track conversation._id){
+        @for(
+        conversation of conversations;
+        track conversation._id
+        ){
 
-        <div
-            class="conversation-item"
-            (click)="selectChat(conversation)"
-        >
+        <div class="conversation-item" [class.active]="selectedConversationId === conversation._id"
+            (click)="selectChat(conversation)">
 
             <!-- AVATAR -->
 
             <div class="avatar-wrapper">
 
-                <img
-                    src="https://i.pravatar.cc/150"
-                    alt="avatar"
-                >
+                <img src="https://i.pravatar.cc/150" alt="avatar">
 
                 @if(isOnline(conversation)){
 
@@ -38,7 +64,6 @@
                 }
 
             </div>
-
 
             <!-- INFO -->
 
@@ -66,7 +91,6 @@
 
                 </div>
 
-
                 <div class="bottom-row">
 
                     <p>
@@ -77,7 +101,6 @@
                         }}
 
                     </p>
-
 
                     @if(unreadCounts[conversation._id]){
 
