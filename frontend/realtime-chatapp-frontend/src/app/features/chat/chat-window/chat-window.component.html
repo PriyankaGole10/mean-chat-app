@@ -1,231 +1,507 @@
+
 <div class="chat-window">
 
   @if(conversation){
+
+    <!-- HEADER -->
+
+    <div class="chat-header">
+
+      <div class="user-info">
+
+        @if(conversation.isGroup){
+
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png"
+            alt="group"
+          >
+
+        } @else {
+
+          <img
+            src="https://i.pravatar.cc/150"
+            alt="user"
+          >
+
+        }
+
+        <div class="user-details">
+
+          <h3>
+
+            {{
+              conversation.isGroup
+              ? conversation.groupName
+              : getOtherUser()?.username
+            }}
+
+          </h3>
+
+          @if(!conversation.isGroup){
+
+            @if(typingUser){
+
+              <span class="typing-text">
+
+                typing...
+
+              </span>
+
+            } @else {
+
+              <span class="online">
+
+                online
+
+              </span>
+
+            }
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- MESSAGES -->
 
     <div
       class="messages"
       #scrollContainer
     >
 
-      @for(message of messages; track message._id){
+      @for(
 
-        <div
-          class="message-wrapper"
-          [class.mine]="isMine(message)"
-        >
+        message of messages;
 
-          <div class="message-bubble">
+        track trackMessage(
+          i,
+          message
+        );
 
-            <!-- TEXT -->
+        let i = $index
 
-            @if(message.text){
+      ){
 
-              <p class="message-text">
+        @if(message){
 
-                {{ message.text }}
+          <!-- DATE SEPARATOR -->
 
-              </p>
+          @if(
 
-            }
+            i === 0
 
-            <!-- MEDIA -->
+            ||
 
-            @if(message.mediaUrls?.length){
+            (
 
-              <div class="media-container">
+              (
+                messages[i - 1]?.createdAt
+                | date:'dd/MM/yyyy'
+              )
 
-                @for(media of message.mediaUrls; track media._id){
+              !==
 
-                  <!-- IMAGE -->
+              (
+                message?.createdAt
+                | date:'dd/MM/yyyy'
+              )
 
-                  <ng-container
-                    *ngIf="media.fileType?.startsWith('image/')"
-                  >
+            )
 
-                    <div class="image-wrapper">
+          ){
 
-                      <img
-                        [src]="media.fileUrl"
-                        class="chat-image"
-                        (click)="openFile(media.fileUrl)"
-                      >
+            <div class="date-separator">
 
-                      <!-- DOWNLOAD IMAGE -->
+              <span>
 
-                      <a
-                        [href]="getDownloadUrl(media)"
-                        download
-                        class="download-btn"
-                      >
-                        ⬇
-                      </a>
+                {{
 
-                    </div>
+                  (
+                    message?.createdAt
+                    | date:'dd/MM/yyyy'
+                  ) === todayDate
 
-                  </ng-container>
+                  ? 'Today'
 
-                  <!-- VIDEO -->
+                  :
 
-                  <ng-container
-                    *ngIf="media.fileType?.startsWith('video/')"
-                  >
+                  (
 
-                    <video
-                      controls
-                      class="chat-video"
-                    >
+                    (
+                      message?.createdAt
+                      | date:'dd/MM/yyyy'
+                    ) === yesterdayDate
 
-                      <source
-                        [src]="media.fileUrl"
-                        [type]="media.fileType"
-                      >
+                  )
 
-                    </video>
+                  ? 'Yesterday'
 
-                  </ng-container>
+                  :
 
-                  <!-- AUDIO -->
+                  (
+                    message?.createdAt
+                    | date:'mediumDate'
+                  )
 
-                  <ng-container
-                    *ngIf="media.fileType?.startsWith('audio/')"
-                  >
+                }}
 
-                    <audio controls>
+              </span>
 
-                      <source
-                        [src]="media.fileUrl"
-                        [type]="media.fileType"
-                      >
+            </div>
 
-                    </audio>
+          }
 
-                  </ng-container>
+          <!-- MESSAGE -->
 
-                  <!-- PDF -->
+          <div
+            class="message-wrapper"
+            [class.mine]="isMine(message)"
+          >
 
-                  <ng-container
-                    *ngIf="media.fileType === 'application/pdf'"
-                  >
+            <div class="message-bubble">
 
-                    <div class="file-actions">
+              <!-- GROUP USER -->
 
-                      <!-- OPEN PDF -->
+              @if(
 
-                      <a
-                        [href]="media.fileUrl"
-                        target="_blank"
-                        class="file-link"
-                      >
+                conversation.isGroup
+                &&
+                !isMine(message)
 
-                        <div class="file-icon">
-                          📄
+              ){
+
+                <span class="sender-name">
+
+                  {{
+                    message?.sender?.username
+                  }}
+
+                </span>
+
+              }
+
+              <!-- TEXT -->
+
+              @if(message?.text){
+
+                <p class="message-text">
+
+                  {{ message.text }}
+
+                </p>
+
+              }
+
+              <!-- MEDIA -->
+
+              @if(message?.mediaUrls?.length){
+
+                <div class="media-container">
+
+                  @for(
+
+                    media of message.mediaUrls;
+
+                    track trackMedia(
+                      j,
+                      media
+                    );
+
+                    let j = $index
+
+                  ){
+
+                    @if(media){
+
+                      <!-- IMAGE -->
+
+                      @if(
+                        media?.fileType?.startsWith('image/')
+                      ){
+
+                        <div class="image-wrapper">
+
+                          <img
+                            [src]="media?.fileUrl"
+                            class="chat-image"
+                            (click)="openFile(media?.fileUrl)"
+                          >
+
+                          <a
+                            [href]="getDownloadUrl(media)"
+                            download
+                            class="download-btn"
+                          >
+
+                            ⬇
+
+                          </a>
+
                         </div>
 
-                        <div class="file-details">
+                      }
 
-                          <span class="file-title">
+                      <!-- VIDEO -->
 
-                            {{
-                              media.fileName
-                              || 'PDF Document'
-                            }}
+                      @if(
+                        media?.fileType?.startsWith('video/')
+                      ){
 
-                          </span>
+                        <div class="video-wrapper">
 
-                          <span class="file-subtitle">
+                          <video
+                            controls
+                            class="chat-video"
+                          >
 
-                            Open PDF
+                            <source
+                              [src]="media?.fileUrl"
+                              [type]="media?.fileType"
+                            >
 
-                          </span>
+                          </video>
 
                         </div>
 
-                      </a>
+                      }
 
-                      <!-- DOWNLOAD PDF -->
+                      <!-- AUDIO -->
 
-                      <a
-                        [href]="getDownloadUrl(media)"
-                        class="download-file-btn"
-                      >
-                        ⬇
-                      </a>
+                      @if(
+                        media?.fileType?.startsWith('audio/')
+                      ){
 
-                    </div>
+                        <audio controls>
 
-                  </ng-container>
+                          <source
+                            [src]="media?.fileUrl"
+                            [type]="media?.fileType"
+                          >
 
-                  <!-- OTHER FILES -->
+                        </audio>
 
-                  <ng-container
-                    *ngIf="
-                      !media.fileType?.startsWith('image/')
-                      &&
-                      !media.fileType?.startsWith('video/')
-                      &&
-                      !media.fileType?.startsWith('audio/')
-                      &&
-                      media.fileType !== 'application/pdf'
-                    "
-                  >
+                      }
 
-                    <a
-                      [href]="getDownloadUrl(media)"
-                      download
-                      class="file-link"
-                    >
+                      <!-- PDF -->
 
-                      <div class="file-icon">
-                        📎
-                      </div>
+                      @if(
+                        media?.fileType === 'application/pdf'
+                      ){
 
-                      <div class="file-details">
+                        <div class="file-actions">
 
-                        <span class="file-title">
+                          <a
+                            [href]="media?.fileUrl"
+                            target="_blank"
+                            class="file-link"
+                          >
 
-                          {{
-                            media.fileName
-                            || 'Document'
-                          }}
+                            <div class="file-icon">
 
-                        </span>
+                              📄
 
-                        <span class="file-subtitle">
+                            </div>
 
-                          {{
-                            formatBytes(media.bytes)
-                          }}
+                            <div class="file-details">
 
-                        </span>
+                              <span class="file-title">
 
-                      </div>
+                                {{
+                                  media?.fileName
+                                  || 'PDF'
+                                }}
 
-                    </a>
+                              </span>
 
-                  </ng-container>
+                              <span class="file-subtitle">
+
+                                Open PDF
+
+                              </span>
+
+                            </div>
+
+                          </a>
+
+                          <a
+                            [href]="getDownloadUrl(media)"
+                            class="download-file-btn"
+                          >
+
+                            ⬇
+
+                          </a>
+
+                        </div>
+
+                      }
+
+                      <!-- OTHER FILE -->
+
+                      @if(
+
+                        !media?.fileType?.startsWith('image/')
+                        &&
+                        !media?.fileType?.startsWith('video/')
+                        &&
+                        !media?.fileType?.startsWith('audio/')
+                        &&
+                        media?.fileType !== 'application/pdf'
+
+                      ){
+
+                        <div class="file-actions">
+
+                          <a
+                            [href]="getDownloadUrl(media)"
+                            download
+                            class="file-link"
+                          >
+
+                            <div class="file-icon">
+
+                              📎
+
+                            </div>
+
+                            <div class="file-details">
+
+                              <span class="file-title">
+
+                                {{
+                                  media?.fileName
+                                  || 'Document'
+                                }}
+
+                              </span>
+
+                              <span class="file-subtitle">
+
+                                {{
+                                  formatBytes(media?.bytes)
+                                }}
+
+                              </span>
+
+                            </div>
+
+                          </a>
+
+                          <a
+                            [href]="getDownloadUrl(media)"
+                            class="download-file-btn"
+                          >
+
+                            ⬇
+
+                          </a>
+
+                        </div>
+
+                      }
+
+                    }
+
+                  }
+
+                </div>
+
+              }
+
+              <!-- FOOTER -->
+
+              <div class="message-footer">
+
+                <span class="time">
+
+                  {{
+                    message?.createdAt
+                    | date:'shortTime'
+                  }}
+
+                </span>
+
+                @if(isMine(message)){
+
+                  @if(message?.status === 'sent'){
+
+                    <span class="single-tick">
+                      ✓
+                    </span>
+
+                  }
+
+                  @if(message?.status === 'delivered'){
+
+                    <span class="double-tick">
+                      ✓✓
+                    </span>
+
+                  }
+
+                  @if(message?.status === 'seen'){
+
+                    <span class="seen-tick">
+                      ✓✓
+                    </span>
+
+                  }
 
                 }
 
               </div>
 
-            }
+            </div>
 
           </div>
 
-        </div>
+        }
 
       }
 
     </div>
 
+    <!-- INPUT -->
 
-<app-message-input
-  [conversationId]="conversation._id"
-  [userId]="currentUserId"
-  (send)="sendMessage.emit($event)"
->
-</app-message-input>
+    <app-message-input
+
+      [conversationId]="conversation?._id"
+
+      [userId]="currentUserId"
+
+      (typing)="onTyping($event)"
+
+      (send)="sendMessage.emit($event)"
+
+    >
+    </app-message-input>
+
+  } @else {
+
+    <div class="empty-chat">
+
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+      >
+
+      <h2>
+
+        Welcome to Chat
+
+      </h2>
+
+      <p>
+
+        Select conversation to start messaging
+
+      </p>
+
+    </div>
 
   }
 
 </div>
+

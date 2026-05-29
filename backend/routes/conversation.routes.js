@@ -6,7 +6,7 @@ const protect = require("../middleware/auth.middleware");
 
 const {
     createOrOpenConversation,
-    getUserConversations
+    getUserConversations,createGroup
 } = require("../controllers/conversation.controller");
 
 // CREATE/OPEN CHAT
@@ -14,6 +14,13 @@ router.post(
     "/create-conversation",
     protect,
     createOrOpenConversation
+);
+
+//CREATE GROUP
+router.post(
+    "/create-group",
+    protect,
+    createGroup
 );
 
 // GET USER CHATS

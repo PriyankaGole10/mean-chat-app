@@ -67,7 +67,6 @@ async function createOrOpenConversation(req, res) {
 
 // GET USER CONVERSATIONS
 async function getUserConversations(req, res) {
-      console.log( ' req.user._id',req.user._id)
     try {
 
         const conversations = await Conversation.find({
@@ -97,7 +96,70 @@ async function getUserConversations(req, res) {
     }
 }
 
+async function createGroup(req,res){
+
+    try{
+
+        const {
+            groupName,
+            participants
+        } = req.body;
+
+        if(!groupName){
+
+            return res.status(400).json({
+                message:"Group name required"
+            });
+
+        }
+
+        if(participants.length < 2){
+
+            return res.status(400).json({
+                message:"Minimum 3 members required"
+            });
+
+        }
+
+        const users = participants.map(id=>({
+            user:id
+        }));
+
+        users.push({
+            user:req.user._id
+        });
+
+        const group = await Conversation.create({
+
+            isGroup:true,
+
+            groupName,
+
+            groupAdmin:req.user._id,
+
+            participants:users
+
+        });
+
+        const populatedGroup =
+        await Conversation.findById(group._id)
+        .populate("participants.user")
+        .populate("groupAdmin");
+
+        res.status(201).json(populatedGroup);
+
+    }catch(error){
+
+        res.status(500).json({
+            message:error.message
+        });
+
+    }
+
+}
+
+
 module.exports = {
     createOrOpenConversation,
-    getUserConversations
+    getUserConversations,createGroup
 };

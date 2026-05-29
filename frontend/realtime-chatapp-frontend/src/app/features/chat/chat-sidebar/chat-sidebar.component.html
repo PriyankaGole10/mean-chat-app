@@ -1,92 +1,119 @@
 <div class="chat-sidebar">
 
     <!-- HEADER -->
-
     <div class="sidebar-header">
+        <h2>Chats</h2>
 
-        <h2>
-            Chats
-        </h2>
-
+        <button class="group-btn" (click)="openGroupModal()">+</button>
     </div>
 
     <!-- SEARCH -->
-
     <div class="search-container">
-
-        <input type="text" [(ngModel)]="searchText" (input)="onSearch()" placeholder="Search users...">
-
+        <input type="text" [(ngModel)]="searchText" (input)="onSearch()" placeholder="Search users..." />
     </div>
 
+    <!-- SEARCH RESULTS -->
+    @if(searchedUsers.length > 0){
     <div class="search-results">
 
+        <div class="section-title">Search Results</div>
+
         @for(user of searchedUsers; track user._id){
-
         <div class="search-user" (click)="startChat(user)">
-
-            <img src="https://i.pravatar.cc/150">
-
-            <span>
-
-                {{ user.username }}
-
-            </span>
-
+            <img src="https://i.pravatar.cc/150" />
+            <span>{{ user.username }}</span>
         </div>
-
         }
 
     </div>
+    }
 
+    <!-- GROUP MODAL -->
+    @if(showGroupModal){
+    <div class="group-modal-overlay">
 
-    <!-- CONVERSATIONS -->
+        <div class="group-modal">
 
-    <div class="conversation-list">
+            <div class="group-modal-header">
+                <h3>Create Group</h3>
+                <button (click)="closeGroupModal()">✕</button>
+            </div>
 
-        @for(
-        conversation of conversations;
-        track conversation._id
-        ){
+            <input type="text" [(ngModel)]="groupName" placeholder="Group name" class="group-name-input" />
 
-        <div class="conversation-item" [class.active]="selectedConversationId === conversation._id"
-            (click)="selectChat(conversation)">
+            <div class="users-title">
+                Selected: {{ selectedGroupUsers.length }}
+            </div>
 
-            <!-- AVATAR -->
+            <div class="group-users-list">
 
-            <div class="avatar-wrapper">
+                @for(user of allUsers; track user._id){
 
-                <img src="https://i.pravatar.cc/150" alt="avatar">
+                <div class="group-user-item" (click)="toggleGroupUser(user)" [class.selected]="isSelectedUser(user)">
 
-                @if(isOnline(conversation)){
+                    <img src="https://i.pravatar.cc/150" />
 
-                <div class="online-dot"></div>
+                    <div class="group-user-info">
+                        <div class="group-username">{{ user.username }}</div>
+                    </div>
+
+                    @if(isSelectedUser(user)){
+                    <div class="check-icon">✔</div>
+                    }
+
+                </div>
 
                 }
 
             </div>
 
-            <!-- INFO -->
+            <button class="create-group-btn" (click)="submitCreateGroup()">
+                Create Group
+            </button>
 
+        </div>
+    </div>
+    }
+
+    <!-- CONVERSATIONS -->
+    <div class="conversation-list">
+
+        @for(conversation of conversations; track conversation._id){
+
+        <div class="conversation-item" [class.active]="selectedConversationId === conversation._id"
+            (click)="selectChat(conversation)">
+
+            <!-- AVATAR -->
+            <div class="avatar-wrapper">
+
+                @if(conversation.isGroup){
+                <img src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png" />
+                } @else {
+                <img src="https://i.pravatar.cc/150" />
+                }
+
+                @if(!conversation.isGroup && isOnline(conversation)){
+                <div class="online-dot"></div>
+                }
+
+            </div>
+
+            <!-- INFO -->
             <div class="conversation-info">
 
                 <div class="top-row">
 
                     <h4>
-
-                        {{
-                        getOtherUser(conversation)?.username
-                        || 'User'
-                        }}
-
+                        {{ getConversationName(conversation) }}
                     </h4>
 
                     <span class="time">
-
                         {{
+                        formatLastMessageTime(
                         conversation?.lastMessage?.createdAt
-                        | date:'shortTime'
+                        || conversation?.lastActivity
+                        )
                         }}
-
                     </span>
 
                 </div>
@@ -94,24 +121,13 @@
                 <div class="bottom-row">
 
                     <p>
-
-                        {{
-                        conversation?.lastMessage?.text
-                        || 'No messages yet'
-                        }}
-
+                        {{ getLastMessagePreview(conversation) }}
                     </p>
 
                     @if(unreadCounts[conversation._id]){
-
                     <div class="unread-count">
-
-                        {{
-                        unreadCounts[conversation._id]
-                        }}
-
+                        {{ unreadCounts[conversation._id] }}
                     </div>
-
                     }
 
                 </div>

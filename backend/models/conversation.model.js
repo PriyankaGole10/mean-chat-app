@@ -16,6 +16,11 @@ const conversationSchema = new mongoose.Schema(
             type: String,
             default: ""
         },
+        
+         groupAdmin:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
 
         groupDescription: {
             type: String,

@@ -28,4 +28,8 @@ getMessages(conversationId: string){
 sendMessages(payload:any){
     return this.http.post(environment.apiUrl + Conversation.sendMessages,payload)
 }
+
+createGroup(data:any){
+   return this.http.post(environment.apiUrl + Conversation.createGroup,data )
+}
 }

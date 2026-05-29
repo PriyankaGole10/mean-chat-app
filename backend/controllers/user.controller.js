@@ -26,4 +26,20 @@ async function searchUsers(req, res) {
     }
 }
 
-module.exports = {searchUsers};
+
+async function getAllUsers(req, res) {
+    try {
+        const users = await User.find({
+            _id: { $ne: req.user.id }
+        }).select('-password');
+
+        res.status(200).json(users);
+
+    } catch (err) {
+        res.status(500).json({
+            message: 'Failed to fetch users'
+        });
+    }
+}
+
+module.exports = { searchUsers, getAllUsers };

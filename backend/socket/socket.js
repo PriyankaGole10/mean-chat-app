@@ -46,10 +46,10 @@ const initializeSocket = (server) => {
 
 
         socket.on("send-message", (messageData) => {
-            io.to(messageData.conversation).emit(
-                "receive-message",
-                messageData
-            );
+
+            const room = messageData.conversation?._id || messageData.conversation;
+
+            io.to(room).emit("receive-message", messageData);
         });
 
         socket.on("message-delivered", async ({ messageId, conversationId }) => {
@@ -80,30 +80,30 @@ const initializeSocket = (server) => {
             );
 
             io.to(conversationId).emit("message-seen", {
-              
-                    messageId,
-                    userId,
-                    status: "seen"
-            
+
+                messageId,
+                userId,
+                status: "seen"
+
             })
-    })
+        })
 
 
 
-    // DISCONNECT
-    socket.on("disconnect", () => {
+        // DISCONNECT
+        socket.on("disconnect", () => {
 
-        for (let [userId, socketId] of onlineUsers.entries()) {
-            if (socketId === socket.id) {
-                onlineUsers.delete(userId);
-                break;
+            for (let [userId, socketId] of onlineUsers.entries()) {
+                if (socketId === socket.id) {
+                    onlineUsers.delete(userId);
+                    break;
+                }
             }
-        }
 
-        io.emit("online-users", Array.from(onlineUsers.keys()));
-    });
-    // console.log('onlineUsers-3', onlineUsers)
-})
+            io.emit("online-users", Array.from(onlineUsers.keys()));
+        });
+        // console.log('onlineUsers-3', onlineUsers)
+    })
 };
 
 module.exports = initializeSocket;

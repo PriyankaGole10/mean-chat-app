@@ -4,74 +4,126 @@
 
 @if(selectedFiles.length){
 
-<div class="file-preview-container">
+  <div class="file-preview-container">
 
-  @for(file of selectedFiles; track file){
+    @for(
 
-  <div class="file-chip">
+      file of selectedFiles;
 
-    @if(isImageFile(file.file)){
+      track trackFile(
+        $index,
+        file
+      )
 
-      <img
-        [src]="file.preview"
-        class="preview-image"
-      >
+    ){
 
-    } @else {
+      @if(file){
 
-      <div class="file-icon">
+        <div class="file-chip">
 
-        @if(file.file?.type === 'application/pdf'){
+          <!-- IMAGE -->
 
-          <mat-icon class="pdf-icon">
-            picture_as_pdf
-          </mat-icon>
+          @if(isImageFile(file)){
 
-        } @else if(file.file?.type?.startsWith('video/')){
+            <img
+              [src]="file?.preview"
+              class="preview-image"
+            >
 
-          <mat-icon class="video-icon">
-            video_file
-          </mat-icon>
+          } @else {
 
-        } @else if(file.file?.type?.startsWith('audio/')){
+            <!-- FILE ICON -->
 
-          <mat-icon class="audio-icon">
-            audio_file
-          </mat-icon>
+            <div class="file-icon">
 
-        } @else {
+              @if(
+                file?.file?.type ===
+                'application/pdf'
+              ){
 
-          <mat-icon class="doc-icon">
-            description
-          </mat-icon>
+                <mat-icon class="pdf-icon">
 
-        }
+                  picture_as_pdf
 
-      </div>
+                </mat-icon>
+
+              }
+
+              @else if(
+                file?.file?.type?.startsWith(
+                  'video/'
+                )
+              ){
+
+                <mat-icon class="video-icon">
+
+                  video_file
+
+                </mat-icon>
+
+              }
+
+              @else if(
+                file?.file?.type?.startsWith(
+                  'audio/'
+                )
+              ){
+
+                <mat-icon class="audio-icon">
+
+                  audio_file
+
+                </mat-icon>
+
+              }
+
+              @else {
+
+                <mat-icon class="doc-icon">
+
+                  description
+
+                </mat-icon>
+
+              }
+
+            </div>
+
+          }
+
+          <!-- FILE NAME -->
+
+          <div class="file-name">
+
+            {{
+              file?.file?.name
+            }}
+
+          </div>
+
+          <!-- REMOVE -->
+
+          <button
+
+            type="button"
+
+            class="remove-btn"
+
+            (click)="removeFile(file)"
+
+          >
+
+            ✕
+
+          </button>
+
+        </div>
+
+      }
 
     }
 
-    <div class="file-name">
-
-      {{ file.file.name }}
-
-    </div>
-
-    <button
-      type="button"
-      class="remove-btn"
-      (click)="removeFile(file)"
-    >
-
-      ✕
-
-    </button>
-
   </div>
-
-  }
-
-</div>
 
 }
 
@@ -81,50 +133,74 @@
 
 <div class="message-input-container">
 
-  <!-- HIDDEN FILE INPUT -->
+  <!-- FILE INPUT -->
 
   <input
+
     type="file"
+
     hidden
+
     multiple
+
     #fileInput
+
     (change)="onFileSelected($event)"
+
   >
 
-  <!-- ATTACH BUTTON -->
+  <!-- ATTACH -->
 
   <button
+
     type="button"
+
     class="icon-btn"
+
     (click)="fileInput.click()"
+
   >
 
     <mat-icon>
+
       attach_file
+
     </mat-icon>
 
   </button>
 
-  <!-- TEXT INPUT -->
+  <!-- TEXT -->
 
   <input
+
     type="text"
+
     [(ngModel)]="text"
+
     (input)="onTyping()"
+
     (keyup.enter)="sendMessage()"
+
     placeholder="Type a message"
+
   >
 
-  <!-- SEND BUTTON -->
+  <!-- SEND -->
 
   <button
+
     type="button"
+
     class="send-btn"
+
     (click)="sendMessage()"
+
   >
 
     <mat-icon>
+
       send
+
     </mat-icon>
 
   </button>

@@ -1,4 +1,10 @@
 import {
+  CommonModule,
+  DatePipe
+} from '@angular/common';
+
+import {
+  AfterViewChecked,
   Component,
   ElementRef,
   EventEmitter,
@@ -6,11 +12,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-
-import {
-  CommonModule,
-  DatePipe
-} from '@angular/common';
 
 import { MessageInputComponent }
 from '../message-input/message-input.component';
@@ -26,102 +27,131 @@ from '../message-input/message-input.component';
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss'
 })
-
-export class ChatWindowComponent {
+export class ChatWindowComponent implements AfterViewChecked {
 
   @Input() conversation: any;
-
   @Input() messages: any[] = [];
+  @Input() currentUserId = '';
+  @Input() typingUser = '';
 
-  @Input() currentUserId: string = '';
+  @Output() sendMessage = new EventEmitter<FormData>();
+  @Output() typing = new EventEmitter<any>();
 
-  @Input() typingUser: string = '';
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-  @Output() sendMessage =
-    new EventEmitter<FormData>();
+  todayDate = new Date().toLocaleDateString('en-GB');
 
-  @ViewChild('scrollContainer')
-  scrollContainer!: ElementRef;
+  yesterdayDate = new Date(
+    new Date().setDate(new Date().getDate() - 1)
+  ).toLocaleDateString('en-GB');
 
-  ngAfterViewChecked(){
-
+  // =========================
+  // LIFECYCLE
+  // =========================
+  ngAfterViewChecked() {
     this.scrollToBottom();
-
   }
 
-  scrollToBottom(){
+  // =========================
+  // SCROLL
+  // =========================
+  scrollToBottom() {
+    try {
+      const el = this.scrollContainer?.nativeElement;
+      if (!el) return;
 
-    try{
-
-      this.scrollContainer.nativeElement.scrollTop =
-      this.scrollContainer.nativeElement.scrollHeight;
-
-    }catch(error){}
-
+      el.scrollTo({
+        top: el.scrollHeight,
+        behavior: 'smooth'
+      });
+    } catch {}
   }
 
-  isMine(message:any):boolean{
+  // =========================
+  // TRACK BY (FIXED SAFELY)
+  // =========================
+  trackMessage(index: number, message: any) {
+    return message?._id ?? index;
+  }
+
+  trackMedia(index: number, media: any) {
+    return media?.fileUrl ?? index;
+  }
+
+  // =========================
+  // EVENTS
+  // =========================
+  onTyping(data: any) {
+    this.typing.emit(data);
+  }
+
+  // =========================
+  // HELPERS
+  // =========================
+  isMine(message: any): boolean {
+    if (!message) return false;
 
     return (
-      message.sender === this.currentUserId
-      ||
-      message.sender?._id === this.currentUserId
+      message?.sender === this.currentUserId ||
+      message?.sender?._id === this.currentUserId
     );
-
   }
 
-  getOtherUser(){
-
+  getOtherUser() {
     return this.conversation?.participants?.find(
-      (p:any) => p.user._id !== this.currentUserId
+      (p: any) => p?.user?._id !== this.currentUserId
     )?.user;
-
   }
 
- getDownloadUrl(media: any) {
-
-  if (!media?.fileUrl) return '';
-
-  const url = media.fileUrl;
-
-  if (media.resourceType === 'raw' || url.includes('/raw/upload/')) {
-    return url.replace('/raw/upload/', '/raw/upload/fl_attachment/');
-  }
-
-  if (media.resourceType === 'video' || url.includes('/video/upload/')) {
-    return url.replace('/video/upload/', '/video/upload/fl_attachment/');
-  }
-
-  return url.replace('/image/upload/', '/image/upload/fl_attachment/');
-}
-
-  openFile(url:string){
-
+  openFile(url: string) {
+    if (!url) return;
     window.open(url, '_blank');
-
   }
 
-  formatBytes(bytes:number){
+  getDownloadUrl(media: any) {
+    if (!media?.fileUrl) return '';
 
-    if(!bytes) return '';
+    const url = media.fileUrl;
 
-    const sizes = [
-      'Bytes',
-      'KB',
-      'MB',
-      'GB'
-    ];
+    if (
+      media.resourceType === 'raw' ||
+      url.includes('/raw/upload/')
+    ) {
+      return url.replace(
+        '/raw/upload/',
+        '/raw/upload/fl_attachment/'
+      );
+    }
+
+    if (
+      media.resourceType === 'video' ||
+      url.includes('/video/upload/')
+    ) {
+      return url.replace(
+        '/video/upload/',
+        '/video/upload/fl_attachment/'
+      );
+    }
+
+    return url.replace(
+      '/image/upload/',
+      '/image/upload/fl_attachment/'
+    );
+  }
+
+  formatBytes(bytes: number) {
+    if (!bytes) return '';
+
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
 
     const i = Math.floor(
       Math.log(bytes) / Math.log(1024)
     );
 
     return (
-      (bytes / Math.pow(1024, i)).toFixed(1)
-      + ' ' +
+      (bytes / Math.pow(1024, i)).toFixed(1) +
+      ' ' +
       sizes[i]
     );
-
   }
-
 }

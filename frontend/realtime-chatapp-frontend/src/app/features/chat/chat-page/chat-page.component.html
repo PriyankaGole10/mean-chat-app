@@ -15,6 +15,7 @@
          [unreadCounts]="unreadCounts" 
          (openChat)="onChatSelected($event)"
          (createChat)="createConversation($event)"
+         (createGroup)="createGroupChat($event)"
           [selectedConversationId]="selectedConversation?._id">
     </app-chat-sidebar>
 
