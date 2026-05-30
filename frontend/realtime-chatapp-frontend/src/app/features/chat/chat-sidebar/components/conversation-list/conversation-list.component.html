@@ -1,0 +1,48 @@
+<div class="conversation-list">
+
+  @for (conv of conversations; track conv._id) {
+
+    <div class="conversation-item"
+         [class.active]="isActive(conv)"
+         (click)="selectConversation(conv)">
+
+      <!-- AVATAR -->
+      <div class="avatar">
+
+        <img
+          [src]="conv.isGroup
+            ? 'https://cdn-icons-png.flaticon.com/512/681/681494.png'
+            : 'https://i.pravatar.cc/150'"
+        />
+
+        @if (!conv.isGroup && isOnline(conv)) {
+          <span class="online-dot"></span>
+        }
+
+      </div>
+
+      <!-- INFO -->
+      <div class="info">
+
+        <div class="top">
+          <h4>{{ getName(conv) }}</h4>
+          <span class="time">{{ getTime(conv) }}</span>
+        </div>
+
+        <div class="bottom">
+          <p>{{ getLastMessage(conv) }}</p>
+
+          @if (getUnreadCount(conv) > 0) {
+            <span class="badge">
+              {{ getUnreadCount(conv) }}
+            </span>
+          }
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

@@ -1,0 +1,89 @@
+
+<div class="modal-backdrop" (click)="close.emit()">
+
+  <div class="group-modal" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+
+      <h2>Create Group</h2>
+
+      <button
+        class="close-btn"
+        (click)="close.emit()">
+        ✕
+      </button>
+
+    </div>
+
+    <!-- Group Name -->
+    <div class="form-group">
+
+      <label>Group Name</label>
+
+      <input
+        type="text"
+        placeholder="Enter group name"
+        [(ngModel)]="groupName">
+
+    </div>
+
+    <!-- Users -->
+    <div class="users-section">
+
+      <label>Select Members</label>
+
+      <div class="users-list">
+
+        @for(user of allUsers; track user._id) {
+
+          <div
+            class="user-item"
+            [class.selected]="isSelected(user)"
+            (click)="toggleUser(user)">
+
+            <div class="user-avatar">
+              {{ user?.username?.charAt(0) }}
+            </div>
+
+            <div class="user-info">
+              {{ user?.username }}
+            </div>
+
+            <div class="check-mark">
+
+              @if(isSelected(user)) {
+                ✓
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+
+      <button
+        class="cancel-btn"
+        (click)="close.emit()">
+        Cancel
+      </button>
+
+      <button
+        class="create-btn"
+        [disabled]="!groupName || selectedUsers.length === 0"
+        (click)="submit()">
+        Create Group
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

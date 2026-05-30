@@ -13,18 +13,17 @@ export class AppComponent {
   title = 'realtime-chatapp-frontend';
   currentUser = '';
 
-private auth = inject(AuthService);
+  private auth = inject(AuthService);
 
-ngOnInit(){
-this.loadUser();
-}
+  ngOnInit() {
+    this.loadUser();
+  }
 
 
   loadUser() {
     if (sessionStorage.getItem('token')) {
       this.auth.getMe().subscribe({
         next: (res: any) => {
-          console.log("USER:", res.user);
           this.currentUser = res.user.username
         },
         error: () => {

@@ -1,0 +1,62 @@
+<div class="settings-page">
+
+  <div class="settings-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back
+    </button>
+
+    <h2>Settings</h2>
+  </div>
+
+  <!-- Account -->
+  <div class="settings-card">
+
+    <h3>Account</h3>
+
+    <div class="setting-item">
+      <span>Profile</span>
+      <button (click)="goToProfile()">Open</button>
+    </div>
+
+    <div class="setting-item">
+      <span>Change Password</span>
+      <button>Open</button>
+    </div>
+
+  </div>
+
+  <!-- Preferences -->
+  <div class="settings-card">
+
+    <h3>Preferences</h3>
+
+    <div class="setting-item">
+      <span>Dark Mode</span>
+      <input type="checkbox">
+    </div>
+
+    <div class="setting-item">
+      <span>Notifications</span>
+      <input type="checkbox">
+    </div>
+
+  </div>
+
+  <!-- Privacy -->
+  <div class="settings-card">
+
+    <h3>Privacy</h3>
+
+    <div class="setting-item">
+      <span>Blocked Users</span>
+      <button>Manage</button>
+    </div>
+
+    <div class="setting-item">
+      <span>Last Seen</span>
+      <button>Edit</button>
+    </div>
+
+  </div>
+
+</div>

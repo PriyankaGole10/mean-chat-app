@@ -1,0 +1,85 @@
+.conversation-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.conversation-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f1f1;
+  transition: 0.2s;
+}
+
+.conversation-item:hover {
+  background: #f5f6f6;
+}
+
+.conversation-item.active {
+  background: #e7fce3;
+}
+
+.avatar {
+  position: relative;
+}
+
+.avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background: #00c853;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.top h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.time {
+  font-size: 11px;
+  color: gray;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bottom p {
+  margin: 0;
+  font-size: 12px;
+  color: gray;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  background: #00a884;
+  color: white;
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 50%;
+}

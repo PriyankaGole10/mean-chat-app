@@ -1,0 +1,74 @@
+<!-- SEARCH -->
+
+<div class="search-container">
+
+  <input
+
+    type="text"
+
+    [(ngModel)]="searchText"
+
+    (input)="onSearch()"
+
+    placeholder="Search users..."
+
+  >
+
+</div>
+
+<!-- RESULTS -->
+
+@if(searchedUsers.length > 0){
+
+<div class="search-results">
+
+  <div class="section-title">
+
+    Search Results
+
+  </div>
+
+  @for(
+    user of searchedUsers;
+    track user._id
+  ){
+
+  <div
+
+    class="search-user"
+
+    (click)="selectUser(user)"
+
+  >
+
+    <img
+
+      src="https://i.pravatar.cc/150"
+
+      alt="user"
+
+    >
+
+    <div class="search-user-info">
+
+      <div class="username">
+
+        {{ user.username }}
+
+      </div>
+
+      <div class="subtitle">
+
+        Start conversation
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>
+
+}

@@ -1,0 +1,77 @@
+<div
+  class="conversation-item"
+  [class.active]="isActive()"
+  (click)="selectChat()"
+>
+
+  <!-- AVATAR -->
+
+  <div class="avatar-wrapper">
+
+    @if(conversation?.isGroup){
+
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png"
+        alt="group"
+      >
+
+    } @else {
+
+      <img
+        src="https://i.pravatar.cc/150"
+        alt="user"
+      >
+
+      @if(isOnline()){
+
+        <div class="online-dot"></div>
+
+      }
+
+    }
+
+  </div>
+
+  <!-- INFO -->
+
+  <div class="conversation-info">
+
+    <div class="top-row">
+
+      <h4>
+
+        {{ getConversationName() }}
+
+      </h4>
+
+      <span class="time">
+
+        {{ formatTime() }}
+
+      </span>
+
+    </div>
+
+    <div class="bottom-row">
+
+      <p>
+
+        {{ getLastMessagePreview() }}
+
+      </p>
+
+      @if(getUnreadCount() > 0){
+
+        <div class="unread-count">
+
+          {{ getUnreadCount() }}
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</div>

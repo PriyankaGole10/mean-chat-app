@@ -1,31 +1,92 @@
-<div class="chat-layout">
+<!-- ================= GLOBAL HEADER ================= -->
+<div class="app-header">
 
-    <!-- LEFT SIDEBAR -->
+  <div class="app-title">
+    Chat App
+  </div>
 
-    <app-sidebar class="sidebar">
-    </app-sidebar>
+  <div class="app-actions">
 
+    <button (click)="openProfile()" title="Profile">
+      👤
+    </button>
 
-    <!-- CHAT LIST -->
+    <button (click)="openSettings()" title="Settings">
+      ⚙
+    </button>
 
-    <app-chat-sidebar class="chat-sidebar" 
-    [conversations]="conversations"
-     [onlineUsers]="onlineUsers"
-        [currentUserId]="currentUser._id"
-         [unreadCounts]="unreadCounts" 
-         (openChat)="onChatSelected($event)"
-         (createChat)="createConversation($event)"
-         (createGroup)="createGroupChat($event)"
-          [selectedConversationId]="selectedConversation?._id">
-    </app-chat-sidebar>
+    <button (click)="logout()" title="Logout">
+      ⎋
+    </button>
 
-
-    <!-- CHAT WINDOW -->
-
-    <app-chat-window class="chat-window"
-     [conversation]="selectedConversation" [messages]="messages"
-        [currentUserId]="currentUser?._id || ''"  [typingUser]="typingUser"
-        (sendMessage)="sendMessage($event)">
-    </app-chat-window>
+  </div>
 
 </div>
+
+<!-- ================= CHAT LAYOUT ================= -->
+<div class="chat-layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar"
+       [class.hidden]="isMobile && activePanel === 'chat'">
+
+    <app-chat-sidebar
+      [conversations]="conversations"
+      [selectedConversationId]="selectedConversation?._id"
+      [unreadCounts]="unreadCounts"
+      [onlineUsers]="onlineUsers"
+      (openChat)="onChatSelected($event)"
+      (createChat)="createConversation($event)"
+      (openGroup)="openGroupModal = true">
+    </app-chat-sidebar>
+
+  </div>
+
+  <!-- CHAT WINDOW -->
+  <div class="chat-window"
+       [class.hidden]="isMobile && activePanel === 'list'">
+
+    <!-- BACK BUTTON (MOBILE ONLY - KEEP) -->
+    <div class="mobile-header" *ngIf="isMobile && selectedConversation">
+      <button (click)="activePanel='list'">←</button>
+      <span>{{ selectedConversation?.name }}</span>
+    </div>
+
+    <!-- CHAT CONTENT -->
+    @if(selectedConversation) {
+
+      <app-chat-window
+        [conversation]="selectedConversation"
+        [messages]="messages"
+        [typingUser]="typingUser"
+        (sendMessage)="sendMessage($event)">
+      </app-chat-window>
+
+    } @else {
+
+      <div class="empty-state">
+        <h2>Welcome to Chat</h2>
+        <p>Select a conversation</p>
+      </div>
+
+    }
+
+  </div>
+
+</div>
+
+<!-- ================= GROUP MODAL ================= -->
+@if(openGroupModal) {
+  <app-group-modal
+    [allUsers]="allUsers"
+    (close)="openGroupModal = false"
+    (create)="createGroupChat($event)">
+  </app-group-modal>
+}
+
+@if(showProfileModal) {
+  <app-profile-modal
+    [user]="currentUser"
+    (close)="showProfileModal = false">
+  </app-profile-modal>
+}

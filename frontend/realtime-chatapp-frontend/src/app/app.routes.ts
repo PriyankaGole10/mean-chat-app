@@ -23,6 +23,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: ()=>import('./features/chat/chat-page/chat-page.component')
     .then(m => m.ChatPageComponent)
-}
+},
+{
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: ()=>import('./features/chat/chat-page/components/profile-modal/profile-modal.component')
+    .then(m => m.ProfileModalComponent)
+},
+{
+    path: 'settings',
+    canActivate: [authGuard],
+    loadComponent: ()=>import('./features/chat/chat-page/components/settings/settings.component')
+    .then(m => m.SettingsComponent)
+},
 
 ];

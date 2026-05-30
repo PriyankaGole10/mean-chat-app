@@ -1,10 +1,11 @@
 .chat-window{
-  height:100vh;
   width:100%;
   display:flex;
   flex-direction:column;
   background:#efeae2;
   overflow:hidden;
+  flex:1;
+  min-height:0;
 }
 
 /* HEADER */
@@ -61,6 +62,7 @@
 
 .messages{
   flex:1;
+  min-height:0;   /* important */
   overflow-y:auto;
   padding:18px;
   display:flex;
@@ -261,6 +263,14 @@ audio{
   margin-top:2px;
 }
 
+:host{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  height:100%;
+}
+
 .time{
   font-size:11px;
   color:#667781;
@@ -309,7 +319,7 @@ audio{
 /* INPUT */
 
 app-message-input{
-  width:100%;
+ display:block;
   flex-shrink:0;
 }
 

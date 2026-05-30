@@ -1,130 +1,147 @@
-.chat-layout{
-  display:flex;
-  height:100vh;
-  overflow:hidden;
-  background:#efeae2;
+/* ================= APP HEADER ================= */
+.app-header {
+  height: 55px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  background: #128c7e;
+  color: white;
 }
 
-/* LEFT SIDEBAR */
-
-.sidebar{
-  width:72px;
-  min-width:72px;
-  flex-shrink:0;
+.app-title {
+  font-weight: 600;
+  font-size: 16px;
 }
 
-/* CHAT SIDEBAR */
-
-.chat-sidebar{
-  width:360px;
-  min-width:360px;
-  max-width:360px;
-
-  border-right:1px solid #d1d7db;
-
-  background:white;
-
-  flex-shrink:0;
-
-  overflow:hidden;
+.app-actions {
+  display: flex;
+  gap: 10px;
 }
 
-/* CHAT WINDOW */
+.app-actions button {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
 
-.chat-window{
-  flex:1;
-  min-width:0;
-  overflow:hidden;
+.app-actions button:hover {
+  opacity: 0.8;
+}
+
+/* ================= CHAT LAYOUT ================= */
+.chat-layout {
+  display: flex;
+  height: calc(100vh - 55px);
+  height: calc(100dvh - 55px);
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 360px;
+  min-width: 300px;
+  border-right: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= CHAT WINDOW ================= */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #e5ddd5;
+}
+
+/* ================= EMPTY STATE ================= */
+.empty-state {
+  margin: auto;
+  text-align: center;
+  color: #667781;
+}
+
+/* ================= TOP BAR ================= */
+.chat-topbar {
+  height: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  background: #f7f8fa;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.chat-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chat-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-actions button {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.chat-actions button:hover {
+  transform: scale(1.1);
+}
+
+/* ================= MOBILE HEADER ================= */
+.mobile-header {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+/* ================= UTILITY ================= */
+.hidden {
+  display: none !important;
+}
+/*================= snackbar ==============*/
+.success-snackbar {
+  --mdc-snackbar-container-color: #128c7e;
+  --mat-snack-bar-button-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #d32f2f;
+  --mat-snack-bar-button-color: white;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 300px;
+  }
 }
 
 /* MOBILE */
-
-@media(max-width:768px){
-
-  .sidebar{
-    display:none;
-  }
-
-  .chat-sidebar{
-    width:100%;
-    max-width:100%;
-    min-width:100%;
-  }
-
-  .chat-window{
-    display:none;
-  }
-
-}
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1100px) {
-
-  .chat-sidebar {
-    width: 320px;
-    min-width: 320px;
-    max-width: 320px;
-  }
-
-}
-
-/* =========================
-   MOBILE
-========================= */
-
 @media (max-width: 768px) {
-
   .chat-layout {
-    position: relative;
+    flex-direction: column;
   }
 
-  .sidebar {
-    display: none;
-  }
-
-  .chat-sidebar {
-
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-
-    height: 100vh;
-
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 2;
-  }
-
+  .sidebar,
   .chat-window {
-
     width: 100%;
-    height: 100vh;
-
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 3;
-
-    background: #efeae2;
+    height: 100%;
   }
-
-}
-
-/* =========================
-   FIX INPUT CUT ISSUE
-========================= */
-
-app-chat-window {
-  width: 100%;
-  display: flex;
-  overflow: hidden;
-}
-
-app-chat-sidebar {
-  display: block;
-  overflow: hidden;
 }

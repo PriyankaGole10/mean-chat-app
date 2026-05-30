@@ -1,0 +1,274 @@
+/* BACKDROP */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 16px;
+
+  z-index: 9999;
+}
+
+/* MODAL */
+
+.group-modal {
+  width: 100%;
+  max-width: 550px;
+
+  background: #fff;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  max-height: 90vh;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* HEADER */
+
+.modal-header {
+  height: 65px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 20px;
+
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* FORM */
+
+.form-group {
+  padding: 16px 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+
+  padding: 12px;
+
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+/* USERS */
+
+.users-section {
+  padding: 0 20px 20px;
+  flex: 1;
+}
+
+.users-section label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.users-list {
+  max-height: 320px;
+  overflow-y: auto;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+}
+
+/* USER */
+
+.user-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.user-item:hover {
+  background: #f7f7f7;
+}
+
+.user-item.selected {
+  background: #e8f7f2;
+}
+
+/* AVATAR */
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+
+  background: #128c7e;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+}
+
+/* USER INFO */
+
+.user-info {
+  flex: 1;
+}
+
+/* CHECK */
+
+.check-mark {
+  color: #128c7e;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* FOOTER */
+
+.modal-footer {
+  padding: 16px 20px;
+
+  border-top: 1px solid #e5e5e5;
+
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* BUTTONS */
+
+.cancel-btn {
+  padding: 10px 16px;
+
+  border: 1px solid #ccc;
+  background: white;
+
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.create-btn {
+  padding: 10px 18px;
+
+  border: none;
+  background: #128c7e;
+  color: white;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.create-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  .modal-backdrop {
+    padding: 10px;
+  }
+
+  .group-modal {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    height: 55px;
+    padding: 0 14px;
+  }
+
+  .modal-header h2 {
+    font-size: 18px;
+  }
+
+  .form-group {
+    padding: 14px;
+  }
+
+  .users-section {
+    padding: 0 14px 14px;
+  }
+
+  .users-list {
+    max-height: 250px;
+  }
+
+  .user-item {
+    padding: 10px;
+  }
+
+  .user-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+}
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width: 480px) {
+
+  .modal-header h2 {
+    font-size: 16px;
+  }
+
+  .form-group input {
+    font-size: 13px;
+  }
+
+  .user-info {
+    font-size: 14px;
+  }
+
+}
