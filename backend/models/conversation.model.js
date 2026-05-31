@@ -16,11 +16,12 @@ const conversationSchema = new mongoose.Schema(
             type: String,
             default: ""
         },
-        
-         groupAdmin:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
-    },
+        admins: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        ],
 
         groupDescription: {
             type: String,
@@ -36,11 +37,7 @@ const conversationSchema = new mongoose.Schema(
 
                 role: {
                     type: String,
-                    enum: [
-                        "admin",
-                        "moderator",
-                        "member"
-                    ],
+                    enum: ["moderator", "member"],
                     default: "member"
                 },
 
@@ -48,6 +45,13 @@ const conversationSchema = new mongoose.Schema(
                     type: Date,
                     default: Date.now
                 }
+            }
+        ],
+
+        admins: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
             }
         ],
 
@@ -76,7 +80,35 @@ const conversationSchema = new mongoose.Schema(
             ref: "User"
         },
 
-        onlyAdminsCanMessage: {
+        messagePermission: {
+            type: String,
+            enum: [
+                "everyone",
+                "admins"
+            ],
+            default: "everyone"
+        },
+        editInfoPermission: {
+            type: String,
+            enum: [
+                "creator",
+                "admins"
+            ],
+            default: "admins"
+        },
+        addMemberPermission: {
+            type: String,
+            enum: [
+                "creator",
+                "admins"
+            ],
+            default: "admins"
+        },
+        inviteCode: {
+            type: String,
+            default: null
+        },
+        joinApprovalRequired: {
             type: Boolean,
             default: false
         },

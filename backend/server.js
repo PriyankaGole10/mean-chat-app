@@ -12,6 +12,18 @@ const authRoutes = require("./routes/auth.routes");
 const conversationRoutes = require("./routes/conversation.routes");
 const messageRoutes = require("./routes/message.routes");
 const userRoutes = require("./routes/user.routes");
+const groupMemberRoutes =
+require("./routes/group-member.routes");
+const groupRoleRoutes =
+require("./routes/group-role.routes");
+const groupSettingsRoutes =
+require(
+    "./routes/group-settings.routes"
+);
+const groupInviteRoutes =
+require(
+    "./routes/group-invite.routes"
+);
 
 const app = express();
 
@@ -33,6 +45,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/conversations",conversationRoutes);
 app.use("/api/messages",messageRoutes);
 app.use("/api/users",userRoutes);
+app.use("/api/groups/member",groupMemberRoutes);
+app.use("/api/groups/role",groupRoleRoutes);
+app.use("/api/groups",groupSettingsRoutes);
+app.use("/api/groups",groupInviteRoutes);
 
 // HOME ROUTE
 app.get("/", (req, res) => {
