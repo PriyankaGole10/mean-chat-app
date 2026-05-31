@@ -11,6 +11,7 @@ import { ProfileModalComponent } from "./components/profile-modal/profile-modal.
 import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { GroupInfoModalComponent } from "../group-chat/group-info-modal/group-info-modal.component";
 
 @Component({
   selector: 'app-chat-page',
@@ -20,7 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ChatSidebarComponent,
     ChatWindowComponent,
     GroupModalComponent,
-    ProfileModalComponent
+    ProfileModalComponent,
+    GroupInfoModalComponent
 ],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.scss'
@@ -52,6 +54,8 @@ export class ChatPageComponent {
   openGroupModal = false;
   showProfileModal = false;
   isMobile = false;
+  selectedGroup:any = null;
+showGroupInfoModal = false;
 
   // ================= INIT =================
   ngOnInit() {
@@ -73,6 +77,12 @@ export class ChatPageComponent {
       this.allUsers = res;
     })
   }
+
+
+openGroupInfo(group:any){
+  this.selectedGroup = group;
+  this.showGroupInfoModal = true;
+}
 
   checkScreen() {
     this.isMobile = window.innerWidth <= 768;

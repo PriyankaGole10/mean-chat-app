@@ -59,7 +59,8 @@
         [conversation]="selectedConversation"
         [messages]="messages"
         [typingUser]="typingUser"
-        (sendMessage)="sendMessage($event)">
+        (sendMessage)="sendMessage($event)"
+        (openGroupInfo)="openGroupInfo($event)">
       </app-chat-window>
 
     } @else {
@@ -89,4 +90,16 @@
     [user]="currentUser"
     (close)="showProfileModal = false">
   </app-profile-modal>
+}
+
+@if(showGroupInfoModal){
+
+  <app-group-info-modal
+
+    [group]="selectedGroup"
+
+    (close)="showGroupInfoModal = false">
+
+  </app-group-info-modal>
+
 }

@@ -7,63 +7,87 @@
 
     <div class="chat-header">
 
-      <div class="user-info">
+  <div class="user-info">
 
-        @if(conversation.isGroup){
+    @if(conversation.isGroup){
 
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png"
-            alt="group"
-          >
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png"
+        alt="group"
+      >
+
+    } @else {
+
+      <app-avatar
+  [isGroup]="conversation?.isGroup">
+</app-avatar>
+
+    }
+
+    <div class="user-details">
+
+      <h3>
+
+        {{
+          conversation.isGroup
+          ? conversation.groupName
+          : getOtherUser()?.username
+        }}
+
+      </h3>
+
+      @if(conversation.isGroup){
+
+        <span class="group-subtitle">
+
+          {{
+            conversation?.participants?.length || 0
+          }}
+          members
+
+        </span>
+
+      } @else {
+
+        @if(typingUser){
+
+          <span class="typing-text">
+
+            typing...
+
+          </span>
 
         } @else {
 
-          <img
-            src="https://i.pravatar.cc/150"
-            alt="user"
-          >
+          <span class="online">
+
+            online
+
+          </span>
 
         }
 
-        <div class="user-details">
-
-          <h3>
-
-            {{
-              conversation.isGroup
-              ? conversation.groupName
-              : getOtherUser()?.username
-            }}
-
-          </h3>
-
-          @if(!conversation.isGroup){
-
-            @if(typingUser){
-
-              <span class="typing-text">
-
-                typing...
-
-              </span>
-
-            } @else {
-
-              <span class="online">
-
-                online
-
-              </span>
-
-            }
-
-          }
-
-        </div>
-
-      </div>
+      }
 
     </div>
+
+  </div>
+
+  <!-- GROUP MENU -->
+
+  @if(conversation?.isGroup){
+
+    <button
+      class="group-info-btn"
+      (click)="openGroupDetails()">
+
+      ⋮
+
+    </button>
+
+  }
+
+</div>
 
     <!-- MESSAGES -->
 

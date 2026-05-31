@@ -16,6 +16,7 @@ import {
 import {
   UserService
 } from '../../../../../core/services/user.service';
+import { AvatarComponent } from "../../../../../shared/components/avatar/avatar.component";
 
 @Component({
   selector: 'app-search-users',
@@ -23,8 +24,9 @@ import {
 
   imports: [
     CommonModule,
-    FormsModule
-  ],
+    FormsModule,
+    AvatarComponent
+],
 
   templateUrl:
     './search-users.component.html',

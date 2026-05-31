@@ -1,0 +1,42 @@
+<div class="modal">
+
+  <h3>
+    Join Requests
+  </h3>
+
+  @for(
+    request of requests;
+    track request._id
+  ){
+
+    <div class="request-item">
+
+      <div>
+
+        {{ request.user.username }}
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="approve"
+          (click)="approve(request._id)"
+        >
+          Approve
+        </button>
+
+        <button
+          class="reject"
+          (click)="reject(request._id)"
+        >
+          Reject
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

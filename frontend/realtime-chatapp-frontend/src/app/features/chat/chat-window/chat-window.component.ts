@@ -15,6 +15,7 @@ import {
 
 import { MessageInputComponent }
 from '../message-input/message-input.component';
+import { AvatarComponent } from "../../../shared/components/avatar/avatar.component";
 
 @Component({
   selector: 'app-chat-window',
@@ -22,8 +23,9 @@ from '../message-input/message-input.component';
   imports: [
     CommonModule,
     DatePipe,
-    MessageInputComponent
-  ],
+    MessageInputComponent,
+    AvatarComponent
+],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss'
 })
@@ -36,6 +38,7 @@ export class ChatWindowComponent implements AfterViewChecked {
 
   @Output() sendMessage = new EventEmitter<FormData>();
   @Output() typing = new EventEmitter<any>();
+  @Output() openGroupInfo  = new EventEmitter<any>();
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
@@ -66,6 +69,18 @@ export class ChatWindowComponent implements AfterViewChecked {
       });
     } catch {}
   }
+
+  openGroupDetails() {
+
+  if (!this.conversation?.isGroup) {
+    return;
+  }
+
+  this.openGroupInfo.emit(
+    this.conversation
+  );
+
+}
 
   // =========================
   // TRACK BY (FIXED SAFELY)

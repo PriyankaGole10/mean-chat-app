@@ -17,10 +17,9 @@
 
     } @else {
 
-      <img
-        src="https://i.pravatar.cc/150"
-        alt="user"
-      >
+      <app-avatar
+  [isGroup]="conversation?.isGroup">
+</app-avatar>
 
       @if(isOnline()){
 

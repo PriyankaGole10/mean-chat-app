@@ -30,7 +30,7 @@ router.post(
 router.delete(
     "/invite/:inviteCode",
     protect,
-    loadGroup,
+  
     requireAdmin,
     disableInviteLink
 );

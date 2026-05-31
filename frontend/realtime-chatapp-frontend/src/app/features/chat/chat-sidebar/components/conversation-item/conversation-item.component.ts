@@ -8,14 +8,16 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { AvatarComponent } from "../../../../../shared/components/avatar/avatar.component";
 
 @Component({
   selector: 'app-conversation-item',
   standalone: true,
 
   imports: [
-    CommonModule
-  ],
+    CommonModule,
+    AvatarComponent
+],
 
   templateUrl:
     './conversation-item.component.html',

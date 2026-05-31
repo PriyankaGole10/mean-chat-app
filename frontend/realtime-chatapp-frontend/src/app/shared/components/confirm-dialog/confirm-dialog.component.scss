@@ -1,0 +1,93 @@
+.dialog-backdrop{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+padding:16px;
+}
+
+.dialog-card{
+width:100%;
+max-width:400px;
+background:#fff;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+animation:popup .2s ease;
+}
+
+.dialog-header{
+padding:18px 20px 10px;
+border-bottom:1px solid #eee;
+}
+
+.dialog-header h3{
+margin:0;
+font-size:18px;
+font-weight:600;
+color:#111;
+}
+
+.dialog-body{
+padding:20px;
+}
+
+.dialog-body p{
+margin:0;
+font-size:14px;
+line-height:1.6;
+color:#555;
+}
+
+.dialog-footer{
+display:flex;
+justify-content:flex-end;
+gap:10px;
+padding:16px 20px;
+border-top:1px solid #eee;
+}
+
+.cancel-btn{
+border:none;
+background:#f1f3f5;
+padding:10px 18px;
+border-radius:10px;
+cursor:pointer;
+font-weight:500;
+}
+
+.confirm-btn{
+border:none;
+background:#00a884;
+color:#fff;
+padding:10px 18px;
+border-radius:10px;
+cursor:pointer;
+font-weight:500;
+}
+
+.confirm-btn.danger{
+background:#e53935;
+}
+
+.cancel-btn:hover{
+opacity:.9;
+}
+
+.confirm-btn:hover{
+opacity:.9;
+}
+
+@keyframes popup{
+from{
+transform:scale(.95);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
