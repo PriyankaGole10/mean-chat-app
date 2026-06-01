@@ -1,0 +1,41 @@
+@if(isOpen){
+
+<div class="sidebar-backdrop" (click)="onBackdropClick($event)">
+
+  <div class="sidebar" (click)="onSidebarClick($event)">
+
+    <div class="header">
+      <h3>User Info</h3>
+
+      <button class="close-btn" (click)="onClose()">✕</button>
+    </div>
+
+    <div class="body">
+
+      <img
+        class="avatar"
+        [src]="user?.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'"
+      />
+
+      <h2>{{ user?.username || 'Unknown User' }}</h2>
+      <p>{{ user?.email || 'No email' }}</p>
+
+      <div class="actions">
+
+        <button class="block-btn" (click)="onBlock()" [disabled]="!user">
+          Block User
+        </button>
+
+        <button class="mute-btn" (click)="onMute()" [disabled]="!user">
+          Mute Chat
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

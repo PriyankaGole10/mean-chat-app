@@ -23,7 +23,7 @@ import { GroupInfoModalComponent } from "../group-chat/group-info-modal/group-in
     GroupModalComponent,
     ProfileModalComponent,
     GroupInfoModalComponent
-],
+  ],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.scss'
 })
@@ -54,8 +54,8 @@ export class ChatPageComponent {
   openGroupModal = false;
   showProfileModal = false;
   isMobile = false;
-  selectedGroup:any = null;
-showGroupInfoModal = false;
+  selectedGroup: any = null;
+  showGroupInfoModal = false;
 
   // ================= INIT =================
   ngOnInit() {
@@ -72,17 +72,17 @@ showGroupInfoModal = false;
     this.getAllUsers();
   }
 
-  getAllUsers(){
-    this.userSer.getAllUsers().subscribe((res:any)=>{
+  getAllUsers() {
+    this.userSer.getAllUsers().subscribe((res: any) => {
       this.allUsers = res;
     })
   }
 
 
-openGroupInfo(group:any){
-  this.selectedGroup = group;
-  this.showGroupInfoModal = true;
-}
+  openGroupInfo(group: any) {
+    this.selectedGroup = group;
+    this.showGroupInfoModal = true;
+  }
 
   checkScreen() {
     this.isMobile = window.innerWidth <= 768;
@@ -203,20 +203,20 @@ openGroupInfo(group:any){
       },
         (err) => {
 
-        this.snackBar.open(
-          err?.error?.message || 'Failed to create group',
-          'Close',
-          {
-            duration: 4000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar']
-          }
-        );
+          this.snackBar.open(
+            err?.error?.message || 'Failed to create group',
+            'Close',
+            {
+              duration: 4000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            }
+          );
 
-        console.error(err);
-      }
-    );
+          console.error(err);
+        }
+      );
   }
 
   // ================= PERSONAL CHAT =================
@@ -245,6 +245,6 @@ openGroupInfo(group:any){
   }
 
   openSettings() {
-this.router.navigate(['/settings']);  
-}
+    this.router.navigate(['/settings']);
+  }
 }

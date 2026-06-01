@@ -1,0 +1,148 @@
+<div class="chat-header">
+
+    <div class="header-left">
+
+        @if(conversation?.isGroup){
+
+        <img class="group-avatar" src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png">
+
+        }@else{
+
+        <app-avatar [isGroup]="false">
+        </app-avatar>
+
+        }
+
+        <div class="details">
+
+            <h3>
+
+                {{
+                conversation?.isGroup
+                ? conversation?.groupName
+                : getOtherUser()?.username
+                }}
+
+            </h3>
+
+            @if(conversation?.isGroup){
+
+            <span>
+
+                {{
+                conversation?.participants?.length
+                }}
+                members
+
+            </span>
+
+            }@else{
+
+            @if(typingUser){
+
+            <span class="typing">
+
+                typing...
+
+            </span>
+
+            }@else{
+
+            <span>
+
+                online
+
+            </span>
+
+            }
+
+            }
+
+        </div>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button class="icon-btn" (click)="audioCall.emit()">
+
+            📞
+
+        </button>
+
+        <button class="icon-btn" (click)="videoCall.emit()">
+
+            🎥
+
+        </button>
+
+        <div class="menu-wrapper">
+
+            <button class="icon-btn" (click)="toggleMenu()">
+
+                ⋮
+
+            </button>
+
+            @if(menuOpen){
+
+            <div class="dropdown">
+
+                @if(conversation?.isGroup){
+
+                <button (click)="groupInfo.emit()">
+                    Group Info
+                </button>
+
+                <button (click)="addMembers.emit()">
+                    Add Members
+                </button>
+
+                <button (click)="media.emit()">
+                    Media
+                </button>
+
+                <button (click)="muteChat.emit()">
+                    Mute Notifications
+                </button>
+
+                <button (click)="exitGroup.emit()">
+                    Exit Group
+                </button>
+
+                }@else{
+
+                <button [class.active]="activeMenuItem === 'profile'"
+                (click)="setMenu('profile'); viewProfile.emit()">
+                    View Profile
+                </button>
+
+                <button [class.active]="activeMenuItem === 'search'"
+                (click)="setMenu('search'); searchMessages.emit()">
+                    Search Messages
+                </button>
+
+                <button [class.active]="activeMenuItem === 'media'"
+                (click)="setMenu('media'); media.emit()">
+                    Media
+                </button>
+
+                <button (click)="muteChat.emit()">
+                    Mute Notifications
+                </button>
+
+                <button (click)="blockUser.emit()">
+                    Block User
+                </button>
+
+                }
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</div>

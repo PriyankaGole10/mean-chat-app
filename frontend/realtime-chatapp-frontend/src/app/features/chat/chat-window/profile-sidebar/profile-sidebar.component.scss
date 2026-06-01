@@ -1,0 +1,97 @@
+/* BACKDROP */
+.sidebar-backdrop {
+  width: 340px;
+  height: 100%;
+  background: white;
+
+  display: flex;
+  flex-direction: column;
+
+  border-left: 1px solid rgba(0,0,0,0.08);
+
+  z-index: 10;
+  position: relative;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 340px;
+  height: 100%;
+  background: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: -8px 0 25px rgba(0,0,0,0.15);
+
+  animation: slideIn 0.25s ease;
+}
+
+/* ANIMATION */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+
+  background: #f9f9f9;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* BODY */
+.body {
+  padding: 24px;
+  text-align: center;
+  flex: 1;
+}
+
+/* AVATAR */
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+/* ACTIONS */
+.actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.block-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.mute-btn {
+  background: #f1f1f1;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}

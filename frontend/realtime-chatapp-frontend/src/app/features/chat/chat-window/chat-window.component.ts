@@ -14,8 +14,10 @@ import {
 } from '@angular/core';
 
 import { MessageInputComponent }
-from '../message-input/message-input.component';
+  from '../message-input/message-input.component';
 import { AvatarComponent } from "../../../shared/components/avatar/avatar.component";
+import { ChatHeaderComponent } from "./chat-header/chat-header.component";
+import { ProfileSidebarComponent } from './profile-sidebar/profile-sidebar.component';
 
 @Component({
   selector: 'app-chat-window',
@@ -24,8 +26,10 @@ import { AvatarComponent } from "../../../shared/components/avatar/avatar.compon
     CommonModule,
     DatePipe,
     MessageInputComponent,
-    AvatarComponent
-],
+    AvatarComponent,
+    ChatHeaderComponent,
+    ProfileSidebarComponent
+  ],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss'
 })
@@ -38,9 +42,13 @@ export class ChatWindowComponent implements AfterViewChecked {
 
   @Output() sendMessage = new EventEmitter<FormData>();
   @Output() typing = new EventEmitter<any>();
-  @Output() openGroupInfo  = new EventEmitter<any>();
+  @Output() openGroupInfo = new EventEmitter<any>();
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
+  isProfileOpen = false;
+  selectedUser: any = null;
+
 
   todayDate = new Date().toLocaleDateString('en-GB');
 
@@ -48,16 +56,15 @@ export class ChatWindowComponent implements AfterViewChecked {
     new Date().setDate(new Date().getDate() - 1)
   ).toLocaleDateString('en-GB');
 
-  // =========================
-  // LIFECYCLE
-  // =========================
+
+  ngOnInit():void{
+  }
+
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
-  // =========================
-  // SCROLL
-  // =========================
+ 
   scrollToBottom() {
     try {
       const el = this.scrollContainer?.nativeElement;
@@ -67,20 +74,20 @@ export class ChatWindowComponent implements AfterViewChecked {
         top: el.scrollHeight,
         behavior: 'smooth'
       });
-    } catch {}
+    } catch { }
   }
 
   openGroupDetails() {
 
-  if (!this.conversation?.isGroup) {
-    return;
+    if (!this.conversation?.isGroup) {
+      return;
+    }
+
+    this.openGroupInfo.emit(
+      this.conversation
+    );
+
   }
-
-  this.openGroupInfo.emit(
-    this.conversation
-  );
-
-}
 
   // =========================
   // TRACK BY (FIXED SAFELY)
@@ -168,5 +175,50 @@ export class ChatWindowComponent implements AfterViewChecked {
       ' ' +
       sizes[i]
     );
+  }
+
+
+  startAudioCall() {
+    console.log("Audio call started");
+    // later: socket + WebRTC
+  }
+
+  startVideoCall() {
+    console.log("Video call started");
+  }
+
+
+
+  openAddMembers() {
+    console.log("Open add members modal");
+  }
+
+  openMedia() {
+    console.log("Open media gallery");
+  }
+
+  muteConversation() {
+    console.log("Mute chat API call");
+  }
+
+  exitGroup() {
+    console.log("Exit group API call");
+  }
+
+  openUserProfile() {
+    this.selectedUser = this.getOtherUser();
+    this.isProfileOpen = true;
+  }
+
+  closeProfile() {
+    this.isProfileOpen = false;
+  }
+
+  openSearch() {
+    console.log("Open message search UI");
+  }
+
+  blockUser() {
+    console.log("Block user API call");
   }
 }

@@ -11,4 +11,5 @@ export class AvatarComponent {
  @Input() isGroup = false;
 
   @Input() imageUrl = '';
+  @Input() size  = 44;
 }

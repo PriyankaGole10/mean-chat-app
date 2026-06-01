@@ -18,6 +18,9 @@ export class ConversationListComponent {
 
   @Output() openChat = new EventEmitter<any>();
 
+  ngOnInit(){
+  }
+
   selectConversation(conv: any) {
     this.openChat.emit(conv);
   }

@@ -1,3 +1,230 @@
-<button (click)="showRoles=true">
-  Manage Roles
-</button>
+<div class="modal-overlay">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2>
+        Group Info
+      </h2>
+
+      <button
+        class="close-btn"
+        (click)="close.emit()">
+
+        ✕
+
+      </button>
+
+    </div>
+
+    <div class="group-profile">
+
+      <app-avatar
+        [isGroup]="true" [size]="44">
+      </app-avatar>
+
+      <h3>
+        {{ group?.groupName }}
+      </h3>
+
+      <p>
+        {{ group?.participants?.length || 0 }}
+        members
+      </p>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="action-btn"
+        (click)="showMembers=true">
+
+        Members
+
+      </button>
+
+      <button
+        class="action-btn"
+        (click)="showRoles=true">
+
+        Roles
+
+      </button>
+
+      <button
+        class="action-btn"
+        (click)="showSettings=true">
+
+        Settings
+
+      </button>
+
+      <button
+        class="action-btn"
+        (click)="showRequests=true">
+
+        Requests
+
+      </button>
+
+    </div>
+
+    @if(showMembers){
+
+      <div class="section">
+
+        <h4>
+          Members
+        </h4>
+
+        @for(member of group?.participants;track member.user._id){
+
+          <div class="member-row">
+
+            <div class="member-left">
+
+              <app-avatar [size]="44"></app-avatar>
+
+              <div>
+
+                <div class="name">
+
+                  {{ member.user.username }}
+
+                </div>
+
+                <div class="role">
+
+                  {{ member.role }}
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="member-actions">
+
+              @if(member.role==='member'){
+
+                <button
+                  class="primary-btn"
+                  (click)="makeModerator(member.user._id)">
+
+                  Make Moderator
+
+                </button>
+
+              }
+
+              @if(member.role==='moderator'){
+
+                <button
+                  class="danger-btn"
+                  (click)="removeModerator(member.user._id)">
+
+                  Remove Moderator
+
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+    @if(showRoles){
+
+      <div class="section">
+
+        <h4>
+          Role Management
+        </h4>
+
+        @for(member of group?.participants;track member.user._id){
+
+          <div class="member-row">
+
+            <span>
+
+              {{ member.user.username }}
+
+            </span>
+
+            <span>
+
+              {{ member.role }}
+
+            </span>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+    @if(showSettings){
+
+      <div class="section">
+
+        <h4>
+          Group Settings
+        </h4>
+
+        <button
+          class="primary-btn">
+
+          Change Name
+
+        </button>
+
+        <button
+          class="primary-btn">
+
+          Change Description
+
+        </button>
+
+        <button
+          class="primary-btn">
+
+          Change Image
+
+        </button>
+
+      </div>
+
+    }
+
+    @if(showRequests){
+
+      <div class="section">
+
+        <h4>
+          Join Requests
+        </h4>
+
+        <button
+          class="primary-btn">
+
+          Open Requests
+
+        </button>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

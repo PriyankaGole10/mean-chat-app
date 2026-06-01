@@ -14,30 +14,48 @@ export class GroupMemberService {
     private http: HttpClient
   ) {}
 
-  getMembers(groupId: string) {
+  getMembers(
+    groupId: string
+  ) {
     return this.http.get(
-      `${this.api}/group-members/${groupId}`
+      `${this.api}/group-member/${groupId}`
     );
   }
 
-  addMember(data: any) {
+  addMember(
+    groupId: string,
+    userId: string
+  ) {
     return this.http.post(
-      `${this.api}/group-members/add`,
-      data
+      `${this.api}/group-member/add`,
+      {
+        groupId,
+        userId
+      }
     );
   }
 
-  removeMember(data: any) {
+  removeMember(
+    groupId: string,
+    userId: string
+  ) {
     return this.http.post(
-      `${this.api}/group-members/remove`,
-      data
+      `${this.api}/group-member/remove`,
+      {
+        groupId,
+        userId
+      }
     );
   }
 
-  leaveGroup(groupId: string) {
+  leaveGroup(
+    groupId: string
+  ) {
     return this.http.post(
-      `${this.api}/group-members/leave`,
-      { groupId }
+      `${this.api}/group-member/leave`,
+      {
+        groupId
+      }
     );
   }
 

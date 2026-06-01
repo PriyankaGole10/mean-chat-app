@@ -35,9 +35,9 @@ currentUser: any;
   @Output() openGroup = new EventEmitter<void>();
 
   ngOnInit(){
-     const user = sessionStorage.getItem('user');
-       this.currentUser = user ? JSON.parse(user) : null;
-       this.currentUserId =  this.currentUser._id
+    //  const user = sessionStorage.getItem('user');
+    //    this.currentUser = user ? JSON.parse(user) : null;
+    //    this.currentUserId =  this.currentUser._id
   }
 
 }

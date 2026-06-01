@@ -14,32 +14,20 @@ export class GroupRoleService {
     private http: HttpClient
   ) {}
 
-  addAdmin(data: any) {
-    return this.http.post(
-      `${this.api}/group-role/add-admin`,
-      data
-    );
-  }
+  makeModerator(groupId:string,userId:string){
+  return this.http.post<any>(`${environment.apiUrl}/group-role/make-moderator`,{groupId,userId});
+}
 
-  removeAdmin(data: any) {
-    return this.http.post(
-      `${this.api}/group-role/remove-admin`,
-      data
-    );
-  }
+removeModerator(groupId:string,userId:string){
+  return this.http.post<any>(`${environment.apiUrl}/group-role/remove-moderator`,{groupId,userId});
+}
 
-  makeModerator(data: any) {
-    return this.http.post(
-      `${this.api}/group-role/make-moderator`,
-      data
-    );
-  }
+addAdmin(groupId:string,userId:string){
+  return this.http.post<any>(`${environment.apiUrl}/group-role/add-admin`,{groupId,userId});
+}
 
-  removeModerator(data: any) {
-    return this.http.post(
-      `${this.api}/group-role/remove-moderator`,
-      data
-    );
-  }
+removeAdmin(groupId:string,userId:string){
+  return this.http.post<any>(`${environment.apiUrl}/group-role/remove-admin`,{groupId,userId});
+}
 
 }
