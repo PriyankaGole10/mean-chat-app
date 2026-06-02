@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { User } from '../api-endpoints/user';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,9 @@ import { User } from '../api-endpoints/user';
 export class UserService {
 
   private http = inject(HttpClient)
- 
+
+isMute = new BehaviorSubject<boolean>(false); 
+isBlocked = new BehaviorSubject<boolean>(false); 
 
 
   searchUsers(query: string) {   

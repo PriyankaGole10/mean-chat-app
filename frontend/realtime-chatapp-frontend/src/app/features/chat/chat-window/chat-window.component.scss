@@ -47,7 +47,13 @@
 // }
 
 
-
+:host ::ng-deep .search-highlight {
+  background: #ffeb3b;
+  color: #000;
+  font-weight: 600;
+  padding: 1px 3px;
+  border-radius: 4px;
+}
 
 .group-info-btn{
   width:38px;

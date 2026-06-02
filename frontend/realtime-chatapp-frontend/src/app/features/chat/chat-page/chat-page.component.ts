@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GroupInfoModalComponent } from "../group-chat/group-info-modal/group-info-modal.component";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat-page',
@@ -30,6 +31,7 @@ import { GroupInfoModalComponent } from "../group-chat/group-info-modal/group-in
 export class ChatPageComponent {
 
   private conversationSer = inject(ConversationService);
+  private userService = inject(UserService);
   private socketSer = inject(SocketService);
   private userSer = inject(UserService);
   private router = inject(Router);
@@ -56,6 +58,8 @@ export class ChatPageComponent {
   isMobile = false;
   selectedGroup: any = null;
   showGroupInfoModal = false;
+  isMutedSub!:Subscription;
+  isBlockedSub!:Subscription;
 
   // ================= INIT =================
   ngOnInit() {
@@ -64,12 +68,25 @@ export class ChatPageComponent {
 
     const user = sessionStorage.getItem('user');
     this.currentUser = user ? JSON.parse(user) : null;
+   
 
     this.socketSer.connect(this.currentUser._id);
 
     this.loadConversations();
     this.listenSocket();
     this.getAllUsers();
+
+    this.isMutedSub =this.userService.isMute.subscribe((res:any)=>{
+       this.loadConversations();
+    })
+    this.isBlockedSub =this.userService.isBlocked.subscribe((res:any)=>{
+       this.loadConversations();
+    })
+  }
+
+  ngOnDestroy(){
+    this.isBlockedSub?.unsubscribe;
+    this.isMutedSub?.unsubscribe;
   }
 
   getAllUsers() {

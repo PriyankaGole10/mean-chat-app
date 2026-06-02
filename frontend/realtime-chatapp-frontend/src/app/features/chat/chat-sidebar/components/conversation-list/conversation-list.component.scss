@@ -83,3 +83,37 @@
   padding: 3px 7px;
   border-radius: 50%;
 }
+
+
+
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  overflow: hidden;
+}
+
+.name-row h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.status-icon.blocked {
+  color: #ef4444;
+}
+
+.status-icon.muted {
+  color: #667781;
+}

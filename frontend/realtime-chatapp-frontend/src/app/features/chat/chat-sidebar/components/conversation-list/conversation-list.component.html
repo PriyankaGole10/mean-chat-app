@@ -25,7 +25,23 @@
       <div class="info">
 
         <div class="top">
-          <h4>{{ getName(conv) }}</h4>
+          <div class="name-row">
+
+  <h4>{{ getName(conv) }}</h4>
+
+ @if(isBlocked(conv)){
+  <mat-icon class="blocked-icon">
+  block
+</mat-icon>
+}
+
+@if(isMuted(conv)){
+ <mat-icon class="muted-icon">
+  notifications_off
+</mat-icon>
+}
+
+</div>
           <span class="time">{{ getTime(conv) }}</span>
         </div>
 

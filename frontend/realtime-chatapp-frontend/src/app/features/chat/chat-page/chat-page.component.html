@@ -61,6 +61,7 @@
         [messages]="messages"
         [typingUser]="typingUser"
          [currentUserId]="currentUser._id"
+         [currentUser]="currentUser"
         (sendMessage)="sendMessage($event)"
         (openGroupInfo)="openGroupInfo($event)">
       </app-chat-window>

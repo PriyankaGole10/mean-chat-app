@@ -22,15 +22,46 @@
 
       <div class="actions">
 
-        <button class="block-btn" (click)="onBlock()" [disabled]="!user">
-          Block User
-        </button>
+  <div class="action-row">
 
-        <button class="mute-btn" (click)="onMute()" [disabled]="!user">
-          Mute Chat
-        </button>
+    <div>
+      <h4>Notifications</h4>
+      <p>
+        {{ isMuted ? 'Notifications muted' : 'Notifications enabled' }}
+      </p>
+    </div>
 
-      </div>
+    <button
+      class="toggle-btn"
+      [class.active]="isMuted"
+      (click)="onToggleMute()">
+
+      {{ isMuted ? 'Unmute' : 'Mute' }}
+
+    </button>
+
+  </div>
+
+  <div class="action-row danger">
+
+    <div>
+      <h4>User Access</h4>
+      <p>
+        {{ isBlocked ? 'User is blocked' : 'User can send messages' }}
+      </p>
+    </div>
+
+    <button
+      class="toggle-btn danger-btn"
+      (click)="onToggleBlock()">
+
+      {{ isBlocked ? 'Unblock' : 'Block' }}
+
+    </button>
+
+  </div>
+
+</div>
 
     </div>
 

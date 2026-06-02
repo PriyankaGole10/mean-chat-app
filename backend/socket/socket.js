@@ -125,6 +125,104 @@ const initializeSocket = (server) => {
 
         });
 
+        socket.on("block-user", async ({ blockerId, blockedId }) => {
+
+            const User = require("../models/user.model");
+
+            await User.findByIdAndUpdate(blockerId, {
+                $addToSet: { blockedUsers: blockedId }
+            });
+
+            io.emit("user-blocked", {
+                blockerId,
+                blockedId
+            });
+        });
+
+        socket.on("unblock-user", async ({ blockerId, blockedId }) => {
+
+            const User = require("../models/user.model");
+
+            await User.findByIdAndUpdate(
+                blockerId,
+                {
+                    $pull: {
+                        blockedUsers: blockedId
+                    }
+                }
+            );
+
+            io.emit("user-unblocked", {
+                blockerId,
+                blockedId
+            });
+
+        });
+
+        socket.on("mute-conversation", async ({ userId, conversationId }) => {
+
+            const Conversation = require("../models/conversation.model");
+
+            await Conversation.findByIdAndUpdate(conversationId, {
+                $addToSet: { muteUsers: userId }
+            });
+
+            io.emit("conversation-muted", {
+                userId,
+                conversationId
+            });
+        });
+
+        socket.on("unmute-conversation", async ({ userId, conversationId }) => {
+
+            const Conversation = require("../models/conversation.model");
+
+            await Conversation.findByIdAndUpdate(
+                conversationId,
+                {
+                    $pull: {
+                        muteUsers: userId
+                    }
+                }
+            );
+
+            io.emit("conversation-unmuted", {
+                userId,
+                conversationId
+            });
+
+        });
+
+        socket.on("search-messages", async ({ conversationId, query }) => {
+
+            const Message = require("../models/message.model");
+
+            const results = await Message.find({
+                conversation: conversationId,
+                text: { $regex: query, $options: "i" }
+            }).limit(20);
+
+            socket.emit("search-results", {
+                conversationId,
+                results
+            });
+        });
+
+        socket.on("request-media", async ({ conversationId }) => {
+
+            const Message = require("../models/message.model");
+
+            const media = await Message.find({
+                conversation: conversationId,
+                "mediaUrls.0": { $exists: true }
+            });
+
+            socket.emit("media-response", {
+                conversationId,
+                media
+            });
+        });
+
 
         // DISCONNECT
         socket.on("disconnect", () => {
@@ -148,7 +246,7 @@ const initializeSocket = (server) => {
 
         });
 
-        // console.log('onlineUsers-3', onlineUsers)
+
 
     });
 

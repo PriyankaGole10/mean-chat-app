@@ -81,7 +81,8 @@ async function loginUser(req, res) {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
-                avatar: user.avatar
+                avatar: user.avatar,
+                 blockedUsers: user.blockedUsers
             },
 
             token: generateToken(user._id)

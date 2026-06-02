@@ -52,7 +52,7 @@ async function createOrOpenConversation(req, res) {
         conversation = await Conversation.findById(conversation._id)
             .populate(
                 "participants.user",
-                "username email avatar online"
+                "username email avatar online blockedUsers"
             );
 
         res.status(200).json(conversation);
@@ -75,7 +75,7 @@ async function getUserConversations(req, res) {
         })
             .populate(
                 "participants.user",
-                "username email avatar online"
+                "username email avatar online blockedUsers"
             )
             .populate({
                 path: "lastMessage",

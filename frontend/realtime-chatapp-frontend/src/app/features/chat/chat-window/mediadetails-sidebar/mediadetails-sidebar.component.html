@@ -1,0 +1,47 @@
+@if(isOpen){
+
+<div class="media-sidebar">
+
+  <div class="resize-handle"></div>
+
+  <div class="media-header">
+
+    <h3>
+      Shared Media
+      <span class="count">({{ mediaFiles.length }})</span>
+    </h3>
+
+    <button
+      class="close-btn"
+      (click)="close.emit()">
+
+      ✕
+
+    </button>
+
+  </div>
+
+  <div class="media-grid">
+
+    @for(item of mediaFiles; track item._id){
+
+      @for(media of item.mediaUrls; track media.fileUrl){
+
+        @if(media.fileType?.startsWith('image/')){
+
+          <img
+            [src]="media.fileUrl"
+            class="media-thumb"
+            (click)="openFile(media.fileUrl)">
+
+        }
+
+      }
+
+    }
+
+  </div>
+
+</div>
+
+}

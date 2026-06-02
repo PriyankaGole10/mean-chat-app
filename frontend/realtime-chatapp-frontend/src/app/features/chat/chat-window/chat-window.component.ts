@@ -8,6 +8,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   Output,
   ViewChild
@@ -18,6 +19,9 @@ import { MessageInputComponent }
 import { AvatarComponent } from "../../../shared/components/avatar/avatar.component";
 import { ChatHeaderComponent } from "./chat-header/chat-header.component";
 import { ProfileSidebarComponent } from './profile-sidebar/profile-sidebar.component';
+import { SocketService } from '../../../core/services/socket.service';
+import { UserService } from '../../../core/services/user.service';
+import { MediadetailsSidebarComponent } from "./mediadetails-sidebar/mediadetails-sidebar.component";
 
 @Component({
   selector: 'app-chat-window',
@@ -28,16 +32,20 @@ import { ProfileSidebarComponent } from './profile-sidebar/profile-sidebar.compo
     MessageInputComponent,
     AvatarComponent,
     ChatHeaderComponent,
-    ProfileSidebarComponent
-  ],
+    ProfileSidebarComponent,
+    MediadetailsSidebarComponent
+],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss'
 })
 export class ChatWindowComponent implements AfterViewChecked {
 
+  private socketSer = inject(SocketService)
+  private userService = inject(UserService)
   @Input() conversation: any;
   @Input() messages: any[] = [];
   @Input() currentUserId = '';
+  @Input() currentUser: any;
   @Input() typingUser = '';
 
   @Output() sendMessage = new EventEmitter<FormData>();
@@ -47,7 +55,14 @@ export class ChatWindowComponent implements AfterViewChecked {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   isProfileOpen = false;
-  selectedUser: any = null;
+  selectedConversationOtherUser: any = null;
+  searchQuery = '';
+  isBlocked = false;
+  isMuted = false;
+  mediaFiles: any[] = [];
+  isMediaOpen = false;
+
+
 
 
   todayDate = new Date().toLocaleDateString('en-GB');
@@ -57,14 +72,27 @@ export class ChatWindowComponent implements AfterViewChecked {
   ).toLocaleDateString('en-GB');
 
 
-  ngOnInit():void{
+
+  ngOnInit(): void {
+    this.isBlocked = this.currentUser?.blockedUsers?.includes(
+      this.getOtherUser()?._id)
+
+    this.isMuted = this.conversation?.muteUsers?.includes(
+      this.currentUserId)
+
+    this.socketSer.onMediaResponse((data: any) => {
+      if (data.conversationId === this.conversation?._id) {
+        this.mediaFiles = data.media;
+        this.isMediaOpen = true;
+      }
+    });
   }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
- 
+
   scrollToBottom() {
     try {
       const el = this.scrollContainer?.nativeElement;
@@ -89,9 +117,7 @@ export class ChatWindowComponent implements AfterViewChecked {
 
   }
 
-  // =========================
-  // TRACK BY (FIXED SAFELY)
-  // =========================
+ 
   trackMessage(index: number, message: any) {
     return message?._id ?? index;
   }
@@ -100,16 +126,12 @@ export class ChatWindowComponent implements AfterViewChecked {
     return media?.fileUrl ?? index;
   }
 
-  // =========================
-  // EVENTS
-  // =========================
+  
   onTyping(data: any) {
     this.typing.emit(data);
   }
 
-  // =========================
-  // HELPERS
-  // =========================
+
   isMine(message: any): boolean {
     if (!message) return false;
 
@@ -194,19 +216,21 @@ export class ChatWindowComponent implements AfterViewChecked {
   }
 
   openMedia() {
-    console.log("Open media gallery");
+    const conversationId = this.conversation?._id;
+
+    this.socketSer.requestMedia({
+      conversationId
+    });
   }
 
-  muteConversation() {
-    console.log("Mute chat API call");
-  }
+
 
   exitGroup() {
     console.log("Exit group API call");
   }
 
   openUserProfile() {
-    this.selectedUser = this.getOtherUser();
+    this.selectedConversationOtherUser = this.getOtherUser();
     this.isProfileOpen = true;
   }
 
@@ -214,11 +238,90 @@ export class ChatWindowComponent implements AfterViewChecked {
     this.isProfileOpen = false;
   }
 
-  openSearch() {
-    console.log("Open message search UI");
+  openSearch(query: string) {
+    const conversationId = this.conversation?._id;
+
+    if (!conversationId || !query) return;
+
+    this.socketSer.searchMessages({
+      conversationId,
+      query
+    });
+  }
+  getHighlightedText(text: string): string {
+
+    if (!text || !this.searchQuery) {
+      return text;
+    }
+
+    const regex = new RegExp(
+      `(${this.searchQuery})`,
+      'gi'
+    );
+
+    return text.replace(
+      regex,
+      '<span class="search-highlight">$1</span>'
+    );
   }
 
-  blockUser() {
-    console.log("Block user API call");
+  toggleBlockUser() {
+    this.selectedConversationOtherUser = this.getOtherUser();
+    const blockerId = this.currentUserId;
+    const blockedId = this.selectedConversationOtherUser?._id;
+
+
+    if (!blockerId || !blockedId) return;
+
+    if (this.isBlocked) {
+
+      this.socketSer.unblockUser({
+        blockerId,
+        blockedId
+      });
+
+      this.isBlocked = false;
+      this.userService.isBlocked.next(false)
+
+    } else {
+
+      this.socketSer.blockUser({
+        blockerId,
+        blockedId
+      });
+
+      this.isBlocked = true;
+      this.userService.isBlocked.next(true)
+
+    }
+  }
+
+  toggleMuteConversation() {
+
+    const userId = this.currentUserId;
+    const conversationId = this.conversation?._id;
+
+    if (!userId || !conversationId) return;
+
+    if (this.isMuted) {
+
+      this.socketSer.unmuteConversation({
+        userId,
+        conversationId
+      });
+
+      this.isMuted = false;
+      this.userService.isMute.next(false);
+
+    } else {
+      this.socketSer.muteConversation({
+        userId,
+        conversationId
+      });
+
+      this.isMuted = true;
+      this.userService.isMute.next(true)
+
+    }
   }
 }

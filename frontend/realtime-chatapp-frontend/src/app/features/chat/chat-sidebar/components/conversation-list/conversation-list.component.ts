@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-conversation-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './conversation-list.component.html',
   styleUrl: './conversation-list.component.scss'
 })
@@ -18,7 +19,7 @@ export class ConversationListComponent {
 
   @Output() openChat = new EventEmitter<any>();
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   selectConversation(conv: any) {
@@ -71,4 +72,29 @@ export class ConversationListComponent {
 
     return this.onlineUsers.includes(userId);
   }
+
+  isBlocked(conv: any): boolean {
+
+    if (conv.isGroup) return false;
+
+    const otherUserId =
+      conv.participants?.find(
+        (p: any) => p.user._id !== this.currentUserId
+      )?.user?._id;
+
+    const currentUser = conv.participants?.find(
+        (p: any) => p.user._id === this.currentUserId
+      )?.user;
+      // console.log('currentUser',currentUser)
+
+    return currentUser?.blockedUsers?.includes(otherUserId);
+  }
+
+  isMuted(conv: any): boolean {
+
+    return conv?.muteUsers?.includes(
+      this.currentUserId
+    );
+  }
+
 }

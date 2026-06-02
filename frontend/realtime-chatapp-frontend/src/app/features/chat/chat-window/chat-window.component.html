@@ -15,18 +15,21 @@
   (groupInfo)="openGroupDetails()"
   (addMembers)="openAddMembers()"
   (media)="openMedia()"
-  (muteChat)="muteConversation()"
+ 
   (exitGroup)="exitGroup()"
 
   (viewProfile)="openUserProfile()"
-  (searchMessages)="openSearch()"
-  (blockUser)="blockUser()">
+  (searchMessages)="searchQuery = $event"
+ 
+   [isBlocked]="isBlocked"
+  [isMuted]="isMuted"
+  (toggleBlock)="toggleBlockUser()"
+  (toggleMute)="toggleMuteConversation()">
 </app-chat-header>
 
   <!-- MESSAGES -->
 
   <div class="messages" #scrollContainer>
-
     @for(
 
     message of messages;
@@ -139,11 +142,10 @@
 
         @if(message?.text){
 
-        <p class="message-text">
-
-          {{ message.text }}
-
-        </p>
+        <p
+  class="message-text"
+  [innerHTML]="getHighlightedText(message.text)">
+</p>
 
         }
 
@@ -398,11 +400,21 @@
   <!-- PROFILE SIDEBAR -->
    <app-profile-sidebar
     [isOpen]="isProfileOpen"
-    [user]="selectedUser"
+    [user]="selectedConversationOtherUser"
     (close)="closeProfile()"
-    (block)="blockUser()"
-    (mute)="muteConversation()">
+      [isBlocked]="isBlocked"
+  [isMuted]="isMuted"
+  (toggleBlock)="toggleBlockUser()"
+  (toggleMute)="toggleMuteConversation()">
   </app-profile-sidebar>
+
+  <app-mediadetails-sidebar
+  [isOpen]="isMediaOpen"
+  [mediaFiles]="mediaFiles"
+   (close)="isMediaOpen=false"
+  >
+
+  </app-mediadetails-sidebar>
 
   } @else {
 

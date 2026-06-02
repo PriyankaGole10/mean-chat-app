@@ -1,114 +1,295 @@
-.chat-header{
-  height:72px;
-  background:#fff;
-  border-bottom:1px solid #e9edef;
-  padding:0 16px;
+.chat-header {
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #e9edef;
+  padding: 0 16px;
 
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  flex-shrink:0;
+  flex-shrink: 0;
+  position: relative;
 }
 
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:12px;
+/* ================= LEFT ================= */
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 220px;
 }
 
-.group-avatar{
-  width:44px;
-  height:44px;
-  border-radius:50%;
+.group-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.details{
-  display:flex;
-  flex-direction:column;
+.details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.details h3{
-  margin:0;
-  font-size:16px;
-  font-weight:600;
-  color:#111b21;
+.details h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111b21;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.details span{
-  font-size:13px;
-  color:#667781;
-  margin-top:3px;
+.details span {
+  font-size: 13px;
+  color: #667781;
+  margin-top: 3px;
 }
 
-.typing{
-  color:#00a884 !important;
+.typing {
+  color: #00a884 !important;
+  font-weight: 500;
 }
 
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
+/* ================= SEARCH ================= */
+
+.search-bar {
+  flex: 1;
+  max-width: 420px;
+  margin: 0 20px;
+
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #f0f2f5;
+  border-radius: 22px;
+
+  padding: 0 14px;
 }
 
-.icon-btn{
-  width:38px;
-  height:38px;
-  border:none;
-  border-radius:50%;
-  cursor:pointer;
-  background:transparent;
-  font-size:18px;
+.search-bar input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 14px;
+  color: #111b21;
 }
 
-.icon-btn:hover{
-  background:#f0f2f5;
+.search-bar input::placeholder {
+  color: #667781;
 }
+
+.close-search {
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+}
+
+.close-search:hover {
+  background: #dfe5e7;
+}
+
+/* ================= ACTIONS ================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  background: transparent;
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s;
+}
+
+.icon-btn:hover {
+  background: #f0f2f5;
+}
+
+/* ================= MENU ================= */
 
 .menu-wrapper {
   position: relative;
-  z-index: 5;
 }
 
 .dropdown {
   position: absolute;
+  top: 48px;
   right: 0;
-  top: 100%;
-  z-index: 9999;
 
-  background: white;
-  border: 1px solid #eee;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  width: 220px;
+
+  background: #fff;
+  border-radius: 10px;
+
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+
+  overflow: hidden;
+  z-index: 9999;
 }
 
 .dropdown button {
   width: 100%;
-  text-align: left;
-  padding: 10px;
+
+  padding: 12px 14px;
+
   border: none;
   background: transparent;
+
+  text-align: left;
+
   cursor: pointer;
+
+  font-size: 14px;
+  color: #111b21;
+
+  transition: 0.15s;
 }
 
 .dropdown button:hover {
   background: #f5f6f6;
 }
 
-/* 🔥 ACTIVE STATE */
 .dropdown button.active {
   background: #e7fce3;
   color: #00a884;
   font-weight: 600;
 }
 
-@media(max-width:768px){
+/* ================= SEARCH HIGHLIGHT ================= */
 
-  .chat-header{
-    padding:0 10px;
+:host ::ng-deep .highlight .message-bubble {
+  animation: searchHighlight 2s ease;
+}
+
+@keyframes searchHighlight {
+  0% {
+    box-shadow: 0 0 0 4px #ffe082;
   }
 
-  .dropdown{
-    width:200px;
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  .chat-header {
+    padding: 0 10px;
+    gap: 8px;
   }
 
+  .header-left {
+    min-width: unset;
+    flex: 1;
+  }
+
+  .details h3 {
+    max-width: 120px;
+  }
+
+  .search-bar {
+    position: absolute;
+
+    left: 10px;
+    right: 10px;
+    top: 78px;
+
+    max-width: unset;
+
+    margin: 0;
+
+    z-index: 100;
+  }
+
+  .dropdown {
+    width: 200px;
+  }
+}
+
+
+/* ================= TOGGLE ACTIONS ================= */
+
+.toggle-btn {
+  width: 100%;
+  padding: 12px 14px;
+
+  border: none;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+/* Normal hover */
+
+.toggle-btn:hover {
+  background: #f5f6f6;
+}
+
+/* BLOCKED STATE */
+
+.toggle-btn.blocked {
+  color: #e53935;
+  font-weight: 600;
+}
+
+.toggle-btn.blocked:hover {
+  background: rgba(229, 57, 53, 0.08);
+}
+
+/* MUTED STATE */
+
+.toggle-btn.muted {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.toggle-btn.muted:hover {
+  background: rgba(255, 152, 0, 0.08);
 }
