@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-invite-link-modal',
@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './invite-link-modal.component.scss'
 })
 export class InviteLinkModalComponent {
-
+@Input() group: any;
 }

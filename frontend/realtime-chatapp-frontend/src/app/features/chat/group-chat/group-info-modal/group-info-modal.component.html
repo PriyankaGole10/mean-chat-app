@@ -1,229 +1,119 @@
-<div class="modal-overlay">
+<div class="overlay" (click)="close.emit()">
 
-  <div class="modal">
+  <div class="drawer" (click)="$event.stopPropagation()">
 
-    <div class="modal-header">
+    <!-- HEADER -->
+    <app-group-profile-card
+      [group]="group"
+      [totalMembers]="totalMembers"
+      [canEdit]="canEditGroup"
+      (editImage)="changeGroupImage()"
+      (editDescription)="editDescription()"
+      (addMembers)="openAddMembers()">
+    </app-group-profile-card>
 
-      <h2>
-        Group Info
-      </h2>
+    <!-- QUICK MENU -->
+    <div class="menu-section">
 
-      <button
-        class="close-btn"
-        (click)="close.emit()">
-
-        ✕
-
-      </button>
-
-    </div>
-
-    <div class="group-profile">
-
-      <app-avatar
-        [isGroup]="true" [size]="44">
-      </app-avatar>
-
-      <h3>
-        {{ group?.groupName }}
-      </h3>
-
-      <p>
-        {{ group?.participants?.length || 0 }}
-        members
-      </p>
-
-    </div>
-
-    <div class="actions">
-
-      <button
-        class="action-btn"
-        (click)="showMembers=true">
-
-        Members
-
-      </button>
-
-      <button
-        class="action-btn"
-        (click)="showRoles=true">
-
-        Roles
-
-      </button>
-
-      <button
-        class="action-btn"
-        (click)="showSettings=true">
-
-        Settings
-
-      </button>
-
-      <button
-        class="action-btn"
-        (click)="showRequests=true">
-
-        Requests
-
-      </button>
-
-    </div>
-
-    @if(showMembers){
-
-      <div class="section">
-
-        <h4>
-          Members
-        </h4>
-
-        @for(member of group?.participants;track member.user._id){
-
-          <div class="member-row">
-
-            <div class="member-left">
-
-              <app-avatar [size]="44"></app-avatar>
-
-              <div>
-
-                <div class="name">
-
-                  {{ member.user.username }}
-
-                </div>
-
-                <div class="role">
-
-                  {{ member.role }}
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div class="member-actions">
-
-              @if(member.role==='member'){
-
-                <button
-                  class="primary-btn"
-                  (click)="makeModerator(member.user._id)">
-
-                  Make Moderator
-
-                </button>
-
-              }
-
-              @if(member.role==='moderator'){
-
-                <button
-                  class="danger-btn"
-                  (click)="removeModerator(member.user._id)">
-
-                  Remove Moderator
-
-                </button>
-
-              }
-
-            </div>
-
-          </div>
-
-        }
-
+      <div class="menu-item" (click)="openMembers()">
+        Members <span>{{ totalMembers }}</span>
       </div>
 
-    }
-
-    @if(showRoles){
-
-      <div class="section">
-
-        <h4>
-          Role Management
-        </h4>
-
-        @for(member of group?.participants;track member.user._id){
-
-          <div class="member-row">
-
-            <span>
-
-              {{ member.user.username }}
-
-            </span>
-
-            <span>
-
-              {{ member.role }}
-
-            </span>
-
-          </div>
-
-        }
-
+      <div class="menu-item" (click)="openMedia()">
+        Media, Links & Docs
       </div>
 
-    }
+      <div class="menu-item" (click)="openInviteLink()">
+        Invite Link
+      </div>
 
-    @if(showSettings){
+      @if(isAdminOrModerator){
+        <div class="menu-item" (click)="openRequests()">
+          Join Requests <span>{{ pendingRequests.length }}</span>
+        </div>
+      }
 
-      <div class="section">
-
-        <h4>
+      @if(isAdmin){
+        <div class="menu-item" (click)="openSettings()">
           Group Settings
-        </h4>
+        </div>
 
-        <button
-          class="primary-btn">
+        <div class="menu-item" (click)="openRoles()">
+          Roles & Permissions
+        </div>
+      }
 
-          Change Name
+    </div>
 
-        </button>
+    <!-- BODY (SWITCH PANELS USING ANGULAR 17 @if) -->
+    <div class="content">
 
-        <button
-          class="primary-btn">
+      @if(showMembersPanel){
+        <app-group-members
+          [members]="members"
+          [canManage]="isAdminOrModerator"
+          (close)="closeAllPanels()">
+        </app-group-members>
+      }
 
-          Change Description
+      @if(showAddMembersPanel){
+        <app-add-members
+          [groupId]="group._id"
+          [users]="users"
+          (close)="closeAllPanels()"
+          (updated)="loadMembers()">
+        </app-add-members>
+      }
 
-        </button>
+      @if(showEditDescriptionPanel){
+        <app-edit-group-description
+          [groupId]="group._id"
+          [description]="group.groupDescription"
+          (close)="closeAllPanels()"
+          (updated)="group.groupDescription = $event">
+        </app-edit-group-description>
+      }
 
-        <button
-          class="primary-btn">
+      @if(showEditImagePanel){
+        <app-edit-group-image
+          [groupId]="group._id"
+          [previewUrl]="group.groupImage"
+          (close)="closeAllPanels()"
+          (updated)="group.groupImage = $event">
+        </app-edit-group-image>
+      }
 
-          Change Image
+      @if(showRequests){
+        <app-join-requests-modal
+          [groupId]="group._id"
+          [requests]="pendingRequests"
+          (close)="closeAllPanels()"
+          (updated)="loadRequests()">
+        </app-join-requests-modal>
+      }
 
-        </button>
+      @if(showRoles){
+        <app-group-role-modal
+          [groupId]="group._id"
+          [admins]="group.admins"
+          [members]="members"
+          (close)="closeAllPanels()">
+        </app-group-role-modal>
+      }
 
-      </div>
+      @if(showInviteLink){
+        <app-invite-link-modal
+          [group]="group"
+          (close)="closeAllPanels()">
+        </app-invite-link-modal>
+      }
 
-    }
+    </div>
 
-    @if(showRequests){
-
-      <div class="section">
-
-        <h4>
-          Join Requests
-        </h4>
-
-        <button
-          class="primary-btn">
-
-          Open Requests
-
-        </button>
-
-      </div>
-
-    }
+    <!-- LEAVE BUTTON -->
+    <button class="leave-btn" (click)="leaveGroup()">
+      Leave Group
+    </button>
 
   </div>
 

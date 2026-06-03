@@ -15,7 +15,7 @@ requireModerator
 
 const {
 
-    addMember,
+    addMembers,
 
     removeMember,
 
@@ -31,7 +31,7 @@ router.post(
 protect,
 loadGroup,
 requireModerator,
-addMember
+addMembers
 );
 
 router.post(

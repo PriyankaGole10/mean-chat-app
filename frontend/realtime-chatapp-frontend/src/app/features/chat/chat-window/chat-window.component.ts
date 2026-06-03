@@ -14,14 +14,15 @@ import {
   ViewChild
 } from '@angular/core';
 
-import { MessageInputComponent }
-  from '../message-input/message-input.component';
+// import { MessageInputComponent }
+//   from '../message-input/message-input.component';
 import { AvatarComponent } from "../../../shared/components/avatar/avatar.component";
 import { ChatHeaderComponent } from "./chat-header/chat-header.component";
 import { ProfileSidebarComponent } from './profile-sidebar/profile-sidebar.component';
 import { SocketService } from '../../../core/services/socket.service';
 import { UserService } from '../../../core/services/user.service';
 import { MediadetailsSidebarComponent } from "./mediadetails-sidebar/mediadetails-sidebar.component";
+import { MessageInputComponent } from './message-input/message-input.component';
 
 @Component({
   selector: 'app-chat-window',

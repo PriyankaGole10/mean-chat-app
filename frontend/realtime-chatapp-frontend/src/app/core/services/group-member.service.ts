@@ -18,19 +18,19 @@ export class GroupMemberService {
     groupId: string
   ) {
     return this.http.get(
-      `${this.api}/group-member/${groupId}`
+      `${this.api}/groups/member/${groupId}`
     );
   }
 
-  addMember(
+  addMembers(
     groupId: string,
-    userId: string
+    userIds: any[]
   ) {
     return this.http.post(
       `${this.api}/group-member/add`,
       {
         groupId,
-        userId
+        userIds
       }
     );
   }

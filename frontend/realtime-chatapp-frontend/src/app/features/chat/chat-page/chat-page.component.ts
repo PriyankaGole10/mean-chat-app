@@ -58,8 +58,8 @@ export class ChatPageComponent {
   isMobile = false;
   selectedGroup: any = null;
   showGroupInfoModal = false;
-  isMutedSub!:Subscription;
-  isBlockedSub!:Subscription;
+  isMutedSub!: Subscription;
+  isBlockedSub!: Subscription;
 
   // ================= INIT =================
   ngOnInit() {
@@ -68,7 +68,7 @@ export class ChatPageComponent {
 
     const user = sessionStorage.getItem('user');
     this.currentUser = user ? JSON.parse(user) : null;
-   
+
 
     this.socketSer.connect(this.currentUser._id);
 
@@ -76,15 +76,15 @@ export class ChatPageComponent {
     this.listenSocket();
     this.getAllUsers();
 
-    this.isMutedSub =this.userService.isMute.subscribe((res:any)=>{
-       this.loadConversations();
+    this.isMutedSub = this.userService.isMute.subscribe((res: any) => {
+      this.loadConversations();
     })
-    this.isBlockedSub =this.userService.isBlocked.subscribe((res:any)=>{
-       this.loadConversations();
+    this.isBlockedSub = this.userService.isBlocked.subscribe((res: any) => {
+      this.loadConversations();
     })
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.isBlockedSub?.unsubscribe;
     this.isMutedSub?.unsubscribe;
   }
@@ -199,6 +199,11 @@ export class ChatPageComponent {
 
   // ================= GROUP =================
   createGroupChat(data: any) {
+    let payload = {
+      groupName: data.groupName,
+      participants: data.participants,
+      creator: this.currentUser._id
+    }
 
     this.conversationSer.createGroup(data)
       .subscribe((res: any) => {

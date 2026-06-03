@@ -1,0 +1,71 @@
+<div class="group-header-card">
+
+  <button
+    class="back-btn"
+    (click)="back.emit()">
+    ←
+  </button>
+
+  <div class="avatar-section">
+
+    <app-avatar
+      [isGroup]="true"
+      [imageUrl]="group?.groupImage"
+      [size]="110">
+    </app-avatar>
+
+    @if(canEdit){
+
+    <button
+      class="camera-btn"
+      (click)="editImage.emit()">
+
+      📷
+
+    </button>
+
+    }
+
+  </div>
+
+  <h2>
+    {{group?.groupName}}
+  </h2>
+
+  <div class="member-count">
+
+    {{totalMembers}} Members
+
+  </div>
+
+  <div class="description">
+
+    {{group?.groupDescription || 'No description'}}
+
+  </div>
+
+  <div class="actions">
+
+    @if(canEdit){
+
+    <button
+      class="action-btn"
+      (click)="editDescription.emit()">
+
+      ✏️ Description
+
+    </button>
+
+    <button
+      class="action-btn"
+      (click)="addMembers.emit()">
+
+      ➕ Add Member
+
+    </button>
+
+    }
+
+  </div>
+
+</div>

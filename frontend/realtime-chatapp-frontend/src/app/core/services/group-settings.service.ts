@@ -14,26 +14,26 @@ export class GroupSettingsService {
     private http: HttpClient
   ) {}
 
-  updateName(data: any) {
+  updateGroupName(data: any) {
     return this.http.put(
       `${this.api}/group-settings/name`,
-      data
+      {data}
     );
   }
 
-  updateDescription(data: any) {
+  updateGroupDescription(data: any) {
     return this.http.put(
       `${this.api}/group-settings/description`,
       data
     );
   }
 
-  updateImage(data: any) {
-    return this.http.put(
-      `${this.api}/group-settings/image`,
-      data
-    );
-  }
+ updateImage(groupId: string, image: string) {
+  return this.http.put(`${this.api}/group-settings/image`, {
+    groupId,
+    image
+  });
+}
 
   toggleMessagePermission(data: any) {
     return this.http.put(

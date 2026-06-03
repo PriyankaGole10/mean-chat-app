@@ -1,0 +1,29 @@
+<div class="add-members">
+
+  <div class="panel-header">
+
+    <button (click)="close.emit()">
+      ←
+    </button>
+
+    <h3>Add Members</h3>
+
+  </div>
+  <app-user-selector
+    [users]="users"
+    (selectionChange)="selectedUsers = $event">
+  </app-user-selector>
+
+  <div class="footer">
+
+    <button
+      class="save-btn"
+      (click)="addMembers()">
+
+      Add Selected Members
+
+    </button>
+
+  </div>
+
+</div>

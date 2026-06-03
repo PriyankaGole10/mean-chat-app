@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-member-list-item',
@@ -8,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './member-list-item.component.scss'
 })
 export class MemberListItemComponent {
-
+@Input() member: any;
+@Input() showActions: boolean = false;
 }

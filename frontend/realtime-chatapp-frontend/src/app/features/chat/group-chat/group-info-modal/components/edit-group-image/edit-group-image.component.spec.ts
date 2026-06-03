@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddMembersModalComponent } from './add-members-modal.component';
+import { EditGroupImageComponent } from './edit-group-image.component';
 
-describe('AddMembersModalComponent', () => {
-  let component: AddMembersModalComponent;
-  let fixture: ComponentFixture<AddMembersModalComponent>;
+describe('EditGroupImageComponent', () => {
+  let component: EditGroupImageComponent;
+  let fixture: ComponentFixture<EditGroupImageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddMembersModalComponent]
+      imports: [EditGroupImageComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AddMembersModalComponent);
+    fixture = TestBed.createComponent(EditGroupImageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -53,14 +53,14 @@ router.get(
 
 // APPROVE JOIN REQUEST (ADMIN + MODERATOR)
 router.patch(
-    "/approve-request/:requestId",
+    "/:id/approve-request/:requestId",
     protect,
     approveJoinRequest
 );
 
 // REJECT JOIN REQUEST (ADMIN + MODERATOR)
 router.patch(
-    "/reject-request/:requestId",
+    "/:id/reject-request/:requestId",
     protect,
     rejectJoinRequest
 );

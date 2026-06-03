@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-empty-state',
@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './empty-state.component.scss'
 })
 export class EmptyStateComponent {
-
+@Input() message: string = '';
 }

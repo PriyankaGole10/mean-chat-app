@@ -47,8 +47,8 @@ app.use("/api/messages",messageRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/groups/member",groupMemberRoutes);
 app.use("/api/groups/role",groupRoleRoutes);
-app.use("/api/groups",groupSettingsRoutes);
-app.use("/api/groups",groupInviteRoutes);
+app.use("/api/groups-settings/",groupSettingsRoutes);
+app.use("/api/group-invite",groupInviteRoutes);
 
 // HOME ROUTE
 app.get("/", (req, res) => {

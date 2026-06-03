@@ -1,0 +1,35 @@
+<div class="image-panel">
+
+  <div class="panel-header">
+
+    <button (click)="close.emit()">
+      ←
+    </button>
+
+    <h3>Group Image</h3>
+
+  </div>
+
+  <div class="preview">
+
+    <app-avatar
+      [isGroup]="true"
+      [imageUrl]="previewUrl"
+      [size]="180">
+    </app-avatar>
+
+  </div>
+
+  <input
+    type="file"
+    (change)="onFileSelected($event)">
+
+  <button
+    class="upload-btn"
+    (click)="upload()">
+
+    Save Image
+
+  </button>
+
+</div>

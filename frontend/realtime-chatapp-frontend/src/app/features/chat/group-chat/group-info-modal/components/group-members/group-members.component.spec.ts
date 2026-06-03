@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupMembersModalComponent } from './group-members-modal.component';
+import { GroupMembersModalComponent } from './group-members.component';
 
 describe('GroupMembersModalComponent', () => {
   let component: GroupMembersModalComponent;

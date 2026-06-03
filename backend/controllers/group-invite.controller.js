@@ -1,14 +1,14 @@
 const crypto =
-require("crypto");
+    require("crypto");
 
 const Conversation =
-require("../models/conversation.model");
+    require("../models/conversation.model");
 
 const GroupInvite =
-require("../models/groupInvite.model");
+    require("../models/groupInvite.model");
 
 const GroupJoinRequest =
-require("../models/groupJoinRequest.model");
+    require("../models/groupJoinRequest.model");
 
 // CREATE INVITE LINK
 async function createInviteLink(
@@ -19,29 +19,29 @@ async function createInviteLink(
     try {
 
         const group =
-        req.group;
+            req.group;
 
         const inviteCode =
-        crypto.randomBytes(16)
-        .toString("hex");
+            crypto.randomBytes(16)
+                .toString("hex");
 
         const invite =
-        await GroupInvite.create({
+            await GroupInvite.create({
 
-            conversationId:
-            group._id,
+                conversationId:
+                    group._id,
 
-            inviteCode,
+                inviteCode,
 
-            createdBy:
-            req.user._id
+                createdBy:
+                    req.user._id
 
-        });
+            });
 
         res.status(201).json({
 
             message:
-            "Invite link created",
+                "Invite link created",
 
             inviteCode,
 
@@ -53,7 +53,7 @@ async function createInviteLink(
 
         res.status(500).json({
             message:
-            error.message
+                error.message
         });
 
     }
@@ -73,28 +73,28 @@ async function disableInviteLink(
         } = req.params;
 
         const invite =
-        await GroupInvite.findOne({
-            inviteCode
-        });
+            await GroupInvite.findOne({
+                inviteCode
+            });
 
         if (!invite) {
 
             return res.status(404).json({
                 message:
-                "Invite not found"
+                    "Invite not found"
             });
 
         }
 
         invite.isActive =
-        false;
+            false;
 
         await invite.save();
 
         res.status(200).json({
 
             message:
-            "Invite disabled"
+                "Invite disabled"
 
         });
 
@@ -102,7 +102,7 @@ async function disableInviteLink(
 
         res.status(500).json({
             message:
-            error.message
+                error.message
         });
 
     }
@@ -122,64 +122,55 @@ async function joinViaInvite(
         } = req.params;
 
         const invite =
-        await GroupInvite.findOne({
+            await GroupInvite.findOne({
 
-            inviteCode,
+                inviteCode,
 
-            isActive: true
+                isActive: true
 
-        });
+            });
 
         if (!invite) {
 
             return res.status(404).json({
 
                 message:
-                "Invalid invite"
+                    "Invalid invite"
 
             });
 
         }
 
         const group =
-        await Conversation.findById(
-            invite.conversationId
-        );
+            await Conversation.findById(
+                invite.conversationId
+            );
 
         if (!group) {
 
             return res.status(404).json({
 
                 message:
-                "Group not found"
+                    "Group not found"
 
             });
 
         }
 
         const alreadyMember =
-        group.participants.some(
-            p =>
-            p.user.toString() ===
-            req.user._id.toString()
-        );
+            group.participants.some(
+                p => p.user.toString() === req.user._id.toString()
+            );
 
         const isAdmin =
-        group.groupAdmin.toString() ===
-        req.user._id.toString();
+            group.admins.some(
+                a => a.toString() === req.user._id.toString()
+            );
 
-        if (
-            alreadyMember ||
-            isAdmin
-        ) {
-
+        if (alreadyMember || isAdmin) {
             return res.status(400).json({
-
-                message:
-                "Already a member"
-
+                message: "Already a member"
             });
-
         }
 
         // JOIN APPROVAL ENABLED
@@ -188,25 +179,25 @@ async function joinViaInvite(
         ) {
 
             const exists =
-            await GroupJoinRequest.findOne({
+                await GroupJoinRequest.findOne({
 
-                conversationId:
-                group._id,
+                    conversationId:
+                        group._id,
 
-                user:
-                req.user._id,
+                    user:
+                        req.user._id,
 
-                status:
-                "pending"
+                    status:
+                        "pending"
 
-            });
+                });
 
             if (exists) {
 
                 return res.status(400).json({
 
                     message:
-                    "Request already pending"
+                        "Request already pending"
 
                 });
 
@@ -215,17 +206,17 @@ async function joinViaInvite(
             await GroupJoinRequest.create({
 
                 conversationId:
-                group._id,
+                    group._id,
 
                 user:
-                req.user._id
+                    req.user._id
 
             });
 
             return res.status(200).json({
 
                 message:
-                "Join request sent"
+                    "Join request sent"
 
             });
 
@@ -234,10 +225,10 @@ async function joinViaInvite(
         group.participants.push({
 
             user:
-            req.user._id,
+                req.user._id,
 
             role:
-            "member"
+                "member"
 
         });
 
@@ -250,7 +241,7 @@ async function joinViaInvite(
         res.status(200).json({
 
             message:
-            "Joined group successfully"
+                "Joined group successfully"
 
         });
 
@@ -258,7 +249,7 @@ async function joinViaInvite(
 
         res.status(500).json({
             message:
-            error.message
+                error.message
         });
 
     }
@@ -274,19 +265,19 @@ async function getPendingRequests(
     try {
 
         const requests =
-        await GroupJoinRequest.find({
+            await GroupJoinRequest.find({
 
-            conversationId:
-            req.params.id,
+                conversationId:
+                    req.params.id,
 
-            status:
-            "pending"
+                status:
+                    "pending"
 
-        })
-        .populate(
-            "user",
-            "username email avatar"
-        );
+            })
+                .populate(
+                    "user",
+                    "username email avatar"
+                );
 
         res.status(200).json(
             requests
@@ -296,7 +287,7 @@ async function getPendingRequests(
 
         res.status(500).json({
             message:
-            error.message
+                error.message
         });
 
     }
@@ -316,47 +307,47 @@ async function approveJoinRequest(
         } = req.params;
 
         const request =
-        await GroupJoinRequest.findById(
-            requestId
-        );
+            await GroupJoinRequest.findById(
+                requestId
+            );
 
         if (!request) {
 
             return res.status(404).json({
 
                 message:
-                "Request not found"
+                    "Request not found"
 
             });
 
         }
 
         const group =
-        await Conversation.findById(
-            request.conversationId
-        );
+            await Conversation.findById(
+                request.conversationId
+            );
 
         group.participants.push({
 
             user:
-            request.user,
+                request.user,
 
             role:
-            "member"
+                "member"
 
         });
 
         await group.save();
 
         request.status =
-        "approved";
+            "approved";
 
         await request.save();
 
         res.status(200).json({
 
             message:
-            "Request approved"
+                "Request approved"
 
         });
 
@@ -364,7 +355,7 @@ async function approveJoinRequest(
 
         res.status(500).json({
             message:
-            error.message
+                error.message
         });
 
     }
@@ -384,30 +375,30 @@ async function rejectJoinRequest(
         } = req.params;
 
         const request =
-        await GroupJoinRequest.findById(
-            requestId
-        );
+            await GroupJoinRequest.findById(
+                requestId
+            );
 
         if (!request) {
 
             return res.status(404).json({
 
                 message:
-                "Request not found"
+                    "Request not found"
 
             });
 
         }
 
         request.status =
-        "rejected";
+            "rejected";
 
         await request.save();
 
         res.status(200).json({
 
             message:
-            "Request rejected"
+                "Request rejected"
 
         });
 
@@ -415,7 +406,7 @@ async function rejectJoinRequest(
 
         res.status(500).json({
             message:
-            error.message
+                error.message
         });
 
     }

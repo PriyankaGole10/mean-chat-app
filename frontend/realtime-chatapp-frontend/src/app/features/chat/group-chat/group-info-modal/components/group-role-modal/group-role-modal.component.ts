@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-group-role-modal',
@@ -8,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './group-role-modal.component.scss'
 })
 export class GroupRoleModalComponent {
-
+@Input() groupId!: string;
+@Input() admins: any[] = [];
+@Input() members: any[] = [];
 }

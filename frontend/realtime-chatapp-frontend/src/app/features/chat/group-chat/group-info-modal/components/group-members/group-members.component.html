@@ -1,0 +1,36 @@
+<div class="members-panel">
+
+  <div class="panel-header">
+
+    <button
+      class="back-btn"
+      (click)="close.emit()">
+
+      ←
+
+    </button>
+
+    <h3>Members</h3>
+
+  </div>
+
+  @if(members.length){
+
+    @for(member of members; track member._id){
+
+      <app-member-list-item
+        [member]="member"
+        [showActions]="canManage">
+      </app-member-list-item>
+
+    }
+
+  }@else{
+
+    <app-empty-state
+      message="No members">
+    </app-empty-state>
+
+  }
+
+</div>

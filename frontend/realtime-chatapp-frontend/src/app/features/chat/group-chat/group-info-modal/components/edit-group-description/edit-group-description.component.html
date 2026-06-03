@@ -1,0 +1,26 @@
+<div class="edit-description">
+
+  <div class="panel-header">
+
+    <button
+      (click)="close.emit()">
+      ←
+    </button>
+
+    <h3>Edit Description</h3>
+
+  </div>
+
+  <textarea
+    [(ngModel)]="description">
+  </textarea>
+
+  <button
+    class="save-btn"
+    (click)="save()">
+
+    Save
+
+  </button>
+
+</div>

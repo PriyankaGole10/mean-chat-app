@@ -1,6 +1,7 @@
 <img
-  src="https://cdn-icons-png.flaticon.com/512/6387/6387948.png"
+  [src]="imageUrl || (isGroup
+    ? 'https://cdn-icons-png.flaticon.com/512/6387/6387948.png'
+    : 'https://cdn-icons-png.flaticon.com/512/149/149071.png')"
   [style.width.px]="size"
   [style.height.px]="size"
-  alt="group"
 />

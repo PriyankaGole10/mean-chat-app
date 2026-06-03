@@ -102,7 +102,8 @@ async function createGroup(req,res){
 
         const {
             groupName,
-            participants
+            participants,
+            creator
         } = req.body;
 
         if(!groupName){
@@ -135,16 +136,17 @@ async function createGroup(req,res){
 
             groupName,
 
-            groupAdmin:req.user._id,
+            admins: [req.user._id],
 
-            participants:users
+            participants:users,
+            createdBy: req.user._id
 
         });
 
         const populatedGroup =
         await Conversation.findById(group._id)
         .populate("participants.user")
-        .populate("groupAdmin");
+        .populate("admins");
 
         res.status(201).json(populatedGroup);
 

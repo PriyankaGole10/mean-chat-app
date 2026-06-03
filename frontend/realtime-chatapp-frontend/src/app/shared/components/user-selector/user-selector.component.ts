@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-user-selector',
@@ -9,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class UserSelectorComponent {
 
+
+   @Input() users: any[] = [];
+   @Output() selectionChange = new EventEmitter<any[]>();
 }

@@ -12,4 +12,7 @@ export class AvatarComponent {
 
   @Input() imageUrl = '';
   @Input() size  = 44;
+
+   
+
 }

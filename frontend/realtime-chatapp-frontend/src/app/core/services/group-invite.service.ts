@@ -14,37 +14,44 @@ export class GroupInviteService {
     private http: HttpClient
   ) {}
 
-  createInvite(groupId: string) {
+   createInvite(groupId: string) {
     return this.http.post(
       `${this.api}/group-invite/${groupId}/invite`,
       {}
     );
   }
 
-  disableInvite(inviteCode: string) {
+    disableInvite(inviteCode: string) {
     return this.http.delete(
       `${this.api}/group-invite/invite/${inviteCode}`
     );
   }
 
-  getJoinRequests(groupId: string) {
+  getPendingRequests(groupId: string) {
     return this.http.get(
       `${this.api}/group-invite/${groupId}/pending-requests`
     );
   }
 
-  approveRequest(requestId: string) {
-    return this.http.patch(
-      `${this.api}/group-invite/approve-request/${requestId}`,
+   joinViaInvite(inviteCode: string) {
+    return this.http.post(
+      `${this.api}/group-invite/join/${inviteCode}`,
       {}
     );
   }
 
-  rejectRequest(requestId: string) {
-    return this.http.patch(
-      `${this.api}/group-invite/reject-request/${requestId}`,
-      {}
-    );
-  }
+  approveRequest(groupId: string, requestId: string) {
+  return this.http.patch(
+    `${this.api}/group-invite/${groupId}/approve-request/${requestId}`,
+    {}
+  );
+}
+
+rejectRequest(groupId: string, requestId: string) {
+  return this.http.patch(
+    `${this.api}/group-invite/${groupId}/reject-request/${requestId}`,
+    {}
+  );
+}
 
 }

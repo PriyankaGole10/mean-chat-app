@@ -1,94 +1,61 @@
 const Conversation =
-require("../models/conversation.model");
+    require("../models/conversation.model");
 
 // ADD MEMBER
-async function addMember(
-    req,
-    res
-) {
+async function addMembers(req, res) {
 
     try {
 
-        const {
-            userId,
-            groupId
-        } = req.body;
+        const { userIds, groupId } = req.body;
 
-        const group =
-        await Conversation.findById(groupId);
+        const group = await Conversation.findById(groupId);
 
         if (!group) {
-
             return res.status(404).json({
                 message: "Group not found"
             });
-
         }
 
-        const exists =
-        group.participants.find(
-            p =>
-            p.user.toString() ===
-            userId
+        // convert existing users to Set
+        const existingUsers = new Set(
+            group.participants.map(p => p.user.toString())
         );
 
-        const isAdminUser =
-        group.groupAdmin.toString() ===
-        userId;
+        const addedUsers = [];
 
-        if (
-            exists ||
-            isAdminUser
-        ) {
+        for (const userId of userIds) {
 
-            return res.status(400).json({
-                message:
-                "User already exists in group"
+            if (existingUsers.has(userId)) {
+                continue; // already in group
+            }
+
+            group.participants.push({
+                user: userId,
+                role: "member"
             });
 
+            addedUsers.push(userId);
         }
-
-        group.participants.push({
-
-            user: userId,
-
-            role: "member"
-
-        });
 
         await group.save();
 
-        const updatedGroup =
-        await Conversation.findById(
-            group._id
-        )
-        .populate(
-            "participants.user",
-            "username email avatar"
-        );
+        const updatedGroup = await Conversation.findById(groupId)
+            .populate("participants.user", "username email avatar")
+            .populate("admins", "username email avatar");
 
-        // 🔥 REAL TIME UPDATE
-        global.io.to(groupId).emit(
-            "member-added",
-            {
-                groupId,
-                userId,
-                group: updatedGroup
-            }
-        );
-
-        res.status(200).json(
-            updatedGroup
-        );
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
+        global.io.to(groupId).emit("members-added", {
+            groupId,
+            addedUsers,
+            group: updatedGroup
         });
 
-    }
+        res.status(200).json(updatedGroup);
 
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        });
+    }
 }
 
 // REMOVE MEMBER
@@ -105,7 +72,7 @@ async function removeMember(
         } = req.body;
 
         const group =
-        await Conversation.findById(groupId);
+            await Conversation.findById(groupId);
 
         if (!group) {
 
@@ -116,28 +83,28 @@ async function removeMember(
         }
 
         const target =
-        group.participants.find(
-            p =>
-            p.user.toString() ===
-            userId
-        );
+            group.participants.find(
+                p =>
+                    p.user.toString() ===
+                    userId
+            );
 
         if (!target) {
 
             return res.status(404).json({
                 message:
-                "Member not found"
+                    "Member not found"
             });
 
         }
 
         // REMOVE MEMBER
         group.participants =
-        group.participants.filter(
-            p =>
-            p.user.toString() !==
-            userId
-        );
+            group.participants.filter(
+                p =>
+                    p.user.toString() !==
+                    userId
+            );
 
         await group.save();
 
@@ -153,7 +120,7 @@ async function removeMember(
 
         res.status(200).json({
             message:
-            "Member removed successfully"
+                "Member removed successfully"
         });
 
     } catch (error) {
@@ -179,10 +146,10 @@ async function leaveGroup(
         } = req.body;
 
         const userId =
-        req.user._id.toString();
+            req.user._id.toString();
 
         const group =
-        await Conversation.findById(groupId);
+            await Conversation.findById(groupId);
 
         if (!group) {
 
@@ -193,24 +160,31 @@ async function leaveGroup(
         }
 
         const isAdmin =
-        group.groupAdmin.toString() ===
-        userId;
+            group.admins.some(
+                a => a.toString() === userId
+            );
 
         if (isAdmin) {
 
-            return res.status(400).json({
-                message:
-                "Transfer admin before leaving group"
-            });
+            const remainingAdmins = group.admins.filter(
+                a => a.toString() !== userId
+            );
 
+            if (remainingAdmins.length === 0) {
+                return res.status(400).json({
+                    message: "Cannot leave group without transferring admin"
+                });
+            }
+
+            group.admins = remainingAdmins;
         }
 
         group.participants =
-        group.participants.filter(
-            p =>
-            p.user.toString() !==
-            userId
-        );
+            group.participants.filter(
+                p =>
+                    p.user.toString() !==
+                    userId
+            );
 
         await group.save();
 
@@ -225,7 +199,7 @@ async function leaveGroup(
 
         res.status(200).json({
             message:
-            "Left group successfully"
+                "Left group successfully"
         });
 
     } catch (error) {
@@ -239,62 +213,56 @@ async function leaveGroup(
 }
 
 // GET MEMBERS
-async function getMembers(
-    req,
-    res
-) {
-
+async function getMembers(req, res) {
     try {
 
-        const group =
-        await Conversation.findById(
-            req.params.id
-        )
-        .populate(
-            "groupAdmin",
-            "username email avatar"
-        )
-        .populate(
+        const group = req.group; // from loadGroup middleware
+
+        if (!group) {
+            return res.status(404).json({
+                message: "Group not found"
+            });
+        }
+
+        const populatedGroup = await group.populate(
             "participants.user",
             "username email avatar"
         );
 
-        const moderators =
-        group.participants.filter(
-            p =>
-            p.role === "moderator"
-        );
+        const users = group.participants.map(p => {
 
-        const members =
-        group.participants.filter(
-            p =>
-            p.role === "member"
-        );
+            let role = "member";
 
-        res.status(200).json({
+            if (
+                group.admins.some(
+                    a => a.toString() === p.user._id.toString()
+                )
+            ) {
+                role = "admin";
+            }
+            else if (p.role === "moderator") {
+                role = "moderator";
+            }
 
-            admin:
-            group.groupAdmin,
-
-            moderators,
-
-            members
-
+            return {
+                user: p.user,
+                role
+            };
         });
 
-    } catch (error) {
+        res.json(users);
 
-        res.status(500).json({
-            message: error.message
-        });
 
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: err.message });
     }
-
 }
+
 
 module.exports = {
 
-    addMember,
+    addMembers,
 
     removeMember,
 

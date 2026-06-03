@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.description-panel {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #f5f7fb;
+}
+
+.panel-header {
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: white;
+
+  padding: 0 18px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+textarea {
+  margin: 16px;
+
+  flex: 1;
+
+  border: none;
+
+  border-radius: 16px;
+
+  background: white;
+
+  padding: 16px;
+
+  resize: none;
+
+  outline: none;
+
+  font-size: 15px;
+}
+
+.save-btn {
+  width: 100px;
+  height: 40px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #128c7e;
+  color: white;
+
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+
+  .panel-header {
+    padding: 0 14px;
+  }
+
+  .panel-title {
+    font-size: 16px;
+  }
+
+  .member-card,
+  .user-card {
+    padding: 10px;
+  }
+
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .image-preview {
+    width: 140px;
+    height: 140px;
+  }
+
+  .upload-btn {
+    width: calc(100% - 30px);
+  }
+
+}
