@@ -33,8 +33,8 @@ export class SettingsComponent {
     }
 
     // Load saved preferences
-    const darkMode = localStorage.getItem('darkMode');
-    const notifications = localStorage.getItem('notifications');
+    const darkMode = sessionStorage.getItem('darkMode');
+    const notifications = sessionStorage.getItem('notifications');
 
     this.darkMode = darkMode === 'true';
     this.notifications = notifications !== 'false';
@@ -56,7 +56,7 @@ export class SettingsComponent {
 
     this.darkMode = !this.darkMode;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       'darkMode',
       String(this.darkMode)
     );
@@ -72,7 +72,7 @@ export class SettingsComponent {
 
     this.notifications = !this.notifications;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       'notifications',
       String(this.notifications)
     );
@@ -98,8 +98,8 @@ export class SettingsComponent {
 
     sessionStorage.clear();
 
-    localStorage.removeItem('darkMode');
-    localStorage.removeItem('notifications');
+    sessionStorage.removeItem('darkMode');
+    sessionStorage.removeItem('notifications');
 
     this.router.navigate(['/login']);
   }

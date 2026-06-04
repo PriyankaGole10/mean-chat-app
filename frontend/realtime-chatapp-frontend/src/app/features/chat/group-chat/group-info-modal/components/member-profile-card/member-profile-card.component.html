@@ -1,0 +1,100 @@
+<div class="profile-panel">
+
+  <div class="profile-header">
+
+    <button
+      class="back-btn"
+      (click)="close.emit()">
+
+      ←
+
+    </button>
+
+    <h3>Member Info</h3>
+
+  </div>
+
+
+  <div class="profile-body">
+
+    <div class="avatar">
+
+      {{
+        member?.username
+          ?.charAt(0)
+          ?.toUpperCase()
+      }}
+
+    </div>
+
+
+    <div class="member-name">
+
+      {{ member?.username }}
+
+      @if(isCurrentUser){
+
+        <span>(You)</span>
+
+      }
+
+    </div>
+
+
+    @if(member?.role === 'admin'){
+
+      <div class="role admin">
+
+        Admin
+
+      </div>
+
+    }
+
+    @if(member?.role === 'moderator'){
+
+      <div class="role moderator">
+
+        Moderator
+
+      </div>
+
+    }
+
+
+    <div class="info-card">
+
+      <div class="label">
+
+        Email
+
+      </div>
+
+      <div class="value">
+
+        {{ member?.email }}
+
+      </div>
+
+    </div>
+
+
+    <!-- <div class="info-card">
+
+      <div class="label">
+
+        User ID
+
+      </div>
+
+      <div class="value">
+
+        {{ member?._id }}
+
+      </div>
+
+    </div> -->
+
+  </div>
+
+</div>

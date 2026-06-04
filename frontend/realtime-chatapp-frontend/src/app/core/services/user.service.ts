@@ -12,7 +12,11 @@ export class UserService {
   private http = inject(HttpClient)
 
 isMute = new BehaviorSubject<boolean>(false); 
-isBlocked = new BehaviorSubject<boolean>(false); 
+isBlocked = new BehaviorSubject<boolean>(false);
+currentUser =
+    JSON.parse(
+      sessionStorage.getItem('user') || '{}'
+    )
 
 
   searchUsers(query: string) {   

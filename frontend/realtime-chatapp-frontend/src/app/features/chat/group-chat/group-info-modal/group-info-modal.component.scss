@@ -1,88 +1,291 @@
-/* FULL SCREEN OVERLAY */
+/* =========================
+   OVERLAY
+========================= */
+
 .overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
   display: flex;
   justify-content: flex-end;
-  z-index: 2000;
+
+  background: transparent;
+  pointer-events: none;
+
+  z-index: 100;
 }
 
-/* DRAWER */
+/* =========================
+   DRAWER
+========================= */
+
 .drawer {
   width: 420px;
   height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
   background: #f5f7fb;
 
-  display: flex;
-  flex-direction: column;
-
-  animation: slideIn 0.25s ease forwards;
-
-  box-shadow: -10px 0 25px rgba(0,0,0,0.2);
   overflow: hidden;
-}
+  pointer-events: auto;
 
-/* ANIMATION */
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-/* MENU */
-.menu-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-}
-
-.menu-item {
-  background: white;
-  min-height: 56px;
-  border-radius: 14px;
-  padding: 0 18px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.menu-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,.08);
-}
-
-/* BUTTON */
-.leave-btn {
-  margin: auto 12px 12px;
-  height: 52px;
-  border: none;
-  border-radius: 14px;
-  background: #ffebee;
-  color: #d32f2f;
-  font-weight: 600;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .drawer {
-    width: 100%;
-  }
+  animation: slideIn 0.2s ease;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08);
 }
 
 .drawer.closing {
   animation: slideOut 0.2s ease forwards;
 }
 
+/* =========================
+   HEADER
+========================= */
+
+.drawer-header {
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  background: white;
+  border-bottom: 1px solid #eceff3;
+
+  flex-shrink: 0;
+}
+
+.drawer-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  background: #f1f5f9;
+}
+
+/* =========================
+   SCROLLABLE CONTENT
+========================= */
+
+.content {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  //   height: 100%;
+  // overflow: hidden;
+}
+
+/* Custom Scrollbar */
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 20px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Firefox */
+
+.content {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+}
+
+/* =========================
+   MENU SECTION
+========================= */
+
+.menu-section {
+  margin: 12px;
+
+  background: #fff;
+
+  border-radius: 14px;
+  overflow: hidden;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item {
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  background: white;
+
+  cursor: pointer;
+
+  border-bottom: 1px solid #eceff3;
+
+  transition: background 0.15s ease;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:hover {
+  background: #f7f9fc;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.menu-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-icon {
+  width: 22px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.count {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.danger {
+  color: #ef4444;
+}
+
+/* =========================
+   ADD MEMBER BUTTON
+========================= */
+
+.add-member-btn {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #128c7e;
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 16px;
+  line-height: 1;
+
+  transition: 0.2s;
+}
+
+.add-member-btn:hover {
+  background: #0f766e;
+}
+
+/* =========================
+   LEAVE BUTTON
+========================= */
+
+.leave-btn {
+  margin: 12px;
+
+  height: 52px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: white;
+
+  color: #d32f2f;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  transition: 0.2s;
+}
+
+.leave-btn:hover {
+  background: #fff5f5;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
 @keyframes slideOut {
-  from { transform: translateX(0); }
-  to { transform: translateX(100%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .drawer {
+    width: 100%;
+  }
 }

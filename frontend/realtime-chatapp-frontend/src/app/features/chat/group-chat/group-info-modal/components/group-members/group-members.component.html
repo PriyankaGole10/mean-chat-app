@@ -1,36 +1,73 @@
+
 <div class="members-panel">
 
+  <!-- FIXED HEADER -->
   <div class="panel-header">
 
     <button
       class="back-btn"
       (click)="close.emit()">
-
       ←
-
     </button>
 
     <h3>Members</h3>
 
+    @if(canManage){
+      <button class="add-btn" (click)="addMembersPanelOpen()">
+        +
+      </button>
+    }
+
   </div>
 
-  @if(members.length){
+  <!-- SCROLLABLE CONTENT -->
+  <div class="members-list">
 
-    @for(member of members; track member._id){
+    @if(members.length){
 
-      <app-member-list-item
-        [member]="member"
-        [showActions]="canManage">
-      </app-member-list-item>
+      @for(member of members; track member._id){
+
+        <div (click)="memberClick.emit(member)">
+
+          <app-member-list-item
+            [member]="member"
+            [showActions]="canManage">
+          </app-member-list-item>
+
+        </div>
+
+      }
+
+    } @else {
+
+      <app-empty-state
+        message="No members">
+      </app-empty-state>
 
     }
 
-  }@else{
-
-    <app-empty-state
-      message="No members">
-    </app-empty-state>
-
-  }
+  </div>
 
 </div>
+
+
+
+@if(selectedMember){
+
+<app-member-profile-card
+[member]="selectedMember"
+  (close)="closeProfile()" >
+</app-member-profile-card>
+}
+
+
+<!-- @if(showAddMembersPanel){
+
+<app-non-existing-group-members
+  [groupId]="group._id"
+  [existingMembers]="members"
+  (close)="showAddMembersPanel = false"
+  (added)="loadMembers()">
+</app-non-existing-group-members>
+
+} -->

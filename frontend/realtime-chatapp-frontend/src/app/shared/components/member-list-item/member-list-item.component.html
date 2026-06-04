@@ -1,1 +1,33 @@
-<p>member-list-item works!</p>
+<div class="member-item">
+
+    <div class="member-left">
+
+        <app-avatar [imageUrl]="member.avatar" [size]="44">
+        </app-avatar>
+
+        <div class="member-info">
+
+            <div class="member-name">
+                {{ member.username }}
+            </div>
+            @if(member.role === 'admin' || member.role === 'moderator'){
+            <div class="member-role">
+                {{ member.role }}
+            </div>
+            }
+
+        </div>
+
+    </div>
+
+    @if(showActions){
+
+    <button class="action-btn" (click)="$event.stopPropagation()">
+
+        ⋮
+
+    </button>
+
+    }
+
+</div>

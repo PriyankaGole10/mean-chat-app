@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 const initializeGroupSocket = require("./group.socket");
 const Message = require("../models/message.model");
-
+const jwt = require("jsonwebtoken");
 const onlineUsers = new Map();
 
 const initializeSocket = (server) => {
@@ -11,6 +11,41 @@ const initializeSocket = (server) => {
             origin: "http://localhost:4200",
             methods: ["GET", "POST"]
         }
+    });
+
+      // SOCKET AUTH MIDDLEWARE
+    io.use(async (socket, next) => {
+
+        try {
+
+            const token =
+                socket.handshake.auth.token;
+
+            if (!token) {
+                return next(
+                    new Error("Unauthorized")
+                );
+            }
+
+            const decoded =
+                jwt.verify(
+                    token,
+                    process.env.JWT_SECRET
+                );
+
+            socket.userId =
+                decoded.id;
+
+            next();
+
+        } catch (err) {
+
+            next(
+                new Error("Unauthorized")
+            );
+
+        }
+
     });
 
     // GLOBAL SOCKET ACCESS (FOR CONTROLLERS)
@@ -26,7 +61,7 @@ const initializeSocket = (server) => {
         // USER ONLINE
         socket.on("user-connected", (userId) => {
 
-            onlineUsers.set(userId, socket.id);
+            onlineUsers.set(socket.userId, socket.id);
 
             io.emit(
                 "online-users",

@@ -1,0 +1,92 @@
+<div class="add-members-panel">
+
+  <!-- HEADER -->
+  <div class="panel-header">
+
+    <button
+      class="back-btn"
+      (click)="close.emit()">
+      ←
+    </button>
+
+    <div class="header-content">
+
+      <h3>Add Members</h3>
+
+      <span>
+        {{ selectedUsers.length }} selected
+      </span>
+
+    </div>
+
+  </div>
+
+  <!-- USER LIST -->
+  <div class="user-list">
+
+    @if(filteredUsers.length){
+
+      @for(user of filteredUsers; track user._id){
+
+        <div
+          class="user-item"
+          (click)="toggleUser(user)">
+
+          <div class="user-info">
+
+            <div class="avatar">
+              {{ user.username?.charAt(0)?.toUpperCase() }}
+            </div>
+
+            <div class="details">
+
+              <div class="name">
+                {{ user.username }}
+              </div>
+
+              <div class="email">
+                {{ user.email }}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div
+            class="checkmark"
+            [class.selected]="isSelected(user)">
+
+            ✓
+
+          </div>
+
+        </div>
+
+      }
+
+    } @else {
+
+      <div class="empty-state">
+        No users available
+      </div>
+
+    }
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+
+    <button
+      class="add-members-btn"
+      [disabled]="!selectedUsers.length"
+      (click)="addMembers()">
+
+      Add Members
+      ({{ selectedUsers.length }})
+
+    </button>
+
+  </div>
+
+</div>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,11 @@ export class GroupMemberService {
     private http: HttpClient
   ) {}
 
-  getMembers(
-    groupId: string
-  ) {
-    return this.http.get(
-      `${this.api}/groups/member/${groupId}`
-    );
-  }
+  getMembers(groupId: string): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/groups/member/${groupId}`
+  );
+}
 
   addMembers(
     groupId: string,

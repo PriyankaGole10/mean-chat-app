@@ -14,6 +14,8 @@ import { JoinRequestsComponent } from "./components/join-requests-modal/join-req
 import { GroupRoleModalComponent } from "./components/group-role-modal/group-role-modal.component";
 import { InviteLinkModalComponent } from "./components/invite-link-modal/invite-link-modal.component";
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { MemberProfileCardComponent } from "./components/member-profile-card/member-profile-card.component";
+import { NonExistingGroupMembersComponent } from "./components/non-existing-group-members/non-existing-group-members.component";
 
 
 @Component({
@@ -30,16 +32,22 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
     JoinRequestsComponent,
     GroupRoleModalComponent,
     InviteLinkModalComponent,
-    EmptyStateComponent
+    EmptyStateComponent,
+    MemberProfileCardComponent,
+    NonExistingGroupMembersComponent
 ],
   templateUrl: './group-info-modal.component.html',
   styleUrl: './group-info-modal.component.scss'
 })
 export class GroupInfoModalComponent {
+clearChat() {
+throw new Error('Method not implemented.');
+}
 
   @Input() group: any;
 
   @Output() close = new EventEmitter<void>();
+  selectedMember: any = null;
 
   private groupRoleSer =
     inject(GroupRoleService);
@@ -69,9 +77,9 @@ export class GroupInfoModalComponent {
   canEditGroup = false;
 
   showMembersPanel = false;
-showAddMembersPanel = false;
-showEditDescriptionPanel = false;
-showEditImagePanel = false;
+  showAddMembersPanel = false;
+  showEditDescriptionPanel = false;
+  showEditImagePanel = false;
 
   showMedia = false;
   showInviteLink = false;
@@ -91,16 +99,31 @@ showEditImagePanel = false;
   }
 
   loadMembers() {
-    this.groupMemberSer
-      .getMembers(this.group._id)
-      .subscribe({
-        next: (res: any) => {
-          // this.admin = res.admin;
-          // this.moderators = res.moderators;
-          // this.members = res.members;
-          this.totalMembers = res.length
-        }
-      });
+    this.groupMemberSer.getMembers(this.group._id).subscribe(
+      (res: any[]) => {
+
+        // const admin = res.find(m => m.role === 'admin');
+
+        const moderators = res.filter(m => m.role === 'moderator');
+
+       this.members = res.map(m => ({
+          ...m.user,
+          role: m.role
+        }));
+
+        // this.admin = admin?.user || null;
+        // console.log('this.admin',this.admin)
+        // console.log('admin',admin)
+        this.admin = this.members.find((m=> m.role=='admin'))
+        this.moderators = moderators.map(m => m.user);
+       
+        // console.log('this.members',this.members)
+
+        this.totalMembers = res.length;
+
+        this.checkPermissions();
+      },
+    );
   }
 
   loadRequests() {
@@ -156,10 +179,11 @@ showEditImagePanel = false;
 
     const user =
       JSON.parse(
-        localStorage.getItem('user') || '{}'
+        sessionStorage.getItem('user') || '{}'
       );
 
     const userId = user?._id;
+    // console.log(userId,user)
 
     this.isAdmin =
       this.admin?._id === userId;
@@ -175,6 +199,8 @@ showEditImagePanel = false;
 
     this.canEditGroup =
       this.isAdmin || isModerator;
+
+      // console.log('canEditGroup',this.canEditGroup)
 
   }
 
@@ -285,10 +311,8 @@ showEditImagePanel = false;
   }
 
   openMembers() {
-    this.showMembers = true;
-    this.showSettings = false;
-    this.showRequests = false;
-    this.showRoles = false;
+    this.closeAllPanels();
+    this.showMembersPanel = true;
   }
 
   openRoles() {
@@ -315,38 +339,58 @@ showEditImagePanel = false;
 
   openAddMembers() {
 
-  this.closeAllPanels();
-
-  this.showAddMembersPanel = true;
-
-}
-
-editDescription() {
-
-  this.closeAllPanels();
-
-  this.showEditDescriptionPanel = true;
-
-}
-
-changeGroupImage() {
-
-  this.closeAllPanels();
-
-  this.showEditImagePanel = true;
-
-}
-
-closeAllPanels() {
-
   this.showMembersPanel = false;
-  this.showAddMembersPanel = false;
-  this.showEditDescriptionPanel = false;
-  this.showEditImagePanel = false;
-  this.showSettings = false;
-  this.showRequests = false;
-  this.showRoles = false;
+    this.closeAllPanels();
 
+    this.showAddMembersPanel = true;
+
+  }
+
+  editDescription() {
+
+    this.closeAllPanels();
+
+    this.showEditDescriptionPanel = true;
+
+  }
+
+  changeGroupImage() {
+
+    this.closeAllPanels();
+
+    this.showEditImagePanel = true;
+
+  }
+
+  closeAllPanels() {
+
+    this.showMembersPanel = false;
+    this.showAddMembersPanel = false;
+    this.showEditDescriptionPanel = false;
+    this.showEditImagePanel = false;
+    this.showSettings = false;
+    this.showRequests = false;
+    this.showRoles = false;
+
+  }
+
+
+  openMemberProfile(member: any) {
+  this.selectedMember = member;
+   this.showMembersPanel = false;
 }
+
+closeMemberProfile() {
+  this.selectedMember = null;
+  this.showMembersPanel = true;
+}
+
+// openAddMembers() {
+
+//   this.showMembersPanel = false;
+
+//   this.showAddMembersPanel = true;
+
+// }
 
 }
