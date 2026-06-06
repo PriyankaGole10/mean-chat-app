@@ -21,7 +21,8 @@ const {
 
     leaveGroup,
 
-    getMembers
+    getMembers,
+    commonGroups
 
 } =
 require("../controllers/group-member.controller");
@@ -54,6 +55,13 @@ router.get(
 protect,
 loadGroup,
 getMembers
+);
+
+router.get(
+"/common-groups/:userId",
+protect,
+
+commonGroups
 );
 
 module.exports =

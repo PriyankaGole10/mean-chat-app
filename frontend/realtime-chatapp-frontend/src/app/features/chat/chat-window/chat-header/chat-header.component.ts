@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { SocketService } from '../../../../core/services/socket.service';
 import { FormsModule } from '@angular/forms';
+import { GroupSettingsService } from '../../../../core/services/group-settings.service';
+import { GroupService } from '../../../../core/services/group.service';
+import { GroupMemberService } from '../../../../core/services/group-member.service';
 
 @Component({
   selector: 'app-chat-header',
@@ -23,7 +26,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './chat-header.component.scss'
 })
 export class ChatHeaderComponent {
-  private socketService = inject(SocketService)
+  private socketService = inject(SocketService);
+  private groupSer = inject(GroupService);
+  private groupMemberSer = inject(GroupMemberService);
+    private groupSettingsService = inject(GroupSettingsService);
+  
   @Input() conversation: any;
   @Input() currentUserId: string = '';
   @Input() typingUser: string = '';
@@ -37,7 +44,7 @@ export class ChatHeaderComponent {
   @Output() addMembers = new EventEmitter<void>();
   @Output() media = new EventEmitter<void>();
   // @Output() muteChat = new EventEmitter<void>();
-  @Output() exitGroup = new EventEmitter<void>();
+  // @Output() exitGroup = new EventEmitter<void>();
   @Output() toggleBlock = new EventEmitter<void>();
   @Output() toggleMute = new EventEmitter<void>();
 
@@ -50,6 +57,7 @@ export class ChatHeaderComponent {
   searchQuery: string = '';
   searchResults: any[] = [];
   isSearchOpen = false;
+  groupMembers:any[]=[]
 
   ngOnInit() {
 
@@ -60,6 +68,17 @@ export class ChatHeaderComponent {
       }
 
     });
+
+this.groupMembers = this.groupSer.selectedGroup.participants.map((m:any)=>{
+  return {
+    ...m?.user,
+  role:m?.role
+  }
+})
+
+   
+
+
 
   }
 
@@ -130,6 +149,68 @@ export class ChatHeaderComponent {
 
   }
 
- 
+ deleteGroup() {
+// console.log("this.groupSer.selectedGroup._id",this.groupSer.selectedGroup._id)
+  const ok =
+    confirm(
+      "Do you want to delete group?"
+    );
+
+  if (!ok) return;
+
+  this.groupSettingsService
+    .deleteGroup(this.groupSer.selectedGroup._id)
+    .subscribe({
+
+      next: () => {
+
+        // this.close.emit();
+
+      }
+
+    });
+
+}
+
+exitGroup() {
+
+    const confirmLeave =
+      confirm(
+        'Leave this group?'
+      );
+
+    if (!confirmLeave) {
+      return;
+    }
+
+    this.groupMemberSer
+      .leaveGroup(
+        this.groupSer.selectedGroup._id
+      )
+      .subscribe({
+
+        next: () => {
+
+          // this.closeModal();
+
+        },
+
+        error: (err) => {
+
+          alert(
+            err.error?.message
+          );
+
+        }
+
+      });
+
+  }
+
+  addMembersInGroupFromHeader(){
+    this.groupSer.isShowGroupInfo  = true
+    this.groupSer.isShowAddMembersPanel = true
+    this.groupSer.isHeaderAddMemberPanel = true
+  }
 
 }

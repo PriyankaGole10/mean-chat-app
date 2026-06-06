@@ -11,8 +11,5 @@ import { AvatarComponent } from "../avatar/avatar.component";
 export class MemberListItemComponent {
 @Input() member: any;
 @Input() showActions: boolean = false;
-// @Output() viewProfile = new EventEmitter<void>();
-constructor(){
-  console.log('member',this.member)
-  }
+
 }

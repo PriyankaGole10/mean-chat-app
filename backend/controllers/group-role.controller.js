@@ -13,6 +13,14 @@ async function addAdmin(req, res) {
         const exists = group.admins.find(a => a.toString() === userId);
         if (exists) return res.status(400).json({ message: "Already admin" });
         group.admins.push(userId);
+        const participant =
+            group.participants.find(
+                p => p.user.toString() === userId
+            );
+
+        if (participant) {
+            participant.role = "admin";
+        }
         await group.save();
         const updatedGroup = await Conversation.findById(groupId).populate("participants.user", "username email avatar");
         global.io.to(groupId).emit("role-updated", { groupId, userId, role: "admin" });

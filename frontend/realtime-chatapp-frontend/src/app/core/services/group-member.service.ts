@@ -17,7 +17,13 @@ export class GroupMemberService {
 
   getMembers(groupId: string): Observable<any[]> {
   return this.http.get<any[]>(
-    `${environment.apiUrl}/groups/member/${groupId}`
+    `${environment.apiUrl}/group-member/${groupId}`
+  );
+}
+
+commonGroupsWithMember(memberId: string): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/group-member/common-groups/${memberId}`
   );
 }
 

@@ -42,4 +42,22 @@ export class GroupSettingsService {
     );
   }
 
+  clearChat(groupId: string) {
+
+  return this.http.delete(
+    `${environment.apiUrl}/group-settings/clear-chat/${groupId}`
+  );
+
+}
+
+
+
+deleteGroup(groupId: string) {
+
+  return this.http.delete(
+    `${environment.apiUrl}/group-settings/delete-group/${groupId}`
+  );
+
+}
+
 }

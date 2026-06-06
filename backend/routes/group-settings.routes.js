@@ -6,7 +6,9 @@ const {
 updateGroupName,
 updateGroupDescription,
 updateGroupImage,
-toggleAdminOnlyMessage
+toggleAdminOnlyMessage,
+clearChat,
+deleteGroup
 } = require("../controllers/group-settings.controller");
 
 const {
@@ -25,5 +27,11 @@ router.put("/image", protect, loadGroup, requireAdmin, updateGroupImage);
 
 // TOGGLE MESSAGE PERMISSION
 router.put("/toggle-message", protect, loadGroup, requireAdmin, toggleAdminOnlyMessage);
+
+//CLEAR CHAT
+router.delete("/clear-chat/:groupId", protect, loadGroup, clearChat);
+
+//DELETE GROUP
+router.delete("/delete-group/:groupId", protect, loadGroup, deleteGroup);
 
 module.exports = router;

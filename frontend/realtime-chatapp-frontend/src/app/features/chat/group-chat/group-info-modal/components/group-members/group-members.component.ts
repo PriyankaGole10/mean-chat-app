@@ -16,21 +16,36 @@ export class GroupMembersComponent {
   private userSer = inject(UserService)
   @Input() members: any[] = [];
   @Input() canManage: boolean = false;
-  @Input() group:any;;
+  @Input() group:any;
   @Output() close = new EventEmitter<void>();
   @Output() memberClick  = new EventEmitter<void>();
 
   @Output() openAddMembers  = new EventEmitter<void>();
 
 showAddMembersPanel:boolean= false;
+ isAdmin: boolean = false;
 
   selectedMember: any;
   currentUser = this.userSer.currentUser;
+  currentUserId = this.userSer.currentUser._id;
 
 
-  constructor(){
-  // console.log('members',this.members)
+  
+  ngOnChanges(){
+    this.checkAdmin()
   }
+
+  checkAdmin() {
+// debugger
+  this.isAdmin =
+    this.group?.admins?.some(
+      (admin: any) =>
+        admin._id === this.currentUserId ||
+        admin === this.currentUserId
+    );
+    // console.log('isAdmin',this.isAdmin)
+
+}
 
  openMemberProfile(member: any) {
   // console.log('CLICKED MEMBER', member);

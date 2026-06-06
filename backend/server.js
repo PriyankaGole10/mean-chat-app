@@ -45,9 +45,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/conversations",conversationRoutes);
 app.use("/api/messages",messageRoutes);
 app.use("/api/users",userRoutes);
-app.use("/api/groups/member",groupMemberRoutes);
-app.use("/api/groups/role",groupRoleRoutes);
-app.use("/api/groups-settings/",groupSettingsRoutes);
+app.use("/api/group-member",groupMemberRoutes);
+app.use("/api/group-role",groupRoleRoutes);
+app.use("/api/group-settings",groupSettingsRoutes);
 app.use("/api/group-invite",groupInviteRoutes);
 
 // HOME ROUTE

@@ -10,6 +10,12 @@ export class GroupService {
   private api =
     environment.apiUrl;
 
+    selectedGroup:any;
+    isShowAddMembersPanel:boolean = false;
+    isHeaderAddMemberPanel:boolean = false;
+    isShowGroupInfo = false;
+    groupMembers:any[]=[];
+
   constructor(
     private http: HttpClient
   ) {}

@@ -104,20 +104,28 @@
           Group Info
         </button>
 
-        <button (click)="addMembers.emit()">
+        <button (click)="addMembersInGroupFromHeader()">
           Add Members
         </button>
 
-        <button (click)="media.emit()">
+       <button [class.active]="activeMenuItem === 'media'" (click)="setMenu('media'); media.emit()">
+
           Media
+
         </button>
 
-        <button (click)="toggleMute.emit()">
-          Mute Notifications
+        <button class="toggle-btn" [class.muted]="isMuted" (click)="toggleMute.emit()">
+
+          {{ isMuted ? '🔔 Unmute Notifications' : '🔕 Mute Notifications' }}
+
         </button>
 
-        <button (click)="exitGroup.emit()">
+        <button (click)="exitGroup()">
           Exit Group
+        </button>
+
+        <button (click)="deleteGroup()">
+          Delete Group
         </button>
 
         } @else {

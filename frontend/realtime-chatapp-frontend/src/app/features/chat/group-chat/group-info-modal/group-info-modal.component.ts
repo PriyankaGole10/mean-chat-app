@@ -16,6 +16,8 @@ import { InviteLinkModalComponent } from "./components/invite-link-modal/invite-
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { MemberProfileCardComponent } from "./components/member-profile-card/member-profile-card.component";
 import { NonExistingGroupMembersComponent } from "./components/non-existing-group-members/non-existing-group-members.component";
+import { GroupSettingsService } from '../../../../core/services/group-settings.service';
+import { GroupService } from '../../../../core/services/group.service';
 
 
 @Component({
@@ -40,10 +42,8 @@ import { NonExistingGroupMembersComponent } from "./components/non-existing-grou
   styleUrl: './group-info-modal.component.scss'
 })
 export class GroupInfoModalComponent {
-clearChat() {
-throw new Error('Method not implemented.');
-}
 
+ private groupSettingsService = inject(GroupSettingsService);
   @Input() group: any;
 
   @Output() close = new EventEmitter<void>();
@@ -60,6 +60,7 @@ throw new Error('Method not implemented.');
 
   private groupSocketSer =
     inject(GroupSocketService);
+     public groupSer = inject(GroupService);
 
   totalMembers = 0;
 
@@ -84,8 +85,9 @@ throw new Error('Method not implemented.');
   showMedia = false;
   showInviteLink = false;
 
-  admin: any;
+  // admin: any;
   moderators: any[] = [];
+  admins: any[] = [];
   members: any[] = [];
 
   ngOnInit() {
@@ -93,33 +95,34 @@ throw new Error('Method not implemented.');
     this.loadRequests();
 
     this.groupSocketSer
-      .joinGroup(this.group._id);
+      .joinGroup(this.group?._id);
 
     this.listenSockets();
   }
 
   loadMembers() {
-    this.groupMemberSer.getMembers(this.group._id).subscribe(
+    this.groupMemberSer.getMembers(this.group?._id || this.groupSer.selectedGroup?._id).subscribe(
       (res: any[]) => {
 
         // const admin = res.find(m => m.role === 'admin');
 
-        const moderators = res.filter(m => m.role === 'moderator');
+        const moderators = res.filter(m => m?.role === 'moderator');
 
        this.members = res.map(m => ({
-          ...m.user,
-          role: m.role
+          ...m?.user,
+          role: m?.role
         }));
 
         // this.admin = admin?.user || null;
         // console.log('this.admin',this.admin)
         // console.log('admin',admin)
-        this.admin = this.members.find((m=> m.role=='admin'))
-        this.moderators = moderators.map(m => m.user);
+        this.admins = this.members.filter((m=> m?.role=='admin'))
+        this.moderators = moderators.map(m => m?.user);
        
         // console.log('this.members',this.members)
+        this.groupSer.groupMembers = this.members
 
-        this.totalMembers = res.length;
+        this.totalMembers = res?.length;
 
         this.checkPermissions();
       },
@@ -130,7 +133,7 @@ throw new Error('Method not implemented.');
 
     this.groupInviteSer
       .getPendingRequests(
-        this.group._id
+        this.group?._id || this.groupSer.selectedGroup?._id
       )
       .subscribe((res: any) => {
 
@@ -186,7 +189,7 @@ throw new Error('Method not implemented.');
     // console.log(userId,user)
 
     this.isAdmin =
-      this.admin?._id === userId;
+      this.admins?.some((a:any)=>a?._id===userId);
 
     const isModerator =
       this.moderators.some(
@@ -202,6 +205,11 @@ throw new Error('Method not implemented.');
 
       // console.log('canEditGroup',this.canEditGroup)
 
+  }
+
+  closeGroupInfoModal(){
+    this.close.emit();
+    this.groupSer.isShowGroupInfo = false
   }
 
   openInviteLink() {
@@ -284,7 +292,7 @@ throw new Error('Method not implemented.');
     });
   }
 
-  addAdmin(
+  makeAdmin(
     userId: string
   ) {
     this.groupRoleSer.addAdmin(
@@ -346,6 +354,20 @@ throw new Error('Method not implemented.');
 
   }
 
+  closeAddMembers() {
+
+  this.showAddMembersPanel = false;
+  this.groupSer.isShowAddMembersPanel = false;
+
+  // opened from header
+  if (this.groupSer.isHeaderAddMemberPanel) {
+
+    this.groupSer.isHeaderAddMemberPanel = false;
+
+    this.closeGroupInfoModal();
+  }
+}
+
   editDescription() {
 
     this.closeAllPanels();
@@ -385,12 +407,29 @@ closeMemberProfile() {
   this.showMembersPanel = true;
 }
 
-// openAddMembers() {
+clearChat() {
 
-//   this.showMembersPanel = false;
+  const ok =
+    confirm(
+      "Clear all messages in this group?"
+    );
 
-//   this.showAddMembersPanel = true;
+  if (!ok) return;
 
-// }
+  this.groupSettingsService
+    .clearChat(this.group._id)
+    .subscribe({
+
+      next: () => {
+
+        this.close.emit();
+
+      }
+
+    });
+
+}
+
+
 
 }

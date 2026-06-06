@@ -1,5 +1,7 @@
 <div class="profile-panel">
 
+  <!-- HEADER -->
+
   <div class="profile-header">
 
     <button
@@ -14,8 +16,11 @@
 
   </div>
 
+  <!-- BODY -->
 
   <div class="profile-body">
+
+    <!-- AVATAR -->
 
     <div class="avatar">
 
@@ -27,6 +32,7 @@
 
     </div>
 
+    <!-- NAME -->
 
     <div class="member-name">
 
@@ -40,12 +46,13 @@
 
     </div>
 
+    <!-- ROLE -->
 
     @if(member?.role === 'admin'){
 
       <div class="role admin">
 
-        Admin
+        👑 Admin
 
       </div>
 
@@ -55,12 +62,13 @@
 
       <div class="role moderator">
 
-        Moderator
+        🛡 Moderator
 
       </div>
 
     }
 
+    <!-- EMAIL -->
 
     <div class="info-card">
 
@@ -78,22 +86,83 @@
 
     </div>
 
+    <!-- COMMON GROUPS -->
 
-    <!-- <div class="info-card">
+    <div class="info-card">
 
       <div class="label">
 
-        User ID
+        Common Groups
 
       </div>
 
-      <div class="value">
+      <div class="common-groups">
 
-        {{ member?._id }}
+        @if(commonGroupsOfMember.length){
+
+          @for(group of commonGroupsOfMember; track group._id){
+
+            <div class="group-item">
+
+              <div class="group-avatar">
+
+                {{
+                  group.groupName
+                    ?.charAt(0)
+                    ?.toUpperCase()
+                }}
+
+              </div>
+
+              <span>
+
+                {{ group.groupName }}
+
+              </span>
+
+            </div>
+
+          }
+
+        } @else {
+
+          <div class="empty-text">
+
+            No common groups
+
+          </div>
+
+        }
 
       </div>
 
-    </div> -->
+    </div>
+
+    <!-- ACTIONS -->
+
+    @if(isAdmin && !isCurrentUser){
+
+      <div class="actions">
+
+        <button
+          class="action-btn admin-btn"
+          (click)="makeAdmin()">
+
+          👑 Make Admin
+
+        </button>
+
+        <button
+          class="action-btn remove-btn"
+          (click)="removeMember()">
+
+          🚫 Remove From Group
+
+        </button>
+
+      </div>
+
+    }
 
   </div>
 

@@ -1,217 +1,248 @@
-<div class="overlay">
+@if(
+  !groupSer.isHeaderAddMemberPanel ||
+  showAddMembersPanel ||
+  groupSer.isShowAddMembersPanel
+){
+
+<div class="overlay" (click)="closeGroupInfoModal()">
 
   <div class="drawer" (click)="$event.stopPropagation()">
-    @if(showAddMembersPanel){
 
-    <app-non-existing-group-members [groupId]="group._id" [existingMembers]="members"
-      (close)="showAddMembersPanel = false" (added)="loadMembers()">
-    </app-non-existing-group-members>
+    <!-- =========================
+         ADD MEMBERS PANEL
+    ========================== -->
 
-    }@else{
-    <div class="drawer-header">
+    @if(showAddMembersPanel || groupSer.isShowAddMembersPanel){
 
-      <h3>Group Info</h3>
+      <app-non-existing-group-members
+        [groupId]="group?._id || groupSer.selectedGroup?._id"
+        [existingMembers]="members || groupSer.groupMembers"
+        (close)="closeAddMembers()"
+        (added)="loadMembers()">
+      </app-non-existing-group-members>
 
-      <button class="close-btn" (click)="close.emit()">
-
-        ✕
-
-      </button>
-
-    </div>
-    @if(!selectedMember){
-    <app-group-profile-card [group]="group" [totalMembers]="totalMembers" [canEdit]="canEditGroup"
-      (editImage)="changeGroupImage()" (editDescription)="editDescription()" (addMembers)="openAddMembers()">
-    </app-group-profile-card>
     }
 
-    <!-- BODY (SWITCH PANELS USING ANGULAR 17 @if) -->
-    <div class="content">
+  
 
-      @if(!showMembersPanel && !selectedMember){
-      <!-- <div class="menu-scroll"> -->
-      <div class="menu-section">
+    @else {
 
-        <div class="menu-item" (click)="openMedia()">
+      <div class="drawer-header">
 
-          <div class="menu-left">
+        <h3>Group Info</h3>
 
-            <span class="menu-icon">🖼️</span>
+        <button
+          class="close-btn"
+          (click)="closeGroupInfoModal()">
 
-            <span>Media, Links & Docs</span>
+          ✕
 
-          </div>
-
-        </div>
-
-        <div class="menu-item" (click)="openInviteLink()">
-
-          <div class="menu-left">
-
-            <span class="menu-icon">🔗</span>
-
-            <span>Invite Link</span>
-
-          </div>
-
-        </div>
-
-        @if(isAdminOrModerator){
-
-        <div class="menu-item" (click)="openRequests()">
-
-          <div class="menu-left">
-
-            <span class="menu-icon">📨</span>
-
-            <span>Join Requests</span>
-
-          </div>
-
-          <span>{{ pendingRequests.length }}</span>
-
-        </div>
-
-        }
-
-        @if(isAdmin){
-
-        <div class="menu-item" (click)="openSettings()">
-
-          <div class="menu-left">
-
-            <span class="menu-icon">⚙️</span>
-
-            <span>Group Settings</span>
-
-          </div>
-
-        </div>
-
-        <div class="menu-item" (click)="openRoles()">
-
-          <div class="menu-left">
-
-            <span class="menu-icon">🛡️</span>
-
-            <span>Roles & Permissions</span>
-
-          </div>
-
-        </div>
-
-        }
-
-        <div class="menu-item" (click)="openMembers()">
-
-          <div class="menu-left">
-
-            <span class="menu-icon">👥</span>
-
-            <span>Members</span>
-
-          </div>
-
-          <div class="menu-right">
-
-            <span class="count">
-              {{ totalMembers }}
-            </span>
-
-            @if(canEditGroup){
-
-            <button class="add-member-btn" title="Add Members" (click)="openAddMembers(); $event.stopPropagation()">
-
-              👤➕
-
-            </button>
-
-            }
-
-          </div>
-
-        </div>
-
-        <div class="menu-item danger">
-
-          <div class="menu-left">
-
-            <span class="menu-icon">🧹</span>
-
-            <span>Clear Chat</span>
-
-          </div>
-
-        </div>
+        </button>
 
       </div>
-      <!-- </div> -->
-      }
 
-      @if(selectedMember){
+      @if(!selectedMember){
 
-      <app-member-profile-card [member]="selectedMember" (close)="closeMemberProfile()">
-      </app-member-profile-card>
-
-      } @else {
-
-      @if(showMembersPanel){
-      <app-group-members [members]="members" [group]="group" [canManage]="isAdminOrModerator"
-        (openAddMembers)="openAddMembers()" (memberClick)="openMemberProfile($event)" (close)="closeAllPanels()">
-      </app-group-members>
-      }
-
-
-
-      @if(showEditDescriptionPanel){
-      <app-edit-group-description [groupId]="group._id" [description]="group.groupDescription"
-        (close)="closeAllPanels()" (updated)="group.groupDescription = $event">
-      </app-edit-group-description>
-      }
-
-      @if(showEditImagePanel){
-      <app-edit-group-image [groupId]="group._id" [previewUrl]="group.groupImage" (close)="closeAllPanels()"
-        (updated)="group.groupImage = $event">
-      </app-edit-group-image>
-      }
+      <app-group-profile-card
+        [group]="group"
+        [totalMembers]="totalMembers"
+        [canEdit]="canEditGroup"
+        (editImage)="changeGroupImage()"
+        (editDescription)="editDescription()"
+        (addMembers)="openAddMembers()">
+      </app-group-profile-card>
 
       }
 
-      <!-- @if(showRequests){
-        <app-join-requests-modal
-          [groupId]="group._id"
-          [requests]="pendingRequests"
-          (close)="closeAllPanels()"
-          (updated)="loadRequests()">
-        </app-join-requests-modal>
-      }
+      <div class="content">
 
-      @if(showRoles){
-        <app-group-role-modal
-          [groupId]="group._id"
-          [admins]="group.admins"
-          [members]="members"
-          (close)="closeAllPanels()">
-        </app-group-role-modal>
-      }
+        @if(!showMembersPanel && !selectedMember){
 
-      @if(showInviteLink){
-        <app-invite-link-modal
+        <div class="menu-section">
+
+          <div class="menu-item" (click)="openMedia()">
+
+            <div class="menu-left">
+
+              <span class="menu-icon">🖼️</span>
+
+              <span>Media, Links & Docs</span>
+
+            </div>
+
+          </div>
+
+          <div class="menu-item" (click)="openInviteLink()">
+
+            <div class="menu-left">
+
+              <span class="menu-icon">🔗</span>
+
+              <span>Invite Link</span>
+
+            </div>
+
+          </div>
+
+          @if(isAdminOrModerator){
+
+          <div class="menu-item" (click)="openRequests()">
+
+            <div class="menu-left">
+
+              <span class="menu-icon">📨</span>
+
+              <span>Join Requests</span>
+
+            </div>
+
+            <span>{{ pendingRequests.length }}</span>
+
+          </div>
+
+          }
+
+          @if(isAdmin){
+
+          <div class="menu-item" (click)="openSettings()">
+
+            <div class="menu-left">
+
+              <span class="menu-icon">⚙️</span>
+
+              <span>Group Settings</span>
+
+            </div>
+
+          </div>
+
+          <div class="menu-item" (click)="openRoles()">
+
+            <div class="menu-left">
+
+              <span class="menu-icon">🛡️</span>
+
+              <span>Roles & Permissions</span>
+
+            </div>
+
+          </div>
+
+          }
+
+          <div class="menu-item" (click)="openMembers()">
+
+            <div class="menu-left">
+
+              <span class="menu-icon">👥</span>
+
+              <span>Members</span>
+
+            </div>
+
+            <div class="menu-right">
+
+              <span class="count">
+                {{ totalMembers }}
+              </span>
+
+              @if(canEditGroup){
+
+              <button
+                class="add-member-btn"
+                title="Add Members"
+                (click)="openAddMembers(); $event.stopPropagation()">
+
+                👤➕
+
+              </button>
+
+              }
+
+            </div>
+
+          </div>
+
+          <div class="menu-item danger">
+
+            <div class="menu-left" (click)="clearChat()">
+
+              <span class="menu-icon">🧹</span>
+
+              <span>Clear Chat</span>
+
+            </div>
+
+          </div>
+
+          <button
+            class="leave-btn"
+            (click)="leaveGroup()">
+
+            Leave Group
+
+          </button>
+
+        </div>
+
+        }
+
+        @if(selectedMember){
+
+        <app-member-profile-card
+          [member]="selectedMember"
           [group]="group"
-          (close)="closeAllPanels()">
-        </app-invite-link-modal>
-      } -->
+          [isAdmin]="isAdmin"
+          (close)="closeMemberProfile()">
+        </app-member-profile-card>
 
-    </div>
+        }
 
+        @else {
 
-    <!-- LEAVE BUTTON -->
-    <button class="leave-btn" (click)="leaveGroup()">
-      Leave Group
-    </button>
+          @if(showMembersPanel){
+
+          <app-group-members
+            [members]="members"
+            [group]="group"
+            [canManage]="isAdminOrModerator"
+            (openAddMembers)="openAddMembers()"
+            (memberClick)="openMemberProfile($event)"
+            (close)="closeAllPanels()">
+          </app-group-members>
+
+          }
+
+          @if(showEditDescriptionPanel){
+
+          <app-edit-group-description
+            [groupId]="group._id"
+            [description]="group.groupDescription"
+            (close)="closeAllPanels()"
+            (updated)="group.groupDescription = $event">
+          </app-edit-group-description>
+
+          }
+
+          @if(showEditImagePanel){
+
+          <app-edit-group-image
+            [groupId]="group._id"
+            [previewUrl]="group.groupImage"
+            (close)="closeAllPanels()"
+            (updated)="group.groupImage = $event">
+          </app-edit-group-image>
+
+          }
+
+        }
+
+      </div>
+
     }
-
 
   </div>
 
 </div>
+
+}

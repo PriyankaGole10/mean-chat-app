@@ -13,6 +13,7 @@ import { UserService } from '../../../core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GroupInfoModalComponent } from "../group-chat/group-info-modal/group-info-modal.component";
 import { Subscription } from 'rxjs';
+import { GroupService } from '../../../core/services/group.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -33,6 +34,7 @@ export class ChatPageComponent {
   private conversationSer = inject(ConversationService);
   private userService = inject(UserService);
   private socketSer = inject(SocketService);
+  public groupSer = inject(GroupService);
   private userSer = inject(UserService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
@@ -97,6 +99,7 @@ export class ChatPageComponent {
 
 
   openGroupInfo(group: any) {
+    // this.groupSer.selectedGroup = group
     this.selectedGroup = group;
     this.showGroupInfoModal = true;
   }
@@ -141,6 +144,7 @@ export class ChatPageComponent {
   // ================= SELECT CHAT =================
   onChatSelected(chat: any) {
     this.selectedConversation = chat;
+    this.groupSer.selectedGroup = chat;
 
     this.socketSer.joinConversation(chat._id);
 

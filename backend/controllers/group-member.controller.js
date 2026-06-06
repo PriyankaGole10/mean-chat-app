@@ -259,6 +259,49 @@ async function getMembers(req, res) {
     }
 }
 
+async function commonGroups(req, res) {
+
+  try {
+
+    const currentUserId =
+      req.user._id;
+
+    const targetUserId =
+      req.params.userId;
+
+    const groups =
+      await Conversation.find({
+        isGroup: true,
+        "participants.user": {
+          $all: [
+            currentUserId,
+            targetUserId
+          ]
+        }
+      })
+      .select(
+        "_id groupName groupImage"
+      );
+
+      const result =
+      groups.map(group => ({
+        conversationId: group._id,
+        groupName: group.groupName,
+        groupImage: group.groupImage
+      }));
+
+    res.status(200).json(result);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+}
+
 
 module.exports = {
 
@@ -268,6 +311,8 @@ module.exports = {
 
     leaveGroup,
 
-    getMembers
+    getMembers,
+
+    commonGroups
 
 };

@@ -52,22 +52,14 @@
 
 
 
-@if(selectedMember){
+<!-- @if(selectedMember){
 
 <app-member-profile-card
 [member]="selectedMember"
+[group]="group"
+[isAdmin]="isAdmin"
   (close)="closeProfile()" >
 </app-member-profile-card>
-}
-
-
-<!-- @if(showAddMembersPanel){
-
-<app-non-existing-group-members
-  [groupId]="group._id"
-  [existingMembers]="members"
-  (close)="showAddMembersPanel = false"
-  (added)="loadMembers()">
-</app-non-existing-group-members>
-
 } -->
+
+

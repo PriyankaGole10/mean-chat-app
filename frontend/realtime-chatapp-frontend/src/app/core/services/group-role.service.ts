@@ -12,22 +12,22 @@ export class GroupRoleService {
 
   constructor(
     private http: HttpClient
-  ) {}
+  ) { }
 
-  makeModerator(groupId:string,userId:string){
-  return this.http.post<any>(`${environment.apiUrl}/group-role/make-moderator`,{groupId,userId});
-}
+  makeModerator(groupId: string, userId: string) {
+    return this.http.post<any>(`${environment.apiUrl}/group-role/make-moderator`, { groupId, userId });
+  }
 
-removeModerator(groupId:string,userId:string){
-  return this.http.post<any>(`${environment.apiUrl}/group-role/remove-moderator`,{groupId,userId});
-}
+  removeModerator(groupId: string, userId: string) {
+    return this.http.post<any>(`${environment.apiUrl}/group-role/remove-moderator`, { groupId, userId });
+  }
 
-addAdmin(groupId:string,userId:string){
-  return this.http.post<any>(`${environment.apiUrl}/group-role/add-admin`,{groupId,userId});
-}
+  addAdmin(groupId: string, userId: string) {
+    return this.http.post<any>(`${environment.apiUrl}/group-role/add-admin`, { groupId, userId });
+  }
 
-removeAdmin(groupId:string,userId:string){
-  return this.http.post<any>(`${environment.apiUrl}/group-role/remove-admin`,{groupId,userId});
-}
+  removeAdmin(groupId: string, userId: string) {
+    return this.http.post<any>(`${environment.apiUrl}/group-role/remove-admin`, { groupId, userId });
+  }
 
 }

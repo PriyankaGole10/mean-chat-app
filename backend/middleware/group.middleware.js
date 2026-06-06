@@ -7,10 +7,12 @@ async function loadGroup(req, res, next) {
 
     try {
 
-        console.log("LOAD GROUP HIT");
+        // console.log("LOAD GROUP HIT");
 
         const group = await Conversation.findById(
-            req.params.id || req.body.groupId
+            req.params.groupId ||
+            req.params.id ||
+            req.body.groupId
         );
 
         if (!group || !group.isGroup) {
@@ -21,12 +23,12 @@ async function loadGroup(req, res, next) {
 
         }
 
-      
+
 
         req.group = group;
 
         req.isAdmin = isAdmin(group, req.user._id);
-    req.isModerator = isModerator(group, req.user._id);
+        req.isModerator = isModerator(group, req.user._id);
 
         req.isMember =
             group.participants.some(
@@ -35,9 +37,6 @@ async function loadGroup(req, res, next) {
                     req.user._id.toString()
             );
 
-        console.log("isAdmin:", req.isAdmin);
-        console.log("isModerator:", req.isModerator);
-        console.log("isMember:", req.isMember);
 
         next();
 

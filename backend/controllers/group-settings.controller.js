@@ -1,4 +1,5 @@
 const Conversation = require("../models/conversation.model");
+const Message = require("../models/message.model");
 
 async function updateGroupName(req, res) {
     try {
@@ -58,4 +59,99 @@ async function toggleAdminOnlyMessage(req, res) {
     }
 }
 
-module.exports = { updateGroupName, updateGroupDescription, updateGroupImage, toggleAdminOnlyMessage };
+
+
+async function clearChat(req, res) {
+
+  try {
+
+    const group =
+      req.group;
+
+    if (
+      !req.isAdmin &&
+      !req.isModerator
+    ) {
+
+      return res.status(403).json({
+        message:
+          "Only admins or moderators can clear chat"
+      });
+
+    }
+
+    await Message.deleteMany({
+      conversation: group._id
+    });
+
+    group.lastMessage = null;
+
+    await group.save();
+
+    global.io
+      .to(group._id.toString())
+      .emit("chat-cleared", {
+        groupId: group._id
+      });
+
+    res.status(200).json({
+      message:
+        "Chat cleared successfully"
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+}
+
+async function deleteGroup(req, res) {
+
+  try {
+
+    const group =
+      req.group;
+
+    if (!req.isAdmin) {
+
+      return res.status(403).json({
+        message:
+          "Only admins can delete group"
+      });
+
+    }
+
+    await Message.deleteMany({
+      conversation: group._id
+    });
+
+    await Conversation.findByIdAndDelete(
+      group._id
+    );
+
+    global.io
+      .to(group._id.toString())
+      .emit("group-deleted", {
+        groupId: group._id
+      });
+
+    res.status(200).json({
+      message:
+        "Group deleted successfully"
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+}
+
+module.exports = { updateGroupName, updateGroupDescription, updateGroupImage, toggleAdminOnlyMessage,clearChat, deleteGroup };
