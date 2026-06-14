@@ -1,5 +1,8 @@
 const cloudinary = require("../config/cloudinary");
 const streamifier = require("streamifier");
+// const path = require("path");
+
+// const baseName = path.parse(originalname).name;
 
 // detect correct Cloudinary resource type
 function getResourceType(mimetype) {
@@ -9,9 +12,9 @@ function getResourceType(mimetype) {
   if (mimetype === "application/pdf") return "raw";
 
   if (mimetype.includes("word") ||
-      mimetype.includes("excel") ||
-      mimetype.includes("zip") ||
-      mimetype.includes("text")) {
+    mimetype.includes("excel") ||
+    mimetype.includes("zip") ||
+    mimetype.includes("text")) {
     return "raw";
   }
 
@@ -24,29 +27,30 @@ function getResourceType(mimetype) {
   return "auto";
 }
 
-const uploadToCloudinary = (fileBuffer, mimetype) => {
-
+const uploadToCloudinary = (fileBuffer, mimetype, originalname) => {
   return new Promise((resolve, reject) => {
-
     const resourceType = getResourceType(mimetype);
+    
+    const uniquePrefix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+    const customPublicId = `real-time-chat-app/${uniquePrefix}-${originalname}`;
 
     const stream = cloudinary.uploader.upload_stream(
       {
-        folder: "real-time-chat-app",
-        resource_type: resourceType,
-        type: "upload",
-        access_mode: "public"
+        public_id: customPublicId,
+        resource_type: resourceType
+        // REMOVED content_disposition to prevent 401 Unauthorized errors
       },
       (error, result) => {
-        if (result) resolve(result);
-        else reject(error);
+        if (error) {
+          console.error(error);
+          return reject(error);
+        }
+        resolve(result);
       }
     );
 
     streamifier.createReadStream(fileBuffer).pipe(stream);
-
   });
-
 };
 
 module.exports = uploadToCloudinary;

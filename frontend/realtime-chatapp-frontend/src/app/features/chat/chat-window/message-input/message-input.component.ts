@@ -401,7 +401,7 @@ implements OnDestroy {
       ){
 
         messageType =
-        'pdf';
+        'file';
 
       }
 

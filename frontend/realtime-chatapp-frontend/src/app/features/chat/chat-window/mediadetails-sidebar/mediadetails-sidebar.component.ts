@@ -10,7 +10,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class MediadetailsSidebarComponent {
 
 
-  @Input() isOpen: any;
+  @Input() isOpenMediaFiles: any;
   @Input() mediaFiles: any[] = [];
   @Output() close = new EventEmitter<void>();
 

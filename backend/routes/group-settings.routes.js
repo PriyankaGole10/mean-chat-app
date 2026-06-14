@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const protect = require("../middleware/auth.middleware");
+const upload =
+  require("../middleware/upload-multer.middleware");
 
 const {
 updateGroupName,
@@ -23,7 +25,7 @@ router.put("/name", protect, loadGroup, requireAdmin, updateGroupName);
 router.put("/description", protect, loadGroup, requireAdmin, updateGroupDescription);
 
 // UPDATE IMAGE
-router.put("/image", protect, loadGroup, requireAdmin, updateGroupImage);
+router.put("/image", protect, loadGroup, requireAdmin, updateGroupImage, upload.single("image"),);
 
 // TOGGLE MESSAGE PERMISSION
 router.put("/toggle-message", protect, loadGroup, requireAdmin, toggleAdminOnlyMessage);

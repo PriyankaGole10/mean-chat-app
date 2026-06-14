@@ -255,11 +255,14 @@ audio{
   display:flex;
   align-items:center;
   gap:10px;
+  width:100%;
+  max-width:100%;
 }
 
 .file-link{
   flex:1;
   display:flex;
+  min-width:0;
   align-items:center;
   gap:12px;
   background:#f4f5f7;
@@ -281,12 +284,17 @@ audio{
 }
 
 .file-details{
-  display:flex;
+ flex:1;
+  min-width:0;
   flex-direction:column;
   overflow:hidden;
 }
 
 .file-title{
+  display:block;
+  width:100%;
+
+
   font-size:14px;
   font-weight:600;
   white-space:nowrap;
@@ -374,6 +382,76 @@ audio{
 .empty-chat p{
   margin:0;
   color:#667781;
+}
+
+.uploading-image{
+  opacity:.45;
+}
+
+.upload-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.55);
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+
+  color:#fff;
+  border-radius:14px;
+}
+
+.loader{
+  width:34px;
+  height:34px;
+
+  border:4px solid rgba(255,255,255,.3);
+  border-top:4px solid #fff;
+
+  border-radius:50%;
+
+  animation:spin .8s linear infinite;
+}
+
+.small-loader{
+  width:20px;
+  height:20px;
+  border-width:3px;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+.video-wrapper{
+  position:relative;
+  width:fit-content;
+}
+
+.audio-wrapper{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.audio-uploading{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.uploading-status{
+  color:#ff9800;
+  font-size:12px;
+}
+
+.failed-status{
+  color:#f44336;
+  font-size:12px;
 }
 
 /* INPUT */

@@ -27,25 +27,17 @@
 <div class="chat-layout">
 
   <!-- SIDEBAR -->
-  <div class="sidebar"
-       [class.hidden]="isMobile && activePanel === 'chat'">
+  <div class="sidebar" [class.hidden]="isMobile && activePanel === 'chat'">
 
-    <app-chat-sidebar
-      [conversations]="conversations"
-      [selectedConversationId]="selectedConversation?._id"
-      [unreadCounts]="unreadCounts"
-      [onlineUsers]="onlineUsers"
-      [currentUserId]="currentUser._id"
-      (openChat)="onChatSelected($event)"
-      (createChat)="createConversation($event)"
-      (openGroup)="openGroupModal = true">
+    <app-chat-sidebar [conversations]="conversations" [selectedConversationId]="selectedConversation?._id"
+      [unreadCounts]="unreadCounts" [onlineUsers]="onlineUsers" [currentUserId]="currentUser._id"
+      (openChat)="onChatSelected($event)" (createChat)="createConversation($event)" (openGroup)="openGroupModal = true">
     </app-chat-sidebar>
 
   </div>
 
   <!-- CHAT WINDOW -->
-  <div class="chat-window"
-       [class.hidden]="isMobile && activePanel === 'list'">
+  <div class="chat-window" [class.hidden]="isMobile && activePanel === 'list'">
 
     <!-- BACK BUTTON (MOBILE ONLY - KEEP) -->
     <div class="mobile-header" *ngIf="isMobile && selectedConversation">
@@ -53,25 +45,28 @@
       <span>{{ selectedConversation?.name }}</span>
     </div>
 
+    @if(showGroupInfoModal || groupSer.isShowGroupInfo){
+
+    <app-group-info-modal [group]="selectedGroup" (close)="showGroupInfoModal = false">
+
+    </app-group-info-modal>
+
+    }
+
     <!-- CHAT CONTENT -->
     @if(selectedConversation) {
 
-      <app-chat-window
-        [conversation]="selectedConversation"
-        [messages]="messages"
-        [typingUser]="typingUser"
-         [currentUserId]="currentUser._id"
-         [currentUser]="currentUser"
-        (sendMessage)="sendMessage($event)"
-        (openGroupInfo)="openGroupInfo($event)">
-      </app-chat-window>
+    <app-chat-window [conversation]="selectedConversation" [messages]="messages" [typingUser]="typingUser"
+      [currentUserId]="currentUser._id" [currentUser]="currentUser" (sendMessage)="sendMessage($event)"
+      (openGroupInfo)="openGroupInfo($event)">
+    </app-chat-window>
 
     } @else {
 
-      <div class="empty-state">
-        <h2>Welcome to Chat</h2>
-        <p>Select a conversation</p>
-      </div>
+    <div class="empty-state">
+      <h2>Welcome to Chat</h2>
+      <p>Select a conversation</p>
+    </div>
 
     }
 
@@ -81,28 +76,11 @@
 
 <!-- ================= GROUP MODAL ================= -->
 @if(openGroupModal) {
-  <app-group-modal
-    [allUsers]="allUsers"
-    (close)="openGroupModal = false"
-    (create)="createGroupChat($event)">
-  </app-group-modal>
+<app-group-modal [allUsers]="allUsers" (close)="openGroupModal = false" (create)="createGroupChat($event)">
+</app-group-modal>
 }
 
 @if(showProfileModal) {
-  <app-profile-modal
-    [user]="currentUser"
-    (close)="showProfileModal = false">
-  </app-profile-modal>
-}
-
-@if(showGroupInfoModal || groupSer.isShowGroupInfo){
-
-  <app-group-info-modal
-
-    [group]="selectedGroup"
-
-    (close)="showGroupInfoModal = false">
-
-  </app-group-info-modal>
-
+<app-profile-modal [user]="currentUser" (close)="showProfileModal = false">
+</app-profile-modal>
 }

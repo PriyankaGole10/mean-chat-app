@@ -116,7 +116,7 @@ export class ChatPageComponent {
       if (!this.selectedConversation ||
         msg.conversation !== this.selectedConversation._id) return;
 
-      this.messages.push(msg);
+      // this.messages.push(msg);
 
       this.socketSer.messageSeen({
         messageId: msg._id,
@@ -144,6 +144,7 @@ export class ChatPageComponent {
   // ================= SELECT CHAT =================
   onChatSelected(chat: any) {
     this.selectedConversation = chat;
+    this.groupSer.selectedCoversation = chat;
     this.groupSer.selectedGroup = chat;
 
     this.socketSer.joinConversation(chat._id);
@@ -160,30 +161,92 @@ export class ChatPageComponent {
   // ================= SEND MESSAGE =================
   sendMessage(formData: FormData) {
 
+    const files =
+      formData.getAll('files') as File[];
+
+    const tempMedia =
+      files.map(file => ({
+
+        fileUrl:
+          URL.createObjectURL(file),
+
+        fileType:
+          file.type,
+
+        fileName:
+          file.name,
+
+        uploading: true
+
+      }));
+
+
     const temp = {
-      _id: 'temp_' + Date.now(),
-      text: formData.get('text'),
-      sender: this.currentUser,
-      conversation: this.selectedConversation._id,
-      createdAt: new Date(),
-      status: 'sending'
+
+      _id:
+        'temp_' + Date.now(),
+
+      text:
+        formData.get('text'),
+
+      sender:
+        this.currentUser,
+
+      conversation:
+        this.selectedConversation._id,
+
+      createdAt:
+        new Date(),
+
+      status:
+        'uploading',
+
+      mediaUrls:
+        tempMedia
+
     };
 
     this.messages.push(temp);
 
-    this.conversationSer.sendMessages(formData)
-      .subscribe((res: any) => {
+    this.conversationSer
+      .sendMessages(formData)
+      .subscribe({
 
-        const i = this.messages.findIndex(m => m._id === temp._id);
+        next: (res: any) => {
 
-        if (i !== -1) {
-          this.messages[i] = res;
+          // cleanup preview urls
+          tempMedia.forEach(media => {
+            if (media.fileUrl?.startsWith('blob:')) {
+              URL.revokeObjectURL(media.fileUrl);
+            }
+          });
+
+          const index = this.messages.findIndex(
+            m => m._id === temp._id
+          );
+
+          if (index !== -1) {
+            this.messages[index] = res;
+          }
+
+          this.socketSer.sendMessage(res);
+
+          this.updateLastMessage(res);
+        },
+
+        error: () => {
+
+          tempMedia.forEach(media => {
+            if (media.fileUrl?.startsWith('blob:')) {
+              URL.revokeObjectURL(media.fileUrl);
+            }
+          });
+
+          temp.status = 'failed';
         }
 
-        this.socketSer.sendMessage(res);
-
-        this.updateLastMessage(res);
       });
+
   }
 
   // ================= UPDATE CONVERSATION =================

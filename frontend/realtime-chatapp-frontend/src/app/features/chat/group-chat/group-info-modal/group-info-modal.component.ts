@@ -9,7 +9,6 @@ import { GroupProfileCardComponent } from "./components/group-profile-card/group
 import { GroupMembersComponent } from "./components/group-members/group-members.component";
 import { AddMembersComponent } from "./components/add-group-members/add-members.component";
 import { EditGroupDescriptionComponent } from "./components/edit-group-description/edit-group-description.component";
-import { EditGroupImageComponent } from "./components/edit-group-image/edit-group-image.component";
 import { JoinRequestsComponent } from "./components/join-requests-modal/join-requests-modal.component";
 import { GroupRoleModalComponent } from "./components/group-role-modal/group-role-modal.component";
 import { InviteLinkModalComponent } from "./components/invite-link-modal/invite-link-modal.component";
@@ -18,6 +17,8 @@ import { MemberProfileCardComponent } from "./components/member-profile-card/mem
 import { NonExistingGroupMembersComponent } from "./components/non-existing-group-members/non-existing-group-members.component";
 import { GroupSettingsService } from '../../../../core/services/group-settings.service';
 import { GroupService } from '../../../../core/services/group.service';
+import { SocketService } from '../../../../core/services/socket.service';
+import { GroupImagePickerComponent } from "./components/group-profile-card/group-image-picker/group-image-picker.component";
 
 
 @Component({
@@ -30,19 +31,20 @@ import { GroupService } from '../../../../core/services/group.service';
     GroupMembersComponent,
     AddMembersComponent,
     EditGroupDescriptionComponent,
-    EditGroupImageComponent,
+    
     JoinRequestsComponent,
     GroupRoleModalComponent,
     InviteLinkModalComponent,
     EmptyStateComponent,
     MemberProfileCardComponent,
-    NonExistingGroupMembersComponent
+    NonExistingGroupMembersComponent,
+    GroupImagePickerComponent
 ],
   templateUrl: './group-info-modal.component.html',
   styleUrl: './group-info-modal.component.scss'
 })
 export class GroupInfoModalComponent {
-
+private socketSer = inject(SocketService);
  private groupSettingsService = inject(GroupSettingsService);
   @Input() group: any;
 
@@ -178,6 +180,8 @@ export class GroupInfoModalComponent {
 
   }
 
+  
+
   checkPermissions() {
 
     const user =
@@ -259,7 +263,14 @@ export class GroupInfoModalComponent {
   }
 
   openMedia() {
-    console.log('Media');
+     const conversationId = this.groupSer.selectedCoversation?._id;
+
+    this.socketSer.requestMedia({
+      conversationId
+    });
+    this.closeAllPanels();
+    this.groupSer.isShowAddMembersPanel = false;
+    this.showAddMembersPanel = false
   }
 
   closeModal() {
@@ -430,6 +441,41 @@ clearChat() {
 
 }
 
+
+uploadGroupImage(file: File) {
+
+  const formData = new FormData();
+
+  formData.append(
+    'groupId',
+    this.group._id
+  );
+
+  formData.append(
+    'image',
+    file
+  );
+
+  this.groupSettingsService
+    .updateGroupImage(formData)
+    .subscribe({
+
+      next: (res: any) => {
+
+        this.group.groupImage =
+          res.groupImage;
+
+        this.showEditImagePanel = false;
+
+      },
+
+      error: err => {
+        console.error(err);
+      }
+
+    });
+
+}
 
 
 }

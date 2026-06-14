@@ -5,58 +5,65 @@
     <app-avatar
       [imageUrl]="group?.groupImage"
       [isGroup]="true"
-      [size]="110">
+      [size]="120">
     </app-avatar>
 
     @if(canEdit){
 
-    <button
-      class="edit-btn"
-      (click)="editImage.emit()">
+      <button
+        class="edit-avatar-btn"
+        (click)="editImage.emit()">
 
-      📷
+        ✏️
 
-    </button>
-
-    <button
-      class="add-btn"
-      (click)="addMembers.emit()">
-
-      ➕
-
-    </button>
+      </button>
 
     }
 
   </div>
 
-  <h2>
+  <h2 class="group-name">
+
     {{group?.groupName}}
+
   </h2>
 
-  <div class="members">
+  <div class="member-count">
 
     {{totalMembers}} Members
 
   </div>
 
-  <div class="description">
+  <div class="description-card">
 
-    <span>
+    <div class="description-header">
+
+      <span>Group Description</span>
+
+      @if(canEdit){
+
+      <button
+        class="edit-description-btn"
+        (click)="editDescription.emit()">
+
+        ✏️
+
+      </button>
+
+      }
+
+    </div>
+
+    <div
+      class="description-text"
+      (click)="canEdit ? editDescription.emit() : null">
+
       {{
         group?.groupDescription
-        || 'No description'
+        || 'Click to add group description'
       }}
-    </span>
 
-    @if(canEdit){
-
-    <button
-      (click)="editDescription.emit()">
-      ✏️
-    </button>
-
-    }
+    </div>
 
   </div>
 

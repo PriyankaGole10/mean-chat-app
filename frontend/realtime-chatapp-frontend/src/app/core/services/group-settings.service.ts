@@ -28,11 +28,11 @@ export class GroupSettingsService {
     );
   }
 
- updateImage(groupId: string, image: string) {
-  return this.http.put(`${this.api}/group-settings/image`, {
-    groupId,
-    image
-  });
+ updateGroupImage(formData: FormData) {
+  return this.http.put(
+    `${this.api}/group-settings/image`,
+    formData
+  );
 }
 
   toggleMessagePermission(data: any) {

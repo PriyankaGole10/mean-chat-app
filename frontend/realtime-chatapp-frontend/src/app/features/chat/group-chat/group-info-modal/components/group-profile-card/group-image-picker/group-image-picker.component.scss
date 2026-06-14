@@ -1,0 +1,128 @@
+.picker-card{
+
+  width:100%;
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:18px;
+
+  animation:fadeIn .2s ease;
+}
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.menu-item{
+
+  padding:14px;
+
+  border-radius:12px;
+
+  background:#f8fafc;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.menu-item:hover{
+
+  background:#e0f2fe;
+
+  transform:translateX(4px);
+}
+
+video{
+
+  width:100%;
+
+  border-radius:16px;
+}
+
+.preview-image{
+
+  width:100%;
+
+  border-radius:16px;
+
+  object-fit:cover;
+}
+
+.actions{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-top:16px;
+}
+
+.primary-btn{
+
+  flex:1;
+
+  border:none;
+
+  height:42px;
+
+  border-radius:12px;
+
+  background:#128c7e;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+.secondary-btn{
+
+  flex:1;
+
+  border:none;
+
+  height:42px;
+
+  border-radius:12px;
+
+  background:#f1f5f9;
+
+  cursor:pointer;
+}
+
+.capture-btn{
+
+  width:100%;
+
+  margin-top:12px;
+
+  height:44px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:#128c7e;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+@keyframes fadeIn{
+
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}

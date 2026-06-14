@@ -4,6 +4,7 @@ export class Conversation{
     static getMessages = '/messages/get-messages'
     static sendMessages = '/messages/send-message'
     static createGroup = '/conversations/create-group'
+    static downloadFile = '/messages/download/'
    
 
 

@@ -1,6 +1,7 @@
 const Message = require("../models/message.model");
 const Conversation = require("../models/conversation.model");
 const uploadToCloudinary = require("../utils/uploadToCloudinary");
+const axios = require("axios");
 
 // SEND MESSAGE
 async function sendMessage(req, res) {
@@ -23,7 +24,8 @@ async function sendMessage(req, res) {
 
         const result = await uploadToCloudinary(
           file.buffer,
-          file.mimetype
+          file.mimetype,
+           file.originalname
         );
 
         mediaUrls.push({
@@ -78,11 +80,16 @@ async function sendMessage(req, res) {
 
   } catch (error) {
 
-    res.status(500).json({
-      message: error.message
-    });
+  console.error("SEND MESSAGE ERROR:");
+  console.error(error);
 
-  }
+  res.status(500).json({
+    message: error.message
+  });
+
+}
+
+
 }
 
 // GET MESSAGES
@@ -111,7 +118,62 @@ async function getMessages(req, res) {
   }
 }
 
+async function downloadFile(req, res) {
+
+  try {
+
+    const { messageId, mediaIndex } = req.params;
+
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({
+        message: "Message not found"
+      });
+    }
+
+    const media =
+      message.mediaUrls[Number(mediaIndex)];
+
+    if (!media) {
+      return res.status(404).json({
+        message: "File not found"
+      });
+    }
+
+    const response = await axios.get(
+      media.fileUrl,
+      {
+        responseType: "stream"
+      }
+    );
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${media.fileName}"`
+    );
+
+    res.setHeader(
+      "Content-Type",
+      media.fileType
+    );
+
+    response.data.pipe(res);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+}
+
 module.exports = {
   sendMessage,
-  getMessages
+  getMessages,
+  downloadFile
 };

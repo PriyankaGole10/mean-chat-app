@@ -11,6 +11,8 @@ export class ConversationService {
 private http = inject(HttpClient);
 
 
+
+
 getUserConversations(){
 return this.http.get(environment.apiUrl + Conversation.getUserConversations)
 }
@@ -32,4 +34,11 @@ sendMessages(payload:any){
 createGroup(data:any){
    return this.http.post(environment.apiUrl + Conversation.createGroup,data )
 }
+
+getDownloadApi(messageId: string,mediaIndex: number) {
+   return(environment.apiUrl + Conversation.downloadFile+`/${messageId}/${mediaIndex}` )
+}
+
+
+
 }

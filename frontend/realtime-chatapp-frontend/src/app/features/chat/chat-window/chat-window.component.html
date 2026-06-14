@@ -1,418 +1,446 @@
 <div class="chat-window">
 
   @if(conversation){
- <div class="chat-area">
-  <!-- HEADER -->
+  <div class="chat-area">
+    <!-- HEADER -->
 
-  <app-chat-header
-  [conversation]="conversation"
-  [currentUserId]="currentUserId"
-  [typingUser]="typingUser"
+    <app-chat-header [conversation]="conversation" [currentUserId]="currentUserId" [typingUser]="typingUser"
+      (audioCall)="startAudioCall()" (videoCall)="startVideoCall()" (groupInfo)="openGroupDetails()"
+      (addMembers)="openAddMembers()" (media)="openMedia()" (exitGroup)="exitGroup()" (viewProfile)="openUserProfile()"
+      (searchMessages)="searchQuery = $event" [isBlocked]="isBlocked" [isMuted]="isMuted"
+      (toggleBlock)="toggleBlockUser()" (toggleMute)="toggleMuteConversation()">
+    </app-chat-header>
 
-  (audioCall)="startAudioCall()"
-  (videoCall)="startVideoCall()"
+    <!-- MESSAGES -->
 
-  (groupInfo)="openGroupDetails()"
-  (addMembers)="openAddMembers()"
-  (media)="openMedia()"
- 
-  (exitGroup)="exitGroup()"
+    <div class="messages" #scrollContainer>
+      @for(
 
-  (viewProfile)="openUserProfile()"
-  (searchMessages)="searchQuery = $event"
- 
-   [isBlocked]="isBlocked"
-  [isMuted]="isMuted"
-  (toggleBlock)="toggleBlockUser()"
-  (toggleMute)="toggleMuteConversation()">
-</app-chat-header>
+      message of messages;
 
-  <!-- MESSAGES -->
+      track trackMessage(
+      i,
+      message
+      );
 
-  <div class="messages" #scrollContainer>
-    @for(
+      let i = $index
 
-    message of messages;
+      ){
 
-    track trackMessage(
-    i,
-    message
-    );
+      @if(message){
 
-    let i = $index
+      <!-- DATE SEPARATOR -->
 
-    ){
+      @if(
 
-    @if(message){
+      i === 0
 
-    <!-- DATE SEPARATOR -->
+      ||
 
-    @if(
+      (
 
-    i === 0
+      (
+      messages[i - 1]?.createdAt
+      | date:'dd/MM/yyyy'
+      )
 
-    ||
+      !==
 
-    (
+      (
+      message?.createdAt
+      | date:'dd/MM/yyyy'
+      )
 
-    (
-    messages[i - 1]?.createdAt
-    | date:'dd/MM/yyyy'
-    )
+      )
 
-    !==
+      ){
 
-    (
-    message?.createdAt
-    | date:'dd/MM/yyyy'
-    )
+      <div class="date-separator">
 
-    )
-
-    ){
-
-    <div class="date-separator">
-
-      <span>
-
-        {{
-
-        (
-        message?.createdAt
-        | date:'dd/MM/yyyy'
-        ) === todayDate
-
-        ? 'Today'
-
-        :
-
-        (
-
-        (
-        message?.createdAt
-        | date:'dd/MM/yyyy'
-        ) === yesterdayDate
-
-        )
-
-        ? 'Yesterday'
-
-        :
-
-        (
-        message?.createdAt
-        | date:'mediumDate'
-        )
-
-        }}
-
-      </span>
-
-    </div>
-
-    }
-
-    <!-- MESSAGE -->
-
-    <div class="message-wrapper" [class.mine]="isMine(message)">
-
-      <div class="message-bubble">
-
-        <!-- GROUP USER -->
-
-        @if(
-
-        conversation.isGroup
-        &&
-        !isMine(message)
-
-        ){
-
-        <span class="sender-name">
+        <span>
 
           {{
-          message?.sender?.username
+
+          (
+          message?.createdAt
+          | date:'dd/MM/yyyy'
+          ) === todayDate
+
+          ? 'Today'
+
+          :
+
+          (
+
+          (
+          message?.createdAt
+          | date:'dd/MM/yyyy'
+          ) === yesterdayDate
+
+          )
+
+          ? 'Yesterday'
+
+          :
+
+          (
+          message?.createdAt
+          | date:'mediumDate'
+          )
+
           }}
 
         </span>
 
-        }
+      </div>
 
-        <!-- TEXT -->
+      }
 
-        @if(message?.text){
+      <!-- MESSAGE -->
 
-        <p
-  class="message-text"
-  [innerHTML]="getHighlightedText(message.text)">
-</p>
+      <div class="message-wrapper" [class.mine]="isMine(message)">
 
-        }
+        <div class="message-bubble">
 
-        <!-- MEDIA -->
-
-        @if(message?.mediaUrls?.length){
-
-        <div class="media-container">
-
-          @for(
-
-          media of message.mediaUrls;
-
-          track trackMedia(
-          j,
-          media
-          );
-
-          let j = $index
-
-          ){
-
-          @if(media){
-
-          <!-- IMAGE -->
-
-          @if(
-          media?.fileType?.startsWith('image/')
-          ){
-
-          <div class="image-wrapper">
-
-            <img [src]="media?.fileUrl" class="chat-image" (click)="openFile(media?.fileUrl)">
-
-            <a [href]="getDownloadUrl(media)" download class="download-btn">
-
-              ⬇
-
-            </a>
-
-          </div>
-
-          }
-
-          <!-- VIDEO -->
-
-          @if(
-          media?.fileType?.startsWith('video/')
-          ){
-
-          <div class="video-wrapper">
-
-            <video controls class="chat-video">
-
-              <source [src]="media?.fileUrl" [type]="media?.fileType">
-
-            </video>
-
-          </div>
-
-          }
-
-          <!-- AUDIO -->
-
-          @if(
-          media?.fileType?.startsWith('audio/')
-          ){
-
-          <audio controls>
-
-            <source [src]="media?.fileUrl" [type]="media?.fileType">
-
-          </audio>
-
-          }
-
-          <!-- PDF -->
-
-          @if(
-          media?.fileType === 'application/pdf'
-          ){
-
-          <div class="file-actions">
-
-            <a [href]="media?.fileUrl" target="_blank" class="file-link">
-
-              <div class="file-icon">
-
-                📄
-
-              </div>
-
-              <div class="file-details">
-
-                <span class="file-title">
-
-                  {{
-                  media?.fileName
-                  || 'PDF'
-                  }}
-
-                </span>
-
-                <span class="file-subtitle">
-
-                  Open PDF
-
-                </span>
-
-              </div>
-
-            </a>
-
-            <a [href]="getDownloadUrl(media)" class="download-file-btn">
-
-              ⬇
-
-            </a>
-
-          </div>
-
-          }
-
-          <!-- OTHER FILE -->
+          <!-- GROUP USER -->
 
           @if(
 
-          !media?.fileType?.startsWith('image/')
+          conversation.isGroup
           &&
-          !media?.fileType?.startsWith('video/')
-          &&
-          !media?.fileType?.startsWith('audio/')
-          &&
-          media?.fileType !== 'application/pdf'
+          !isMine(message)
 
           ){
 
-          <div class="file-actions">
-
-            <a [href]="getDownloadUrl(media)" download class="file-link">
-
-              <div class="file-icon">
-
-                📎
-
-              </div>
-
-              <div class="file-details">
-
-                <span class="file-title">
-
-                  {{
-                  media?.fileName
-                  || 'Document'
-                  }}
-
-                </span>
-
-                <span class="file-subtitle">
-
-                  {{
-                  formatBytes(media?.bytes)
-                  }}
-
-                </span>
-
-              </div>
-
-            </a>
-
-            <a [href]="getDownloadUrl(media)" class="download-file-btn">
-
-              ⬇
-
-            </a>
-
-          </div>
-
-          }
-
-          }
-
-          }
-
-        </div>
-
-        }
-
-        <!-- FOOTER -->
-
-        <div class="message-footer">
-
-          <span class="time">
+          <span class="sender-name">
 
             {{
-            message?.createdAt
-            | date:'shortTime'
+            message?.sender?.username
             }}
 
           </span>
 
-          @if(isMine(message)){
+          }
 
-          @if(message?.status === 'sent'){
+          <!-- TEXT -->
 
-          <span class="single-tick">
-            ✓
-          </span>
+          @if(message?.text){
+
+          <p class="message-text" [innerHTML]="getHighlightedText(message.text)">
+          </p>
 
           }
 
-          @if(message?.status === 'delivered'){
+          <!-- MEDIA -->
 
-          <span class="double-tick">
-            ✓✓
-          </span>
+          @if(message?.mediaUrls?.length){
+
+          <div class="media-container">
+
+            @for(
+
+            media of message.mediaUrls;
+
+            track trackMedia(
+            j,
+            media
+            );
+
+            let j = $index
+
+            ){
+
+            @if(media){
+
+            <!-- IMAGE -->
+
+            @if(
+            media?.fileType?.startsWith('image/')
+            ){
+
+            <div class="image-wrapper">
+
+              <img [src]="media?.fileUrl" class="chat-image" [class.uploading-image]="media?.uploading"
+                (click)="openFile(media?.fileUrl)">
+
+              @if(media?.uploading){
+
+              <div class="upload-overlay">
+
+                <div class="loader"></div>
+
+                <span>
+                  Uploading...
+                </span>
+
+              </div>
+
+              }
+
+              <a [href]="getDownloadApi(message._id,j)" [attr.download]="media.fileName" class="download-btn">
+
+                ⬇
+
+              </a>
+
+            </div>
+
+            }
+
+            <!-- VIDEO -->
+
+            @if(
+            media?.fileType?.startsWith('video/')
+            ){
+
+            <div class="video-wrapper">
+
+              <video controls class="chat-video">
+
+                <source [src]="media?.fileUrl" [type]="media?.fileType">
+
+              </video>
+
+              @if(media?.uploading){
+
+              <div class="upload-overlay">
+                <div class="loader"></div>
+                <span>Uploading video...</span>
+              </div>
+
+              }
+
+            </div>
+
+            }
+
+            <!-- AUDIO -->
+
+          @if(media?.fileType?.startsWith('audio/')){
+
+  <div class="audio-wrapper">
+
+    <audio controls>
+      <source
+        [src]="media?.fileUrl"
+        [type]="media?.fileType">
+    </audio>
+
+    @if(media?.uploading){
+
+      <div class="audio-uploading">
+        <div class="loader small-loader"></div>
+        <span>Uploading audio...</span>
+      </div>
+
+    }
+
+  </div>
+
+}
+          
+
+            <!-- PDF -->
+
+            @if(
+            media?.fileType === 'application/pdf'
+            ){
+
+            <div class="file-actions">
+
+              <a [href]="media?.fileUrl" target="_blank" class="file-link">
+
+                <div class="file-icon">
+
+                  📄
+
+                </div>
+
+                <div class="file-details">
+
+                  <span class="file-title">
+
+                    {{
+                    media?.fileName
+                    || 'PDF'
+                    }}
+
+                  </span>
+
+                  <span class="file-subtitle">
+
+                    Open PDF
+
+                  </span>
+
+                </div>
+
+              </a>
+
+              <a [href]="getDownloadApi(message._id,j)" [attr.download]="media.fileName" class="download-file-btn">
+
+                ⬇
+
+              </a>
+
+            </div>
+
+            }
+
+            <!-- OTHER FILE -->
+
+            @if(
+
+            !media?.fileType?.startsWith('image/')
+            &&
+            !media?.fileType?.startsWith('video/')
+            &&
+            !media?.fileType?.startsWith('audio/')
+            &&
+            media?.fileType !== 'application/pdf'
+
+            ){
+
+            <div class="file-actions">
+
+              <a [href]="getDownloadApi(message._id,j)" [attr.download]="media.fileName" class="file-link">
+
+                <div class="file-icon">
+
+                  📎
+
+                </div>
+
+                <div class="file-details">
+
+                  <span class="file-title">
+
+                    {{
+                    media?.fileName
+                    || 'Document'
+                    }}
+
+                  </span>
+
+                  <span class="file-subtitle">
+
+                    {{
+                    formatBytes(media?.bytes)
+                    }}
+
+                  </span>
+
+                </div>
+
+              </a>
+
+              <a [href]="getDownloadApi(message._id,j)" [attr.download]="media.fileName" class="download-file-btn">
+
+                ⬇
+
+              </a>
+
+            </div>
+
+            }
+
+            }
+
+            }
+
+          </div>
 
           }
 
-          @if(message?.status === 'seen'){
+          <!-- FOOTER -->
 
-          <span class="seen-tick">
-            ✓✓
-          </span>
+          <div class="message-footer">
 
-          }
+            <span class="time">
 
-          }
+              {{
+              message?.createdAt
+              | date:'shortTime'
+              }}
+
+            </span>
+
+            @if(message?.status === 'uploading'){
+
+            <span class="uploading-status">
+              ⏳ Uploading...
+            </span>
+
+            }
+
+            @if(message?.status === 'failed'){
+
+            <span class="failed-status">
+              ❌ Failed
+            </span>
+
+            }
+
+
+            @if(isMine(message)){
+
+            @if(message?.status === 'sent'){
+
+            <span class="single-tick">
+              ✓
+            </span>
+
+            }
+
+            @if(message?.status === 'delivered'){
+
+            <span class="double-tick">
+              ✓✓
+            </span>
+
+            }
+
+            @if(message?.status === 'seen'){
+
+            <span class="seen-tick">
+              ✓✓
+            </span>
+
+            }
+
+            }
+
+
+
+          </div>
 
         </div>
 
       </div>
 
+      }
+
+      }
+
     </div>
 
-    }
 
-    }
 
-  </div>
+    <!-- INPUT -->
 
- 
-
-  <!-- INPUT -->
-
-  <app-message-input [conversationId]="conversation?._id" [userId]="currentUserId" (typing)="onTyping($event)"
-    (send)="sendMessage.emit($event)">
-  </app-message-input> 
+    <app-message-input [conversationId]="conversation?._id" [userId]="currentUserId" (typing)="onTyping($event)"
+      (send)="sendMessage.emit($event)">
+    </app-message-input>
 
   </div>
 
   <!-- PROFILE SIDEBAR -->
-   <app-profile-sidebar
-    [isOpen]="isProfileOpen"
-    [user]="selectedConversationOtherUser"
-    (close)="closeProfile()"
-      [isBlocked]="isBlocked"
-  [isMuted]="isMuted"
-  (toggleBlock)="toggleBlockUser()"
-  (toggleMute)="toggleMuteConversation()">
+  <app-profile-sidebar [isOpen]="isProfileOpen" [user]="selectedConversationOtherUser" (close)="closeProfile()"
+    [isBlocked]="isBlocked" [isMuted]="isMuted" (toggleBlock)="toggleBlockUser()"
+    (toggleMute)="toggleMuteConversation()">
   </app-profile-sidebar>
 
-  <app-mediadetails-sidebar
-  [isOpen]="isMediaOpen"
-  [mediaFiles]="mediaFiles"
-   (close)="isMediaOpen=false"
-  >
+  <app-mediadetails-sidebar [isOpenMediaFiles]="isMediaOpen" [mediaFiles]="mediaFiles" (close)="isMediaOpen=false">
 
   </app-mediadetails-sidebar>
 

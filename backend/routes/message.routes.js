@@ -8,7 +8,8 @@ const upload = require("../middleware/upload-multer.middleware");
 
 const {
     sendMessage,
-    getMessages
+    getMessages,
+    downloadFile
 } = require("../controllers/message.controller");
 
 // SEND MESSAGE
@@ -25,6 +26,10 @@ router.get(
     protect,
     getMessages
 );
+
+
+
+router.get("/download/:messageId/:mediaIndex", downloadFile);
 
 
 

@@ -8,9 +8,7 @@
 
   <div class="drawer" (click)="$event.stopPropagation()">
 
-    <!-- =========================
-         ADD MEMBERS PANEL
-    ========================== -->
+
 
     @if(showAddMembersPanel || groupSer.isShowAddMembersPanel){
 
@@ -226,12 +224,20 @@
 
           @if(showEditImagePanel){
 
-          <app-edit-group-image
+          <!-- <app-edit-group-image
             [groupId]="group._id"
             [previewUrl]="group.groupImage"
             (close)="closeAllPanels()"
             (updated)="group.groupImage = $event">
-          </app-edit-group-image>
+          </app-edit-group-image> -->
+
+          <app-group-image-picker
+
+    (close)="closeAllPanels()"
+
+    (imageSelected)="uploadGroupImage($event)">
+
+  </app-group-image-picker>
 
           }
 

@@ -11,6 +11,7 @@ export class GroupService {
     environment.apiUrl;
 
     selectedGroup:any;
+    selectedCoversation:any;
     isShowAddMembersPanel:boolean = false;
     isHeaderAddMemberPanel:boolean = false;
     isShowGroupInfo = false;

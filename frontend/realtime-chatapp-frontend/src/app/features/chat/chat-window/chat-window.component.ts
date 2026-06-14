@@ -23,6 +23,7 @@ import { SocketService } from '../../../core/services/socket.service';
 import { UserService } from '../../../core/services/user.service';
 import { MediadetailsSidebarComponent } from "./mediadetails-sidebar/mediadetails-sidebar.component";
 import { MessageInputComponent } from './message-input/message-input.component';
+import { ConversationService } from '../../../core/services/conversation.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -43,6 +44,7 @@ export class ChatWindowComponent implements AfterViewChecked {
 
   private socketSer = inject(SocketService)
   private userService = inject(UserService)
+  private conversationService = inject(ConversationService)
   @Input() conversation: any;
   @Input() messages: any[] = [];
   @Input() currentUserId = '';
@@ -87,6 +89,8 @@ export class ChatWindowComponent implements AfterViewChecked {
         this.isMediaOpen = true;
       }
     });
+
+   
   }
 
   ngAfterViewChecked() {
@@ -153,36 +157,108 @@ export class ChatWindowComponent implements AfterViewChecked {
     window.open(url, '_blank');
   }
 
-  getDownloadUrl(media: any) {
-    if (!media?.fileUrl) return '';
+  getDownloadApi(messageId: string,mediaIndex: number){
+    this.conversationService.getDownloadApi(messageId,mediaIndex);
+  }
 
-    const url = media.fileUrl;
+ getDownloadUrl(media: any) {
+  if (!media?.fileUrl) return '';
 
-    if (
-      media.resourceType === 'raw' ||
-      url.includes('/raw/upload/')
-    ) {
-      return url.replace(
-        '/raw/upload/',
-        '/raw/upload/fl_attachment/'
-      );
-    }
+  const url = media.fileUrl;
+  
+  // 1. Strip out single quotes, replace spaces with underscores, and URL encode it safely
+  let cleanName = media.fileName ? media.fileName.replace(/'/g, '').replace(/\s+/g, '_') : 'download.pdf';
+  const safeName = encodeURIComponent(cleanName);
 
-    if (
-      media.resourceType === 'video' ||
-      url.includes('/video/upload/')
-    ) {
-      return url.replace(
-        '/video/upload/',
-        '/video/upload/fl_attachment/'
-      );
-    }
-
+  // 2. For RAW resources (PDFs, docs, zips)
+  if (media.resourceType === 'raw' || url.includes('/raw/upload/')) {
     return url.replace(
-      '/image/upload/',
-      '/image/upload/fl_attachment/'
+      '/raw/upload/',
+      `/raw/upload/fl_attachment:${safeName}/`
     );
   }
+
+  // 3. For VIDEO resources
+  if (media.resourceType === 'video' || url.includes('/video/upload/')) {
+    return url.replace(
+      '/video/upload/',
+      `/video/upload/fl_attachment:${safeName}/`
+    );
+  }
+
+  // 4. For IMAGE resources
+  return url.replace(
+    '/image/upload/',
+    `/image/upload/fl_attachment:${safeName}/`
+  );
+}
+
+  
+
+//   getDownloadUrl(media: any) {
+
+//   if (!media?.fileUrl) return '';
+
+//   const fileName = encodeURIComponent(media.fileName);
+
+//   const attachment = `fl_attachment:${fileName}`;
+
+//   if (
+//     media.resourceType === 'raw' ||
+//     media.fileUrl.includes('/raw/upload/')
+//   ) {
+//     return media.fileUrl.replace(
+//       '/raw/upload/',
+//       `/raw/upload/${attachment}/`
+//     );
+//   }
+
+//   if (
+//     media.resourceType === 'video' ||
+//     media.fileUrl.includes('/video/upload/')
+//   ) {
+//     return media.fileUrl.replace(
+//       '/video/upload/',
+//       `/video/upload/${attachment}/`
+//     );
+//   }
+
+//   return media.fileUrl.replace(
+//     '/image/upload/',
+//     `/image/upload/${attachment}/`
+//   );
+// }
+
+// getDownloadUrl(media: any) {
+
+//   fetch(media.fileUrl)
+//     .then(res => res.blob())
+//     .then(blob => {
+
+//       const blobUrl =
+//         URL.createObjectURL(blob);
+
+//       const a =
+//         document.createElement('a');
+
+//       a.href = blobUrl;
+
+//       a.download =
+//         media.fileName || 'file';
+
+//       document.body.appendChild(a);
+
+//       a.click();
+
+//       document.body.removeChild(a);
+
+//       URL.revokeObjectURL(blobUrl);
+
+//     });
+
+// }
+
+  
 
   formatBytes(bytes: number) {
     if (!bytes) return '';

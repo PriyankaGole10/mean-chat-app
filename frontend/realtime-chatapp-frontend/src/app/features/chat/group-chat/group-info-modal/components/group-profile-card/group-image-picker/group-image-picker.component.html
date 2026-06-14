@@ -1,0 +1,92 @@
+<div class="picker-card">
+
+  @if(cameraMode){
+
+    <video
+      #video
+      autoplay
+      playsinline>
+    </video>
+
+    <button
+      class="capture-btn"
+      (click)="capture()">
+
+      Capture
+
+    </button>
+
+  }
+
+  @else {
+
+    @if(!previewUrl){
+
+      <div class="menu">
+
+        <div
+          class="menu-item"
+          (click)="openCamera()">
+
+          📷 Camera
+
+        </div>
+
+        <div
+          class="menu-item"
+          (click)="openPhotos()">
+
+          🖼 Photos
+
+        </div>
+
+        <div
+          class="menu-item"
+          (click)="openFiles()">
+
+          📁 Files
+
+        </div>
+
+      </div>
+
+    }
+
+    @else {
+
+      <img
+        [src]="previewUrl"
+        class="preview-image">
+
+      <div class="actions">
+
+        <button
+          class="secondary-btn"
+          (click)="previewUrl=''">
+
+          Change
+
+        </button>
+
+        <button
+          class="primary-btn"
+          (click)="save()">
+
+          Save
+
+        </button>
+
+      </div>
+
+    }
+
+  }
+
+  <input
+    hidden
+    #fileInput
+    type="file"
+    accept="image/*"
+    (change)="onFileSelected($event)">
+
+</div>
