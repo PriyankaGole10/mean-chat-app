@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend
+    container_name: chat-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build: ./frontend/realtime-chatapp-frontend
+    container_name: chat-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
