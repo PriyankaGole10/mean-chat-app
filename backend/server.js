@@ -13,17 +13,17 @@ const conversationRoutes = require("./routes/conversation.routes");
 const messageRoutes = require("./routes/message.routes");
 const userRoutes = require("./routes/user.routes");
 const groupMemberRoutes =
-require("./routes/group-member.routes");
+    require("./routes/group-member.routes");
 const groupRoleRoutes =
-require("./routes/group-role.routes");
+    require("./routes/group-role.routes");
 const groupSettingsRoutes =
-require(
-    "./routes/group-settings.routes"
-);
+    require(
+        "./routes/group-settings.routes"
+    );
 const groupInviteRoutes =
-require(
-    "./routes/group-invite.routes"
-);
+    require(
+        "./routes/group-invite.routes"
+    );
 
 const app = express();
 
@@ -36,19 +36,22 @@ connectDB();
 initializeSocket(server);
 
 // MIDDLEWARE
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    // credentials: true
+}));
 
 app.use(express.json());
 
 // ROUTES
 app.use("/api/auth", authRoutes);
-app.use("/api/conversations",conversationRoutes);
-app.use("/api/messages",messageRoutes);
-app.use("/api/users",userRoutes);
-app.use("/api/group-member",groupMemberRoutes);
-app.use("/api/group-role",groupRoleRoutes);
-app.use("/api/group-settings",groupSettingsRoutes);
-app.use("/api/group-invite",groupInviteRoutes);
+app.use("/api/conversations", conversationRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/group-member", groupMemberRoutes);
+app.use("/api/group-role", groupRoleRoutes);
+app.use("/api/group-settings", groupSettingsRoutes);
+app.use("/api/group-invite", groupInviteRoutes);
 
 // HOME ROUTE
 app.get("/", (req, res) => {

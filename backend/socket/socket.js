@@ -8,12 +8,13 @@ const initializeSocket = (server) => {
 
     const io = new Server(server, {
         cors: {
-            origin: "http://localhost:4200",
-            methods: ["GET", "POST"]
+            origin: process.env.CLIENT_URL,
+            methods: ["GET", "POST"],
+            // credentials: true
         }
     });
 
-      // SOCKET AUTH MIDDLEWARE
+    // SOCKET AUTH MIDDLEWARE
     io.use(async (socket, next) => {
 
         try {
